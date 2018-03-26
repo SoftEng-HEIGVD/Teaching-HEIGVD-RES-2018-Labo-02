@@ -64,6 +64,7 @@ public class RouletteV1WasadigiTest {
   @Test
   @TestAuthor(githubId = {"wasadigi", "SoftEng-HEIGVD"})
   public void theServerShouldStillHaveZeroStudentsAtStart() throws IOException {
+    System.out.println(roulettePair.getClient().getNumberOfStudents());
     assertEquals(0, roulettePair.getClient().getNumberOfStudents());
   }
 
