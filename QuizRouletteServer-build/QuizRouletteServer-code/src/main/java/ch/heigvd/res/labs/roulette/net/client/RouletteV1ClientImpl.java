@@ -18,52 +18,97 @@ import java.util.logging.Logger;
 
 /**
  * This class implements the client side of the protocol specification (version 1).
- * 
+ *
  * @author Olivier Liechti
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
-  private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
+    private Socket sock;
+    private BufferedReader reader;
+    private PrintWriter writer;
 
-  @Override
-  public void connect(String server, int port) throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
 
-  @Override
-  public void disconnect() throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    public void connect(String server, int port) throws IOException {
+        sock = new Socket(server, port);
+        reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+        writer = new PrintWriter(sock.getOutputStream());
+        if(this.isConnected())
+            readFromServer();
+    }
 
-  @Override
-  public boolean isConnected() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    public void disconnect() throws IOException {
+        // send "BYE" message
+        sendToServer(RouletteV1Protocol.CMD_BYE);
+        // closing the connection
+        sock.close();
+    }
 
-  @Override
-  public void loadStudent(String fullname) throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    public boolean isConnected() {
+        // we have to check if the connexion is not closed : CF Oracle documentation : socket.isConnected()
+        return sock != null && !sock.isClosed() && sock.isConnected();
+    }
 
-  @Override
-  public void loadStudents(List<Student> students) throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    public void loadStudent(String fullname) throws IOException {
+        // initilize the loading
+        sendToServer(RouletteV1Protocol.CMD_LOAD);
+        // empty the buffer and check if we received the message
+        String s = readFromServer();
+        if(s != "") {
+            // send the "fullname" message to the server
+            sendToServer(fullname);
+        }
+        // "ENDOFDATA
+        sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+    }
 
-  @Override
-  public Student pickRandomStudent() throws EmptyStoreException, IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    public void loadStudents(List<Student> students) throws IOException {
+        //LOAD
+        sendToServer(RouletteV1Protocol.CMD_LOAD);
 
-  @Override
-  public int getNumberOfStudents() throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+        // empty the buffer and check if we received the message
+        String answer = readFromServer();
+        if(answer != ""){
+            for(Student student : students){
+                sendToServer(student.getFullname());
+            }
+        }
+        //ENDOFDATA
+        sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+    }
 
-  @Override
-  public String getProtocolVersion() throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    public Student pickRandomStudent() throws EmptyStoreException, IOException {
+        // send "RANDOM" message to the server and catch the answer
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getNumberOfStudents() throws IOException {
+        // "INFO
+        // TODO
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getProtocolVersion() throws IOException {
+        // "INFO"
+        // TODO
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void sendToServer(String data){
+
+    }
+
+    private String readFromServer(){
+        return "";
+    }
 
 
 
