@@ -54,7 +54,7 @@ public class StudentsStoreImpl implements IStudentsStore {
   @Override
   public void importData(BufferedReader reader) throws IOException {
     LOG.log(Level.INFO, "Importing data from input reader of type {0}", reader.getClass());
-    List<Student> studentsToAdd = new ArrayList<>();
+    List<Student> studentsToAdd = new LinkedList();
     String record;
     boolean endReached = false;
     while (!endReached && (record = reader.readLine()) != null) {

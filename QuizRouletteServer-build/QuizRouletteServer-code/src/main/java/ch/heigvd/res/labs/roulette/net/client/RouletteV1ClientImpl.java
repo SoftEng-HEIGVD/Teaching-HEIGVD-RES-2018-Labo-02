@@ -143,12 +143,12 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         }
     }
 
-    private void sendToServer(String s){
+    protected void sendToServer(String s){
         out.println(s);
         out.flush();
     }
 
-    private void skipMessageServer() throws IOException{
+    protected void skipMessageServer() throws IOException{
         in.readLine();
     }
 
