@@ -1,10 +1,6 @@
 package ch.heigvd.res.labs.roulette.net.client;
-
-import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
-import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
+s
 import ch.heigvd.res.labs.roulette.data.Student;
-import ch.heigvd.res.labs.roulette.net.protocol.ByeCommandResponse;
-import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
 import ch.heigvd.schoolpulse.TestAuthor;
 import org.junit.*;
@@ -15,9 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -28,6 +21,10 @@ public class RouletteV2SmithHeigTest {
     @Rule
     public EphemeralClientServerPair roulettePair = new EphemeralClientServerPair(RouletteV2Protocol.VERSION);
 
+    /**
+     * When the server clear, should have 0 students after that
+     * @throws IOException
+     */
     @Test
     @TestAuthor(githubId = "smithheig")
     public void theServerShouldHaveZeroStudentAfterClear() throws IOException {
@@ -37,6 +34,10 @@ public class RouletteV2SmithHeigTest {
         assertEquals(0,roulettePair.getClient().getNumberOfStudents());
     }
 
+    /**
+     * Test if the client revieved the list of the current students on the server
+     * @throws IOException
+     */
     @Test
     @TestAuthor(githubId = "smithheig")
     public void testClientReceivedCorrectListOfStudentFromServer() throws IOException {
@@ -48,6 +49,10 @@ public class RouletteV2SmithHeigTest {
         assertTrue(client.listStudents().contains(new Student("john")));
     }
 
+    /**
+     * Test if the server give you a Bye message correct
+     * @throws IOException
+     */
     @Test
     @TestAuthor(githubId = "smithheig")
     public void testResponseFromServerWhenExitWithBye() throws IOException{
