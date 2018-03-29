@@ -6,6 +6,8 @@ import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RandomCommandResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,6 +39,9 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
       socket = new Socket(server, port);
       in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       out = new PrintWriter(socket.getOutputStream());
+
+      LOG.info(in.readLine());
+
     }catch(IOException e){
       LOG.log(Level.SEVERE, "Client could not create socket exit: {0}", e.getMessage());
     }
@@ -80,7 +85,18 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
   @Override
   public int getNumberOfStudents() throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    // ask server for info
+    out.println(RouletteV1Protocol.CMD_INFO);
+    out.flush();
+
+    // process answer
+    String response = in.readLine();
+    InfoCommandResponse infoResponse = JsonObjectMapper.parseJson(response, InfoCommandResponse.class);
+
+    // extract value
+    return infoResponse.getNumberOfStudents();
+
   }
 
   @Override
