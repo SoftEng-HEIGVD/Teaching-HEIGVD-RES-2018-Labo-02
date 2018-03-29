@@ -65,12 +65,20 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
   @Override
   public void loadStudent(String fullname) throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    out.print(RouletteV1Protocol.CMD_LOAD);
+    out.print(fullname);
+    out.print(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
   }
 
   @Override
   public void loadStudents(List<Student> students) throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    out.print(RouletteV1Protocol.CMD_LOAD);
+
+    for(Student student : students)
+    out.print(student.getFullname());
+
+    out.print(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
   }
 
   @Override
@@ -85,7 +93,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
   @Override
   public String getProtocolVersion() throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    return RouletteV1Protocol.VERSION;
   }
 
 }
