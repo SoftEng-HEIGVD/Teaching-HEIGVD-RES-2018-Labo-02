@@ -14,7 +14,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,35 +35,24 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
   @Override
   public void connect(String server, int port) throws IOException {
-    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    socket = new Socket(server, port);
+    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    out = new PrintWriter(socket.getOutputStream());
 
-    try{
-      socket = new Socket(server, port);
-      in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      out = new PrintWriter(socket.getOutputStream());
-
-      LOG.info(in.readLine());
-
-    }catch(IOException e){
-      LOG.log(Level.SEVERE, "Client could not create socket exit: {0}", e.getMessage());
-    }
-
+    LOG.info(in.readLine());
   }
 
   @Override
   public void disconnect() throws IOException {
-    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-      LOG.info("Client disconnect");
-      in.close();
-      out.close();
-      socket.close();
+    LOG.info("Client disconnect");
+    in.close();
+    out.close();
+    socket.close();
 
   }
 
   @Override
   public boolean isConnected() {
-    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
     if(socket == null){
       return false;
     }
@@ -70,25 +61,41 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
   @Override
   public void loadStudent(String fullname) throws IOException {
-    out.print(RouletteV1Protocol.CMD_LOAD);
-    out.print(fullname);
-    out.print(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+    List<Student> students = new ArrayList<>();
+    students.add(new Student(fullname));
+    this.loadStudents(students);
   }
 
   @Override
   public void loadStudents(List<Student> students) throws IOException {
-    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    out.print(RouletteV1Protocol.CMD_LOAD);
+    out.println(RouletteV1Protocol.CMD_LOAD);
+    out.flush();
+
+    LOG.info(in.readLine());
 
     for(Student student : students)
-    out.print(student.getFullname());
+      out.println(student.getFullname());
+    out.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+    out.flush();
 
-    out.print(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+    LOG.info(in.readLine());
   }
 
   @Override
   public Student pickRandomStudent() throws EmptyStoreException, IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    out.println(RouletteV1Protocol.CMD_RANDOM);
+    out.flush();
+
+    String response = in.readLine();
+    LOG.info(response);
+    RandomCommandResponse randomResponse = JsonObjectMapper.parseJson(response, RandomCommandResponse.class);
+
+    if(!randomResponse.getError().isEmpty()){
+      LOG.info(randomResponse.getError());
+      throw new EmptyStoreException();
+    }
+
+    return new Student(randomResponse.getFullname());
   }
 
   @Override
@@ -100,6 +107,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     // process answer
     String response = in.readLine();
+    LOG.info(response);
     InfoCommandResponse infoResponse = JsonObjectMapper.parseJson(response, InfoCommandResponse.class);
 
     // extract value
@@ -109,7 +117,6 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
   @Override
   public String getProtocolVersion() throws IOException {
-    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     return RouletteV1Protocol.VERSION;
   }
 
