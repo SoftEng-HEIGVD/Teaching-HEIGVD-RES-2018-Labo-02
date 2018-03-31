@@ -23,9 +23,9 @@ import java.util.logging.Logger;
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
-    private Socket sock;
-    private BufferedReader reader;
-    private PrintWriter writer;
+    private Socket sock = null;
+    private BufferedReader reader = null;
+    private PrintWriter writer = null;
 
     private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
 
@@ -34,7 +34,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         sock = new Socket(server, port);
         reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
         writer = new PrintWriter(sock.getOutputStream());
-        if(this.isConnected())
+        if(isConnected())
             readFromServer();
         
         readFromServer();
@@ -60,13 +60,16 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         sendToServer(RouletteV1Protocol.CMD_LOAD);
         // empty the buffer and check if we received the message
         String s = readFromServer();
-        if(!s.equals("")) {
+        if(!s.equals(RouletteV1Protocol.RESPONSE_LOAD_START)) {
             // send the "fullname" message to the server
             sendToServer(fullname);
         }
         // "ENDOFDATA
         sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
-        readFromServer();
+        s = readFromServer();
+        if(!s.equals(RouletteV1Protocol.RESPONSE_LOAD_DONE)){
+            LOG.log(Level.SEVERE,"No reponse from server after ENDOFDATA");
+        }
     }
 
     @Override
@@ -76,14 +79,20 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
         // empty the buffer and check if we received the message
         String s = readFromServer();
-        if(!s.equals("")){
+        if(!s.equals(RouletteV1Protocol.RESPONSE_LOAD_START)){
             for(Student student : students){
                 sendToServer(student.getFullname());
             }
+        }else{
+            LOG.log(Level.SEVERE,"No reponse from server after command LOAD");
         }
         //ENDOFDATA
         sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
-        readFromServer();
+        s = readFromServer();
+        if(!s.equals(RouletteV1Protocol.RESPONSE_LOAD_DONE)){
+            LOG.log(Level.SEVERE,"No reponse from server after ENDOFDATA");
+        }
+        
     }
 
     @Override
@@ -124,9 +133,17 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     }
 
     protected void close() throws IOException{
-        writer.close();
-        reader.close();
-        sock.close();
+        if(writer != null){
+            writer.close();
+        }
+        
+        if(reader != null){
+            reader.close();
+        }
+        
+        if(sock != null){
+            sock.close();
+        }
     }
     protected void sendToServer(String data){
         writer.println(data);
