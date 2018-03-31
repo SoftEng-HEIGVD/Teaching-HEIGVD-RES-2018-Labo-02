@@ -85,29 +85,44 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     @Override
     public Student pickRandomStudent() throws EmptyStoreException, IOException {
         // send "RANDOM" message to the server and catch the answer
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        sendToServer(RouletteV1Protocol.CMD_RANDOM);
+        String answer = readFromServer();
+        RandomCommandResponse rdm = JsonObjectMapper.parseJson(answer,RandomCommandResponse.class);
+        if(rdm.getError() != null){
+            throw new EmptyStoreException();
+        }
+
+        return new Student(rdm.getFullname());
+        // TODO
     }
 
     @Override
     public int getNumberOfStudents() throws IOException {
         // "INFO
+        sendToServer(RouletteV1Protocol.CMD_INFO);
+        String answer = readFromServer();
+        InfoCommandResponse response = JsonObjectMapper.parseJson(answer,InfoCommandResponse.class);
+        return response.getNumberOfStudents();
         // TODO
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String getProtocolVersion() throws IOException {
         // "INFO"
+        sendToServer(RouletteV1Protocol.CMD_INFO);
+        String answer = readFromServer();
+        InfoCommandResponse response = JsonObjectMapper.parseJson(answer,InfoCommandResponse.class);
+        return response.getProtocolVersion();
         // TODO
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void sendToServer(String data){
-
+        writer.write(data);
+        //writer.flush(); -> à voir si il faut mettre
     }
 
-    private String readFromServer(){
-        return "";
+    private String readFromServer() throws IOException {
+        return reader.readLine();
     }
 
 
