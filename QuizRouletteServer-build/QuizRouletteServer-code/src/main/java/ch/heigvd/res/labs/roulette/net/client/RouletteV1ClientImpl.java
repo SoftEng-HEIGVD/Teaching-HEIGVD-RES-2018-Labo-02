@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
-    private Socket sock;
+    protected Socket sock;
     private BufferedReader reader;
     private PrintWriter writer;
 
@@ -43,6 +43,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         // send "BYE" message
         sendToServer(RouletteV1Protocol.CMD_BYE);
         // closing the connection
+        reader.close();
+        writer.close();
         sock.close();
     }
 
@@ -58,7 +60,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         sendToServer(RouletteV1Protocol.CMD_LOAD);
         // empty the buffer and check if we received the message
         String s = readFromServer();
-        if(s != "") {
+        if(!s.equals("")) {
             // send the "fullname" message to the server
             sendToServer(fullname);
         }
@@ -72,8 +74,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         sendToServer(RouletteV1Protocol.CMD_LOAD);
 
         // empty the buffer and check if we received the message
-        String answer = readFromServer();
-        if(answer != ""){
+        String s = readFromServer();
+        if(!s.equals("")){
             for(Student student : students){
                 sendToServer(student.getFullname());
             }
@@ -86,13 +88,16 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     public Student pickRandomStudent() throws EmptyStoreException, IOException {
         // send "RANDOM" message to the server and catch the answer
         sendToServer(RouletteV1Protocol.CMD_RANDOM);
+        
         String answer = readFromServer();
-        RandomCommandResponse rdm = JsonObjectMapper.parseJson(answer,RandomCommandResponse.class);
-        if(rdm.getError() != null){
+        
+        RandomCommandResponse reponse = JsonObjectMapper.parseJson(answer,RandomCommandResponse.class);
+        
+        if(reponse.getError() != null){
             throw new EmptyStoreException();
         }
 
-        return new Student(rdm.getFullname());
+        return new Student(reponse.getFullname());
         // TODO
     }
 
@@ -116,13 +121,15 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         // TODO
     }
 
-    private void sendToServer(String data){
-        writer.write(data);
-        //writer.flush(); -> à voir si il faut mettre
+    protected void sendToServer(String data){
+        writer.println(data);
+        writer.flush();
+        //TODO
     }
 
-    private String readFromServer() throws IOException {
+    protected String readFromServer() throws IOException {
         return reader.readLine();
+        //TODO
     }
 
 
