@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
-    protected Socket sock;
+    private Socket sock;
     private BufferedReader reader;
     private PrintWriter writer;
 
@@ -36,6 +36,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         writer = new PrintWriter(sock.getOutputStream());
         if(this.isConnected())
             readFromServer();
+        
+        readFromServer();
     }
 
     @Override
@@ -43,9 +45,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         // send "BYE" message
         sendToServer(RouletteV1Protocol.CMD_BYE);
         // closing the connection
-        reader.close();
-        writer.close();
-        sock.close();
+        close();
     }
 
     @Override
@@ -66,6 +66,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         }
         // "ENDOFDATA
         sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+        readFromServer();
     }
 
     @Override
@@ -82,6 +83,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         }
         //ENDOFDATA
         sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+        readFromServer();
     }
 
     @Override
@@ -121,6 +123,11 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         // TODO
     }
 
+    protected void close() throws IOException{
+        writer.close();
+        reader.close();
+        sock.close();
+    }
     protected void sendToServer(String data){
         writer.println(data);
         writer.flush();
@@ -131,6 +138,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         return reader.readLine();
         //TODO
     }
+    
+    
 
 
 
