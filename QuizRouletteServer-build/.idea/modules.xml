@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/QuizRouletteServer-build.iml" filepath="$PROJECT_DIR$/QuizRouletteServer-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/QuizRouletteServer-build.iml" filepath="$PROJECT_DIR$/QuizRouletteServer-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/QuizRouletteServer-code/QuizRouletteServer-code.iml" filepath="$PROJECT_DIR$/QuizRouletteServer-code/QuizRouletteServer-code.iml" />
+      <module fileurl="file://$PROJECT_DIR$/QuizRouletteServer-code/QuizRouletteServer-code.iml" filepath="$PROJECT_DIR$/QuizRouletteServer-code/QuizRouletteServer-code.iml" />
+      <module fileurl="file://$PROJECT_DIR$/QuizRouletteServer-test/QuizRouletteServer-test.iml" filepath="$PROJECT_DIR$/QuizRouletteServer-test/QuizRouletteServer-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/QuizRouletteServer-test/QuizRouletteServer-test.iml" filepath="$PROJECT_DIR$/QuizRouletteServer-test/QuizRouletteServer-test.iml" />
     </modules>
   </component>
