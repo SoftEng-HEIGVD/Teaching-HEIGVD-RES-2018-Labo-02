@@ -45,10 +45,15 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   @Override
   public void disconnect() throws IOException {
     LOG.info("Client disconnect");
-    in.close();
-    out.close();
-    socket.close();
 
+    if(in != null)
+      in.close();
+
+    if(out != null)
+      out.close();
+
+    if(socket != null)
+      socket.close();
   }
 
   @Override
@@ -64,6 +69,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     List<Student> students = new ArrayList<>();
     students.add(new Student(fullname));
     this.loadStudents(students);
+
+    LOG.info("load studend : " + fullname);
   }
 
   @Override
@@ -75,6 +82,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     for(Student student : students)
       out.println(student.getFullname());
+
     out.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
     out.flush();
 
