@@ -31,14 +31,14 @@ public class RouletteV2rlabinotTest {
     public EphemeralClientServerPair roulettePair = new EphemeralClientServerPair(RouletteV2Protocol.VERSION);
 
     @Test
-    @TestAuthor(githubId = "romaingallay")
+    @TestAuthor(githubId = "rlabinot")
     public void theServerShouldReturnCorrectProtocolVersion() throws IOException {
         String version = roulettePair.getClient().getProtocolVersion();
         assertEquals("2.0", version);
     }
 
     @Test
-    @TestAuthor(githubId = "romaingallay")
+    @TestAuthor(githubId = "rlabinot")
     public void theServerShouldHaveZeroStudentAfterClear() throws IOException, EmptyStoreException {
         IRouletteV2Client client = (IRouletteV2Client)roulettePair.getClient();
 
@@ -54,7 +54,7 @@ public class RouletteV2rlabinotTest {
     }
 
     @Test
-    @TestAuthor(githubId = "romaingallay")
+    @TestAuthor(githubId = "rlabinot")
     public void theServerShouldReturnTheStudentList() throws IOException {
         IRouletteV2Client client = (IRouletteV2Client)roulettePair.getClient();
 
