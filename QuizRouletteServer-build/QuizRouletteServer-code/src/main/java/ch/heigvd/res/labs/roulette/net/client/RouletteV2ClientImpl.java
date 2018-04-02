@@ -85,7 +85,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         return reponse.getStudents();
     }
 
-    public int getNumberOfAddedNewStudent() {
+    public int getNumberOfStudentAdded() {
         if (load != null) {
             return load.getNumberOfNewStudents();
         } else {
