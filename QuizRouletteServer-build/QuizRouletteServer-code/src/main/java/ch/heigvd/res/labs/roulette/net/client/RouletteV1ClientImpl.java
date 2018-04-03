@@ -27,11 +27,11 @@ import java.util.logging.Logger;
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
-  private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
+  static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
 
   private Socket socket;
-  private BufferedReader in;
-  private PrintWriter out;
+  BufferedReader in;
+  PrintWriter out;
 
   @Override
   public void connect(String server, int port) throws IOException {
@@ -70,7 +70,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     students.add(new Student(fullname));
     this.loadStudents(students);
 
-    LOG.info("load studend : " + fullname);
+    LOG.info("load student : " + fullname);
   }
 
   @Override
