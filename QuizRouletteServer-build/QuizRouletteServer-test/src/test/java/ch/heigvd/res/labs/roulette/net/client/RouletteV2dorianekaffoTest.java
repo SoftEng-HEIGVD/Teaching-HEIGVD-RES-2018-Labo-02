@@ -15,6 +15,7 @@ import org.junit.rules.ExpectedException;
  * @author Doriane Kaffo
  */
 public class RouletteV2dorianekaffoTest {
+    
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
