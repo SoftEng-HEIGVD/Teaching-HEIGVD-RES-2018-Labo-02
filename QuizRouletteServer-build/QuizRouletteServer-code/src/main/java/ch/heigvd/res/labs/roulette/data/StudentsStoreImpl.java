@@ -20,7 +20,8 @@ public class StudentsStoreImpl implements IStudentsStore {
   static final Logger LOG = Logger.getLogger(StudentsStoreImpl.class.getName());
 
   private final List<Student> students = new LinkedList<>();
-
+  private int numberOfNewStudentsAdded;
+  
   @Override
   public synchronized void clear() {
     students.clear();
@@ -50,20 +51,27 @@ public class StudentsStoreImpl implements IStudentsStore {
   public synchronized int getNumberOfStudents() {
     return students.size();
   }
+  
+  @Override
+  public synchronized int getNumberOfNewStudentsAddedStudents() {
+    return numberOfNewStudentsAdded;
+  }
 
   @Override
   public void importData(BufferedReader reader) throws IOException {
     LOG.log(Level.INFO, "Importing data from input reader of type {0}", reader.getClass());
     List<Student> studentsToAdd = new ArrayList<>();
     String record;
+    numberOfNewStudentsAdded = 0;
     boolean endReached = false;
     while (!endReached && (record = reader.readLine()) != null) {
       if (record.equalsIgnoreCase(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER)) {
-        LOG.log(Level.INFO, "End of stream reached. New students have been added to the store. How many? We'll tell you when the lab is complete...");
+        LOG.log(Level.INFO, "End of stream reached. New students have been added to the store. There are now {0} students in the store", numberOfNewStudentsAdded);
         endReached = true;
       } else {
         LOG.log(Level.INFO, "Adding student {0} to the store.", record);
         studentsToAdd.add(new Student(record));
+        ++numberOfNewStudentsAdded;
       }
     }
     synchronized (this) {
