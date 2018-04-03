@@ -1,5 +1,6 @@
 package ch.heigvd.res.labs.roulette.net.client;
 
+import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
 import ch.heigvd.schoolpulse.TestAuthor;
@@ -7,7 +8,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -84,5 +87,64 @@ public class RouletteV2AngoranceTest {
     @TestAuthor(githubId = {"Angorance", "LNAline"})
     public void theServerShouldReturnTheCorrectVersionNumber() throws IOException {
         assertEquals(RouletteV2Protocol.VERSION, roulettePair.getClient().getProtocolVersion());
+    }
+    
+    @Test
+    @TestAuthor(githubId = {"Angorance", "LNAline"})
+    public void theServerShouldReturnTheCorrectNumberOfNewStudents() throws IOException {
+        
+        // Create the client from the informations of the server
+        int port = roulettePair.getServer().getPort();
+        IRouletteV2Client client = new RouletteV2ClientImpl();
+        client.connect("localhost", port);
+    
+        // Add students on the server
+        List<Student> serverStudents = new ArrayList<>();
+    
+        serverStudents.add(new Student("Sacha"));
+        serverStudents.add(new Student("Olivier"));
+        serverStudents.add(new Student("Fabienne"));
+    
+        client.loadStudents(serverStudents);
+    
+        assertEquals(3, client.getNumberOfStudentsAdded());
+        
+        client.loadStudent("Lastone");
+    
+        assertEquals(1, client.getNumberOfStudentsAdded());
+    }
+    
+    @Test
+    @TestAuthor(githubId = {"Angorance", "LNAline"})
+    public void theServerShouldReturnTheCorrectNumberOfCommandsExecuted() throws IOException, EmptyStoreException {
+        
+        // Create the client from the informations of the server
+        int port = roulettePair.getServer().getPort();
+        IRouletteV2Client client = new RouletteV2ClientImpl();
+        
+        client.connect("localhost", port);                       // 0
+        
+        client.getProtocolVersion();                                    // 1
+    
+        // Add students on the server
+        List<Student> serverStudents = new ArrayList<>();
+    
+        serverStudents.add(new Student("Sacha"));
+        serverStudents.add(new Student("Olivier"));
+        serverStudents.add(new Student("Fabienne"));
+    
+        client.loadStudents(serverStudents);                            // 2
+        
+        client.getNumberOfStudents();                                   // 3
+        
+        client.pickRandomStudent();                                     // 4
+        
+        client.listStudents();                                          // 5
+        
+        client.clearDataStore();                                        // 6
+        
+        client.disconnect();                                            // 7
+        
+        assertEquals(7, client.getNumberOfCommands());
     }
 }
