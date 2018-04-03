@@ -36,18 +36,6 @@ public class RouletteV2zachnguefackTest {
 
     @Test
     @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
-    public void theServerShouldGiveTheCorrectProtocolVersion() throws IOException {
-        RouletteV2ClientImpl client = new RouletteV2ClientImpl();
-        try {
-            client.connect("HackRes2018.ch", roulettePair.server.getPort());
-        } catch (IOException ex) {
-            Logger.getLogger(RouletteV2zachnguefackTest.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        assertEquals(client.getProtocolVersion(), RouletteV2Protocol.VERSION);
-    }
-
-    @Test
-    @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
     public void itShouldBePossibleForARouletteClientToConnectToARouletteServer() throws Exception {
         int port = roulettePair.getServer().getPort();
         IRouletteV2Client client = new RouletteV2ClientImpl();
