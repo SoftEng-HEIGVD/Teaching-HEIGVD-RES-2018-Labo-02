@@ -8,9 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -35,11 +33,8 @@ public class RouletteV2AngoranceTest {
     @Test
     @TestAuthor(githubId = {"Angorance", "LNAline"})
     public void theServerShouldClearStudents() throws IOException {
-        
-        // Create the client from the information of the server
-        int port = roulettePair.getServer().getPort();
-        IRouletteV2Client client = new RouletteV2ClientImpl();
-        client.connect("localhost", port);
+    
+        IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
         
         // Add students on the server
         List<Student> serverStudents = new ArrayList<>();
@@ -59,11 +54,8 @@ public class RouletteV2AngoranceTest {
     @Test
     @TestAuthor(githubId = {"Angorance", "LNAline"})
     public void theServerShouldListStudents() throws IOException {
-        
-        // Create the client from the informations of the server
-        int port = roulettePair.getServer().getPort();
-        IRouletteV2Client client = new RouletteV2ClientImpl();
-        client.connect("localhost", port);
+    
+        IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
         
         // Add students on the server
         List<Student> serverStudents = new ArrayList<>();
@@ -92,11 +84,8 @@ public class RouletteV2AngoranceTest {
     @Test
     @TestAuthor(githubId = {"Angorance", "LNAline"})
     public void theServerShouldReturnTheCorrectNumberOfNewStudents() throws IOException {
-        
-        // Create the client from the informations of the server
-        int port = roulettePair.getServer().getPort();
-        IRouletteV2Client client = new RouletteV2ClientImpl();
-        client.connect("localhost", port);
+    
+        IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
     
         // Add students on the server
         List<Student> serverStudents = new ArrayList<>();
@@ -117,12 +106,8 @@ public class RouletteV2AngoranceTest {
     @Test
     @TestAuthor(githubId = {"Angorance", "LNAline"})
     public void theServerShouldReturnTheCorrectNumberOfCommandsExecuted() throws IOException, EmptyStoreException {
-        
-        // Create the client from the informations of the server
-        int port = roulettePair.getServer().getPort();
-        IRouletteV2Client client = new RouletteV2ClientImpl();
-        
-        client.connect("localhost", port);                       // 0
+    
+        IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
         
         client.getProtocolVersion();                                    // 1
     
@@ -146,5 +131,16 @@ public class RouletteV2AngoranceTest {
         client.disconnect();                                            // 7
         
         assertEquals(7, client.getNumberOfCommands());
+    }
+    
+    @Test
+    @TestAuthor(githubId = {"Angorance", "LNAline"})
+    public void theServerShouldReturnTheStatusOfTheExecutedCommand() throws IOException {
+    
+        IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
+        
+        client.loadStudent("Hilarb");
+        
+        assertTrue(client.checkSuccessOfCommand());
     }
 }
