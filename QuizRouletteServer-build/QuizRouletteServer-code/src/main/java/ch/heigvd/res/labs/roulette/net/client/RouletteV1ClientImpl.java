@@ -21,31 +21,31 @@ import java.util.logging.Logger;
 /**
  * This class implements the client side of the protocol specification (version
  * 1).
+ *
  * @author Zacharie Nguefack
- * @author cedric  Lankeu
+ * @author cedric Lankeu
  * @author Olivier Liechti
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
-    private static final String ENCODING = "UTF-8"; // specify encoding
-    private boolean isConnect = false;
-    private BufferedReader in;
-    private PrintWriter out;
-    private Socket ClientSocket;
-
+    final String ENCODING = "UTF-8"; // specify encoding
+    boolean isConnect = false;
+    BufferedReader in;
+    PrintWriter out;
+    Socket ClientSocket;
 
     @Override
     public void connect(String server, int port) throws IOException {
         //create the connection between the client and the server
         ClientSocket = new Socket(server, port);
-        
+
         //exchange information through the input and output flows
         in = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream(), ENCODING));
         out = new PrintWriter(new OutputStreamWriter(ClientSocket.getOutputStream(), ENCODING));
-        
+
         // Hello. Online HELP is available. Will you find it?
-        in.readLine(); 
-        
+        in.readLine();
+
         this.isConnect = true;
     }
 
@@ -53,14 +53,14 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     public void disconnect() throws IOException {
         if (isConnect) {
             isConnect = false;
-            
+
             //close the input and output flows
             in.close();
             out.close();
-            
+
             // close the connexion 
             ClientSocket.close();
-        } 
+        }
     }
 
     @Override
@@ -73,10 +73,10 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         // command to server to load data
         out.println(RouletteV1Protocol.CMD_LOAD);
         out.flush();
-        
+
         // read message:  Send your data [end with ENDOFDATA]
         in.readLine();
-        
+
         // send the name to server
         out.println(fullname);
         out.flush();
@@ -101,7 +101,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
             // read message:  Send your data [end with ENDOFDATA] 
             in.readLine();
-            
+
             //browse the list and send data to the server
             for (Student student : students) {
                 if (student != null && !student.getFullname().isEmpty()) {
@@ -112,21 +112,20 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
             // end of data command
             out.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
             out.flush();
-            
+
             // read message DATA LOADED
             in.readLine();
-            
 
         }
     }
 
     @Override
     public Student pickRandomStudent() throws EmptyStoreException, IOException {
-        
+
         //send the loader command to server
         out.println(RouletteV1Protocol.CMD_RANDOM);
         out.flush();
-        
+
         // read server response and parse it to Json format
         RandomCommandResponse ServerResponse = JsonObjectMapper.parseJson(in.readLine(), RandomCommandResponse.class);
 
@@ -140,11 +139,11 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public int getNumberOfStudents() throws IOException {
-        
+
         // send command to server
         out.println(RouletteV1Protocol.CMD_INFO);
         out.flush();
-        
+
         // return number of students 
         return JsonObjectMapper.parseJson(in.readLine(),
                 InfoCommandResponse.class).getNumberOfStudents();
@@ -152,11 +151,11 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public String getProtocolVersion() throws IOException {
-        
+
         // send command to server
         out.println(RouletteV1Protocol.CMD_INFO);
         out.flush();
-        
+
         return JsonObjectMapper.parseJson(in.readLine(), InfoCommandResponse.class).getProtocolVersion();
     }
 
