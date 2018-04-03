@@ -23,6 +23,7 @@ import java.util.logging.Logger;
  *
  * @author Olivier Liechti
  * @author Adam Zouari
+ * @author Nair Alic
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
