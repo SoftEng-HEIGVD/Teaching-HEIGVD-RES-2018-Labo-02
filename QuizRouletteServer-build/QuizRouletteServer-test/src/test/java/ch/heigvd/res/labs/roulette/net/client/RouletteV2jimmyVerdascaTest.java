@@ -56,7 +56,6 @@ public class RouletteV2jimmyVerdascaTest {
      clientSocket.close();
      
      //test with LOAD, 3 X INFO and BYE
-     roulettePair = new EphemeralClientServerPair(RouletteV2Protocol.VERSION);
      clientSocket = new Socket("localhost", roulettePair.getServer().getPort());
      fromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
      toServer = new PrintWriter(clientSocket.getOutputStream());
@@ -103,6 +102,7 @@ public class RouletteV2jimmyVerdascaTest {
      PrintWriter toServer = new PrintWriter(clientSocket.getOutputStream());
      
      String expectedResult;
+     fromServer.readLine();
      
      // add from 0 to 9 student with a LOAD and check if the answer of the server is correct
      for (int tryID = 0; tryID < 10; tryID++) {
@@ -112,6 +112,7 @@ public class RouletteV2jimmyVerdascaTest {
         toServer.flush();
         fromServer.readLine();
         for(int j = 0; j < numberOfStudentsAddedThisTry; j++) {
+           System.out.println("sasha" + (tryID + numberOfStudentsAddedThisTry * 9));
            toServer.println("sasha" + (tryID + numberOfStudentsAddedThisTry * 9));
            toServer.flush();
         }
@@ -138,17 +139,19 @@ public class RouletteV2jimmyVerdascaTest {
      BufferedReader fromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
      PrintWriter toServer = new PrintWriter(clientSocket.getOutputStream());
      
+     System.out.println(fromServer.readLine());
+     
      toServer.println(RouletteV2Protocol.CMD_LOAD);
      toServer.flush();
-     fromServer.readLine();
+     System.out.println(fromServer.readLine());
      toServer.println("sasha");
      toServer.flush();
      toServer.println("olivier");
      toServer.flush();
      toServer.println(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
      toServer.flush();
-     fromServer.readLine();
-     //first test that we had really somthing to database
+     System.out.println(fromServer.readLine());
+     //first test that we had really added something to database
      Assert.assertEquals(2, roulettePair.getClient().getNumberOfStudents());
      toServer.println(RouletteV2Protocol.CMD_CLEAR);
      toServer.flush();
