@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4c4357aa-27c5-482d-98b7-dc7fd91409ca" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2AngoranceTest.java" afterPath="$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2AngoranceTest.java" />
-    </list>
+    <list default="true" id="4c4357aa-27c5-482d-98b7-dc7fd91409ca" name="Default" comment="" />
     <ignored path="QuizRouletteServer-build.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -831,7 +829,7 @@
       <workItem from="1522603300462" duration="9101000" />
       <workItem from="1522669712589" duration="525000" />
       <workItem from="1522693761154" duration="4022000" />
-      <workItem from="1522749655405" duration="1212000" />
+      <workItem from="1522749655405" duration="1302000" />
     </task>
     <servers />
   </component>
@@ -868,7 +866,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31509000" />
+    <option name="totallyTimeSpent" value="31599000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
