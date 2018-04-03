@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * This class contains automated tests to validate the client and the server
- * implementation of the Roulette Protocol (version 1)
+ * implementation of the Roulette Protocol (version 2)
  *
  * @author Labinot Rashiti
  * @author Romain Gallay
