@@ -26,7 +26,6 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
   private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
   
-    private Socket conn;
     private Socket client;
     boolean clientConnected=false;
     private BufferedWriter os;
@@ -36,7 +35,6 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
   @Override
   public void connect(String server, int port) throws IOException {
-    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     if (clientConnected)
         clientConnected = false;
     client = new Socket(server, port);
@@ -102,11 +100,11 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         return JsonObjectMapper.parseJson(is.readLine(), InfoCommandResponse.class).getProtocolVersion();
   }
   
-  private void send(String msg) throws IOException{
+    private void send(String msg) throws IOException{
         os.write(msg);
         os.newLine();
         os.flush();
-  }
+    }
   
     protected String readline() throws IOException {
         String line = "";
