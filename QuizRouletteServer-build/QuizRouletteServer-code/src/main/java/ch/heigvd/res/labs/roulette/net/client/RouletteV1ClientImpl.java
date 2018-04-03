@@ -60,12 +60,16 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         sendToServer(RouletteV1Protocol.CMD_LOAD);
         // empty the buffer and check if we received the message
         String s = readFromServer();
-        if(!s.equals(RouletteV1Protocol.RESPONSE_LOAD_START)) {
+        if(s.equals(RouletteV1Protocol.RESPONSE_LOAD_START)) {
             // send the "fullname" message to the server
             sendToServer(fullname);
+            
+            // "ENDOFDATA
+            sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+        }else{
+            LOG.log(Level.SEVERE,"No reponse from server after command LOAD");
         }
-        // "ENDOFDATA
-        sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+        
         s = readFromServer();
         if(!s.equals(RouletteV1Protocol.RESPONSE_LOAD_DONE)){
             LOG.log(Level.SEVERE,"No reponse from server after ENDOFDATA");
@@ -79,15 +83,16 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
         // empty the buffer and check if we received the message
         String s = readFromServer();
-        if(!s.equals(RouletteV1Protocol.RESPONSE_LOAD_START)){
+        if(s.equals(RouletteV1Protocol.RESPONSE_LOAD_START)){
             for(Student student : students){
                 sendToServer(student.getFullname());
             }
+            sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
         }else{
             LOG.log(Level.SEVERE,"No reponse from server after command LOAD");
         }
         //ENDOFDATA
-        sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+        
         s = readFromServer();
         if(!s.equals(RouletteV1Protocol.RESPONSE_LOAD_DONE)){
             LOG.log(Level.SEVERE,"No reponse from server after ENDOFDATA");
