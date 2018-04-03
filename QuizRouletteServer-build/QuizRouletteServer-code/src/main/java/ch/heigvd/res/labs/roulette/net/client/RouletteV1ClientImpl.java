@@ -72,13 +72,13 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         
         s = readFromServer();
         if(!s.equals(RouletteV1Protocol.RESPONSE_LOAD_DONE)){
-            LOG.log(Level.SEVERE,"No reponse from server after ENDOFDATA");
+            LOG.log(Level.SEVERE,"No answer from server after ENDOFDATA");
         }
     }
 
     @Override
     public void loadStudents(List<Student> students) throws IOException {
-        //LOAD
+        //
         sendToServer(RouletteV1Protocol.CMD_LOAD);
 
         // empty the buffer and check if we received the message
@@ -95,7 +95,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         
         s = readFromServer();
         if(!s.equals(RouletteV1Protocol.RESPONSE_LOAD_DONE)){
-            LOG.log(Level.SEVERE,"No reponse from server after ENDOFDATA");
+            LOG.log(Level.SEVERE,"No answer from server after ENDOFDATA");
         }
         
     }
@@ -106,7 +106,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         sendToServer(RouletteV1Protocol.CMD_RANDOM);
         
         String answer = readFromServer();
-        
+
+        // un-serialisation of the JSON
         RandomCommandResponse reponse = JsonObjectMapper.parseJson(answer,RandomCommandResponse.class);
         
         if(reponse.getError() != null){
@@ -114,27 +115,26 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         }
 
         return new Student(reponse.getFullname());
-        // TODO
     }
 
     @Override
     public int getNumberOfStudents() throws IOException {
-        // "INFO
+        // send INFO message
         sendToServer(RouletteV1Protocol.CMD_INFO);
         String answer = readFromServer();
+        // un-serialisation of the JSON
         InfoCommandResponse response = JsonObjectMapper.parseJson(answer,InfoCommandResponse.class);
         return response.getNumberOfStudents();
-        // TODO
     }
 
     @Override
     public String getProtocolVersion() throws IOException {
-        // "INFO"
+        // send INFO message
         sendToServer(RouletteV1Protocol.CMD_INFO);
         String answer = readFromServer();
+        // un-serialisation of the JSON
         InfoCommandResponse response = JsonObjectMapper.parseJson(answer,InfoCommandResponse.class);
         return response.getProtocolVersion();
-        // TODO
     }
 
     protected void close() throws IOException{
@@ -153,12 +153,10 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     protected void sendToServer(String data){
         writer.println(data);
         writer.flush();
-        //TODO
     }
 
     protected String readFromServer() throws IOException {
         return reader.readLine();
-        //TODO
     }
     
     
