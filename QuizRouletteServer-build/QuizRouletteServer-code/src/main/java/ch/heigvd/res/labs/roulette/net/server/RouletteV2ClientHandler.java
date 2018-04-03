@@ -14,12 +14,15 @@ import java.util.logging.Logger;
  * This class implements the Roulette protocol (version 2).
  *
  * @author Olivier Liechti
+ * @author modified by Yann Lederrey and Joel Schar
  */
 public class RouletteV2ClientHandler implements IClientHandler {
 
-  final static Logger LOG = Logger.getLogger(RouletteV1ClientHandler.class.getName());
+  final static Logger LOG = Logger.getLogger(RouletteV2ClientHandler.class.getName());
 
   private final IStudentsStore store;
+
+  private int commandsUsedInSession = 0;
 
   public RouletteV2ClientHandler(IStudentsStore store) {
     this.store = store;
@@ -38,16 +41,21 @@ public class RouletteV2ClientHandler implements IClientHandler {
     while (!done && ((command = reader.readLine()) != null)) {
       LOG.log(Level.INFO, "COMMAND: {0}", command);
       switch (command.toUpperCase()) {
-        case RouletteV2Protocol.CMD_CLEAR: // todo:
-
+        case RouletteV2Protocol.CMD_CLEAR:
+          commandsUsedInSession++;
+          store.clear();
+          writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
+          writer.flush();
           break;
-
-        case RouletteV2Protocol.CMD_LIST: // todo:
+        case RouletteV2Protocol.CMD_LIST:
+          commandsUsedInSession++;
           ListCommandResponse lsResponse = new ListCommandResponse();
-          break,
-
-
-        case RouletteV2Protocol.CMD_RANDOM: // todo:
+          lsResponse.setStudents(store.listStudents());
+          writer.println(JsonObjectMapper.toJson(lsResponse));
+          writer.flush();
+          break;
+        case RouletteV2Protocol.CMD_RANDOM:
+          commandsUsedInSession++;
           RandomCommandResponse rcResponse = new RandomCommandResponse();
           try {
             rcResponse.setFullname(store.pickRandomStudent().getFullname());
@@ -57,34 +65,44 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.println(JsonObjectMapper.toJson(rcResponse));
           writer.flush();
           break;
-
-        case RouletteV1Protocol.CMD_HELP: // todo:
-          writer.println("Commands: " + Arrays.toString(RouletteV1Protocol.SUPPORTED_COMMANDS));
+        case RouletteV2Protocol.CMD_HELP:
+          commandsUsedInSession++;
+          writer.println("Commands: " + Arrays.toString(RouletteV2Protocol.SUPPORTED_COMMANDS));
           break;
-
-        case RouletteV1Protocol.CMD_INFO: // todo:
-          InfoCommandResponse response = new InfoCommandResponse(RouletteV1Protocol.VERSION, store.getNumberOfStudents());
-          writer.println(JsonObjectMapper.toJson(response));
+        case RouletteV2Protocol.CMD_INFO:
+          commandsUsedInSession++;
+          InfoCommandResponse infoResponse = new InfoCommandResponse(RouletteV2Protocol.VERSION, store.getNumberOfStudents());
+          writer.println(JsonObjectMapper.toJson(infoResponse));
           writer.flush();
           break;
-
-        case RouletteV1Protocol.CMD_LOAD: // todo:
-          writer.println(RouletteV1Protocol.RESPONSE_LOAD_START);
+        case RouletteV2Protocol.CMD_LOAD:
+          commandsUsedInSession++;
+          LoadCommandResponse ldResponse = new LoadCommandResponse();
+          writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
           writer.flush();
+          int nbStudentsBefore = store.getNumberOfStudents();
           store.importData(reader);
-          writer.println(RouletteV1Protocol.RESPONSE_LOAD_DONE);
+          int nbStudentsAfter = store.getNumberOfStudents();
+          ldResponse.setNumberOfNewStudents(nbStudentsAfter - nbStudentsBefore);
+          ldResponse.setStatus("success");
+          writer.println(JsonObjectMapper.toJson(ldResponse));
           writer.flush();
           break;
-
-        case RouletteV1Protocol.CMD_BYE: // todo:
+        case RouletteV2Protocol.CMD_BYE:
+          commandsUsedInSession++;
+          ByeCommandResponse byeResponse = new ByeCommandResponse();
+          byeResponse.setNumberOfCommands(commandsUsedInSession);
+          byeResponse.setStatus("success");
+          writer.println(JsonObjectMapper.toJson(byeResponse));
+          writer.flush();
           done = true;
           break;
-
         default:
           writer.println("Huh? please use HELP if you don't know what commands are available.");
           writer.flush();
           break;
       }
-      writer.flush();  }
-
+      writer.flush();
+    }
+  }
 }
