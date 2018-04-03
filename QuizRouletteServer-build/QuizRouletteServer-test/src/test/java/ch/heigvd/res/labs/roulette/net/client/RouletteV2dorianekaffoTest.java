@@ -52,6 +52,7 @@ public class RouletteV2dorianekaffoTest {
         IRouletteV2Client client = new RouletteV2ClientImpl();
         assertFalse(client.isConnected());
         client.connect("localhost", port);
+        
         assertTrue(client.isConnected());
         client.disconnect();
     }
