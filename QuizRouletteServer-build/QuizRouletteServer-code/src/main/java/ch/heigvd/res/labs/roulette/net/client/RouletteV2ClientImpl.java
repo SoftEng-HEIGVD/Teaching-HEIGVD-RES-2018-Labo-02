@@ -36,14 +36,8 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
   @Override
   public int getNumberOfStudentAdded() throws IOException{
-    out.println(RouletteV2Protocol.CMD_LIST);
-    out.flush();
-
-    String response = in.readLine();
-    LOG.info(response);
-
-    ListCommandResponse lsResponse = JsonObjectMapper.parseJson(response, ListCommandResponse.class);
-    return lsResponse.getStudents().size();
+    List<Student> students = listStudents();
+    return students.size();
   }
 
   @Override
