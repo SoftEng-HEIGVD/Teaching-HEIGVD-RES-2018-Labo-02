@@ -30,11 +30,13 @@ public class RouletteV2dorianekaffoTest {
         assertEquals(RouletteV2Protocol.DEFAULT_PORT, roulettePair.getServer().getPort());
     }
 
+    
     @Test
     @TestAuthor(githubId = "dorianekaffo")
     public void theTestRouletteServerShouldRunDuringTests() throws IOException {
         assertTrue(roulettePair.getServer().isRunning());
     }
+    
 
     @Test
     @TestAuthor(githubId = "dorianekaffo")
@@ -46,6 +48,7 @@ public class RouletteV2dorianekaffoTest {
         client.clearDataStore();
         assertEquals(0, client.getNumberOfStudents());
     }
+    
 
     @Test
     @TestAuthor(githubId = "dorianekaffo")
@@ -57,7 +60,8 @@ public class RouletteV2dorianekaffoTest {
         assertTrue(client.isConnected());
         client.disconnect();
     }
-
+    
+    
     @Test
     @TestAuthor(githubId = "dorianekaffo")
     public void theServerShouldReturnTheGoodNumberOfVersion() throws IOException {
