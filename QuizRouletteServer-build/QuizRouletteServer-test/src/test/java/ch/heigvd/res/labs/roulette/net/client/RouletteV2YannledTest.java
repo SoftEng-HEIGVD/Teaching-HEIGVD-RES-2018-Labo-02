@@ -79,6 +79,6 @@ public class RouletteV2YannledTest {
         roulettePair.getClient().loadStudent("Olivier Koop");
         roulettePair.getClient().loadStudent("Olivier De Benoist");
         assertEquals(3, roulettePair.getClient().getNumberOfStudents());
-        assertEquals(5, ((IRouletteV2Client) roulettePair.getClient()).getNumberOfCommands());
+        assertEquals(4, ((IRouletteV2Client) roulettePair.getClient()).getNumberOfCommands());
     }
 }
