@@ -17,7 +17,9 @@ public class ByeCommandResponse {
         this.numberOfCommands = numberOfCommands;
     }
 
-    public int getNumberOfCommands() {
+    public ByeCommandResponse(){}
+
+        public int getNumberOfCommands() {
         return numberOfCommands;
     }
 

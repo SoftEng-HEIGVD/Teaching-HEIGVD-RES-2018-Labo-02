@@ -77,9 +77,10 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     send(RouletteV1Protocol.CMD_LOAD);
     for (Student s : students){
       send(s.getFullname());
-      br.readLine();
     }
+    br.readLine();
     send(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+    br.readLine();
   }
 
   @Override

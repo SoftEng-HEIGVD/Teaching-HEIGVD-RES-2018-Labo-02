@@ -17,6 +17,8 @@ public class LoadCommandResponse {
         this.numberOfNewStudents = numberOfNewStudents;
     }
 
+    public LoadCommandResponse(){}
+
     public String getStatus() {
         return status;
     }
