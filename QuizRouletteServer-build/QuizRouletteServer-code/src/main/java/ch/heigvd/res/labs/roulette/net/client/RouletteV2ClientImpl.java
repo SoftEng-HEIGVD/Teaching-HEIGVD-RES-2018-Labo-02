@@ -84,7 +84,8 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         StudentsList reponse = JsonObjectMapper.parseJson(answer, StudentsList.class);
         return reponse.getStudents();
     }
-
+    
+    @Override
     public int getNumberOfStudentAdded() {
         if (load != null) {
             return load.getNumberOfNewStudents();
@@ -93,13 +94,18 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         }
 
     }
-
+    @Override
     public int getNumberOfCommands() {
         if (bye != null) {
             return bye.getNumberOfCommands();
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public boolean checkSuccessOfCommand() {
+        return true;
     }
 
 }
