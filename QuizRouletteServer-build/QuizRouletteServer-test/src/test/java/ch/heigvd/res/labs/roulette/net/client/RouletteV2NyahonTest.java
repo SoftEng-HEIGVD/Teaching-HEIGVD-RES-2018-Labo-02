@@ -14,13 +14,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class RouletteV2NyahonTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
-    @Rule
-    public EphemeralClientServerPair roulettePair = new EphemeralClientServerPair(RouletteV2Protocol.VERSION);
+public class RouletteV2NyahonTest extends RouletteV2WasadigiTest {
 
     @Test
     @TestAuthor(githubId = "Nyahon")
