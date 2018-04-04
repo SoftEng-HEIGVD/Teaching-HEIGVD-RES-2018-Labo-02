@@ -70,7 +70,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     public void clearDataStore() throws IOException {
         // send "CLEAR" message
         sendToServer(RouletteV2Protocol.CMD_CLEAR);
-        
+
         readFromServer();
         //TODO
 
@@ -84,7 +84,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         StudentsList reponse = JsonObjectMapper.parseJson(answer, StudentsList.class);
         return reponse.getStudents();
     }
-    
+
     @Override
     public int getNumberOfStudentAdded() {
         if (load != null) {
@@ -94,6 +94,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         }
 
     }
+
     @Override
     public int getNumberOfCommands() {
         if (bye != null) {
@@ -105,7 +106,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     @Override
     public boolean checkSuccessOfCommand() {
-        return true;
+        return load.getStatus().equals("sucess");
     }
 
 }
