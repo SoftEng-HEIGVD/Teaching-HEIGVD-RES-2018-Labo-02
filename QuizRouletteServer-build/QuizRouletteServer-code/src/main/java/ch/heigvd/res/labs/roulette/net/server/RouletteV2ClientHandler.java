@@ -40,7 +40,6 @@ public class RouletteV2ClientHandler implements IClientHandler {
 
         int numberOfCommands = 0;
         int numberOfNewStudents = 0;
-        ByeCommandReponse bye = new ByeCommandReponse("success", numberOfCommands);
         String command;
         boolean done = false;
         writer.println("Hello. Online HELP is available. Will you find it?");
@@ -51,11 +50,9 @@ public class RouletteV2ClientHandler implements IClientHandler {
             LOG.log(Level.INFO, "COMMAND: {0}", command);
             switch (command.toUpperCase()) {
                 case RouletteV2Protocol.CMD_HELP:
-                    bye.setNumberOfCommands(numberOfCommands);
                     writer.println("Commands: " + Arrays.toString(RouletteV2Protocol.SUPPORTED_COMMANDS));
                     break;
                 case RouletteV2Protocol.CMD_RANDOM:
-                    bye.setNumberOfCommands(numberOfCommands);
                     RandomCommandResponse rcResponse = new RandomCommandResponse();
                     try {
                         rcResponse.setFullname(store.pickRandomStudent().getFullname());
@@ -66,7 +63,6 @@ public class RouletteV2ClientHandler implements IClientHandler {
                     writer.flush();
                     break;
                 case RouletteV2Protocol.CMD_LOAD:
-                    bye.setNumberOfCommands(numberOfCommands);
                     writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
                     writer.flush();
                     int numberOfStudents = store.getNumberOfStudents();
@@ -77,26 +73,23 @@ public class RouletteV2ClientHandler implements IClientHandler {
                     writer.flush();
                     break;
                 case RouletteV2Protocol.CMD_INFO:
-                    bye.setNumberOfCommands(numberOfCommands);
                     InfoCommandResponse response = new InfoCommandResponse(RouletteV2Protocol.VERSION, store.getNumberOfStudents());
                     writer.println(JsonObjectMapper.toJson(response));
                     writer.flush();
                     break;
                 case RouletteV2Protocol.CMD_LIST:
-                    bye.setNumberOfCommands(numberOfCommands);
                     StudentsList students = new StudentsList();
                     students.setStudents(store.listStudents());
                     writer.println(JsonObjectMapper.toJson(students));
                     writer.flush();
                     break;
                 case RouletteV2Protocol.CMD_CLEAR:
-                    bye.setNumberOfCommands(numberOfCommands);
                     store.clear();
                     writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
                     writer.flush();
                     break;
                 case RouletteV2Protocol.CMD_BYE:
-                    bye.setNumberOfCommands(numberOfCommands);
+                    ByeCommandReponse bye = new ByeCommandReponse("success", numberOfCommands);
                     writer.println(JsonObjectMapper.toJson(bye));
                     writer.flush();
                     done = true;

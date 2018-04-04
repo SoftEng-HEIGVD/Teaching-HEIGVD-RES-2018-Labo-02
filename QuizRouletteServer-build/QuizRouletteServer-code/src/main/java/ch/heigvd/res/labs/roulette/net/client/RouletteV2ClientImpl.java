@@ -1,5 +1,6 @@
 package ch.heigvd.res.labs.roulette.net.client;
 
+import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.data.StudentsList;
@@ -18,14 +19,16 @@ import java.util.List;
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
 
-    ByeCommandReponse bye;
-    LoadCommandReponse load;
+    private ByeCommandReponse bye;
+    private LoadCommandReponse load;
+    private int numberOfCommands;
 
     @Override
     public void connect(String server, int port) throws IOException {
         super.connect(server, port);
         bye = null;
         load = null;
+        numberOfCommands = 0;
     }
 
     @Override
@@ -35,31 +38,50 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         answer = readFromServer();
         bye = JsonObjectMapper.parseJson(answer, ByeCommandReponse.class);
         close();
-        //TODO
+        
+        numberOfCommands++;
     }
 
     @Override
     public void loadStudent(String fullname) throws IOException {
         super.loadStudent(fullname);
-        //answer = readFromServer();
+        
         load = JsonObjectMapper.parseJson(answer, LoadCommandReponse.class);
-        //TODO
+        
+        numberOfCommands++;
     }
 
     @Override
     public void loadStudents(List<Student> students) throws IOException {
         super.loadStudents(students);
-        //answer = readFromServer();
         load = JsonObjectMapper.parseJson(answer, LoadCommandReponse.class);
-        //TODO
+        
+        numberOfCommands++;
+    }
+    
+    @Override
+    public Student pickRandomStudent() throws EmptyStoreException, IOException {
+        numberOfCommands++;
+        
+        return super.pickRandomStudent();
+    }
+
+    @Override
+    public int getNumberOfStudents() throws IOException {
+        numberOfCommands++;
+        
+        return super.getNumberOfStudents();
     }
 
     @Override
     public String getProtocolVersion() throws IOException {
         // "INFO"
         sendToServer(RouletteV2Protocol.CMD_INFO);
-        String answer = readFromServer();
+        answer = readFromServer();
         InfoCommandResponse response = JsonObjectMapper.parseJson(answer, InfoCommandResponse.class);
+        
+        numberOfCommands++;
+        
         return response.getProtocolVersion();
         // TODO
     }
@@ -70,7 +92,8 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         sendToServer(RouletteV2Protocol.CMD_CLEAR);
 
         answer = readFromServer();
-        //TODO
+        
+        numberOfCommands++;
 
     }
 
@@ -80,6 +103,9 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         sendToServer(RouletteV2Protocol.CMD_LIST);
         answer = readFromServer();
         StudentsList reponse = JsonObjectMapper.parseJson(answer, StudentsList.class);
+        
+        numberOfCommands++;
+        
         return reponse.getStudents();
     }
 
@@ -95,11 +121,13 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     @Override
     public int getNumberOfCommands() {
-        if (bye != null) {
+        /*if (bye != null) {
             return bye.getNumberOfCommands();
         } else {
             return 0;
-        }
+        }*/
+        
+        return numberOfCommands;
     }
 
     @Override
