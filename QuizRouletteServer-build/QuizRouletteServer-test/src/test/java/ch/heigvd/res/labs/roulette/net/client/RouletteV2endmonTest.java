@@ -13,7 +13,7 @@ import org.junit.rules.ExpectedException;
  * This class contains automated tests to validate the client and the server
  * implementation of the Roulette Protocol (version 1)
  *
- * @author Miguel Lopes Gouveia(endmon), Rémy Nasserzerade
+ * @author Miguel Lopes Gouveia(endmon), Rémy Nasserzare(remynz)
  */
 public class RouletteV2endmonTest
 {
