@@ -24,7 +24,6 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     @Override
     public void connect(String server, int port) throws IOException {
         super.connect(server, port);
-
         bye = null;
         load = null;
     }
@@ -33,9 +32,8 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     public void disconnect() throws IOException {
         // send "BYE" message
         sendToServer(RouletteV2Protocol.CMD_BYE);
-        String answer = readFromServer();
+        answer = readFromServer();
         bye = JsonObjectMapper.parseJson(answer, ByeCommandReponse.class);
-
         close();
         //TODO
     }
@@ -43,7 +41,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     @Override
     public void loadStudent(String fullname) throws IOException {
         super.loadStudent(fullname);
-        String answer = readFromServer();
+        //answer = readFromServer();
         load = JsonObjectMapper.parseJson(answer, LoadCommandReponse.class);
         //TODO
     }
@@ -51,7 +49,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     @Override
     public void loadStudents(List<Student> students) throws IOException {
         super.loadStudents(students);
-        String answer = readFromServer();
+        //answer = readFromServer();
         load = JsonObjectMapper.parseJson(answer, LoadCommandReponse.class);
         //TODO
     }
@@ -71,7 +69,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         // send "CLEAR" message
         sendToServer(RouletteV2Protocol.CMD_CLEAR);
 
-        readFromServer();
+        answer = readFromServer();
         //TODO
 
     }
@@ -80,7 +78,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     public List<Student> listStudents() throws IOException {
         // send "LIST" message
         sendToServer(RouletteV2Protocol.CMD_LIST);
-        String answer = readFromServer();
+        answer = readFromServer();
         StudentsList reponse = JsonObjectMapper.parseJson(answer, StudentsList.class);
         return reponse.getStudents();
     }
@@ -106,7 +104,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     @Override
     public boolean checkSuccessOfCommand() {
-        return load.getStatus().equals("sucess");
+        return load.getStatus().equals("success");
     }
 
 }
