@@ -33,4 +33,6 @@ public interface IRouletteV2Client extends IRouletteV1Client {
 
   public int getNumberOfCommands() throws IOException;
 
+  public boolean checkSuccessOfCommand() throws IOException;
+
 }

@@ -57,4 +57,9 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     return RouletteV2Protocol.VERSION;
   }
 
+  @Override
+  public boolean checkSuccessOfCommand() throws IOException{
+    return false;
+  }
+
 }
