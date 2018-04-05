@@ -93,7 +93,7 @@ public class RouletteV2zachnguefackTest {
     }
 
     @Test
-    @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
+    @TestAuthor(githubId =  {" zachnguefack", "Lankeu"})
     public void theShouldNothaveAnyStudentsStoreAfterClearCommand() throws IOException {
         IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
         client.loadStudent("Zacharie");
@@ -104,7 +104,7 @@ public class RouletteV2zachnguefackTest {
     }
 
     @Test
-    @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
+    @TestAuthor(githubId = {"zachnguefack","Lankeu"})
     public void theClientMustConnectToTheRightServer() {
         RouletteV2ClientImpl client = new RouletteV2ClientImpl();
         try {
