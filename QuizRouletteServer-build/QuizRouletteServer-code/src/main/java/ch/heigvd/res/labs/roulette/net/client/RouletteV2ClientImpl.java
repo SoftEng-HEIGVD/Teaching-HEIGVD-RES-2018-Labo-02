@@ -58,7 +58,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   }
 
   public boolean checkSuccessOfCommand() throws IOException{
-    return false;
+    return super.checkSuccessOfCommand();
   }
 
   public void disconnect() throws IOException{
