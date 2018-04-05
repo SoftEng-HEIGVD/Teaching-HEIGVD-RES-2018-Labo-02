@@ -1,5 +1,4 @@
 package ch.heigvd.res.labs.roulette.net.client;
-
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
 import ch.heigvd.schoolpulse.TestAuthor;
 import java.io.IOException;
@@ -18,7 +17,7 @@ public class RouletteV2zachnguefackTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-    
+
     @Rule
     public EphemeralClientServerPair roulettePair = new EphemeralClientServerPair(RouletteV2Protocol.VERSION);
 
@@ -27,7 +26,6 @@ public class RouletteV2zachnguefackTest {
     public void theTestRouletteServerShouldRunDuringTests() throws IOException {
         assertTrue(roulettePair.getServer().isRunning());
     }
-   
 
     @Test
     @TestAuthor(githubId = "zachnguefack")
@@ -46,6 +44,7 @@ public class RouletteV2zachnguefackTest {
         }
         assertEquals(client.getProtocolVersion(), RouletteV2Protocol.VERSION);   
     }
+
     @Test
     @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
     public void itShouldBePossibleForARouletteClientToConnectToARouletteServer() throws Exception {
@@ -57,13 +56,12 @@ public class RouletteV2zachnguefackTest {
     }
 
     @Test
-    @TestAuthor(githubId = {"zachnguefack", "Lankeu "})
+    @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
     public void theServerShouldReturnTheCorrectVersionNumber() throws IOException {
         assertEquals(RouletteV2Protocol.VERSION, roulettePair.getClient().getProtocolVersion());
     }
 
-
- 
+    @Test
    @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
     public void theServerShouldHaveZeroStudentsAtStart() throws IOException {
         int port = roulettePair.getServer().getPort();
@@ -93,7 +91,7 @@ public class RouletteV2zachnguefackTest {
     }
 
     @Test
-    @TestAuthor(githubId =  {" zachnguefack", "Lankeu"})
+    @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
     public void theShouldNothaveAnyStudentsStoreAfterClearCommand() throws IOException {
         IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
         client.loadStudent("Zacharie");
@@ -101,18 +99,6 @@ public class RouletteV2zachnguefackTest {
         client.loadStudent("Richard");
         client.clearDataStore();
         assertEquals(0, client.getNumberOfStudents());
-    }
-
-    @Test
-    @TestAuthor(githubId = {"zachnguefack","Lankeu"})
-    public void theClientMustConnectToTheRightServer() {
-        RouletteV2ClientImpl client = new RouletteV2ClientImpl();
-        try {
-            client.connect("HackRes2018.ch", roulettePair.server.getPort());
-        } catch (IOException ex) {
-            Logger.getLogger(RouletteV2zachnguefackTest.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        assertFalse(client.isConnected);
     }
 
 
