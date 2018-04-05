@@ -36,7 +36,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   }
 
   @Override
-  public boolean isConnected() {
+  public boolean isConnected()  {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
