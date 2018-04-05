@@ -77,4 +77,9 @@ public interface IRouletteV1Client {
    */
   public String getProtocolVersion() throws IOException;
 
+  /**
+   * Returns true if last command was correctly executed, false otherwise
+   * @return  if last command was correctly executed
+   */
+  boolean checkSuccessOfCommand();
 }
