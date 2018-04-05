@@ -18,7 +18,7 @@ public class RouletteV2zachnguefackTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-    
+
     @Rule
     public EphemeralClientServerPair roulettePair = new EphemeralClientServerPair(RouletteV2Protocol.VERSION);
 
@@ -27,25 +27,25 @@ public class RouletteV2zachnguefackTest {
     public void theTestRouletteServerShouldRunDuringTests() throws IOException {
         assertTrue(roulettePair.getServer().isRunning());
     }
-   
 
     @Test
     @TestAuthor(githubId = "zachnguefack")
     public void theTestRouletteClientShouldBeConnectedWhenATestStarts() throws IOException {
         assertTrue(roulettePair.getClient().isConnected());
     }
-    
-      @Test
+
+    @Test
     @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
-    public void theServerShouldGiveTheCorrectProtocolVersion() throws IOException{
+    public void theServerShouldGiveTheCorrectProtocolVersion() throws IOException {
         RouletteV2ClientImpl client = new RouletteV2ClientImpl();
-         try {
+        try {
             client.connect("HackRes2018.ch", roulettePair.server.getPort());
         } catch (IOException ex) {
             Logger.getLogger(RouletteV2zachnguefackTest.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
-        assertEquals(client.getProtocolVersion(), RouletteV2Protocol.VERSION);   
+        assertEquals(client.getProtocolVersion(), RouletteV2Protocol.VERSION);
     }
+
     @Test
     @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
     public void itShouldBePossibleForARouletteClientToConnectToARouletteServer() throws Exception {
@@ -62,9 +62,7 @@ public class RouletteV2zachnguefackTest {
         assertEquals(RouletteV2Protocol.VERSION, roulettePair.getClient().getProtocolVersion());
     }
 
-
- 
-   @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
+    @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
     public void theServerShouldHaveZeroStudentsAtStart() throws IOException {
         int port = roulettePair.getServer().getPort();
         IRouletteV2Client client = new RouletteV2ClientImpl();
@@ -93,7 +91,7 @@ public class RouletteV2zachnguefackTest {
     }
 
     @Test
-    @TestAuthor(githubId =  {" zachnguefack", "Lankeu"})
+    @TestAuthor(githubId = {" zachnguefack", "Lankeu"})
     public void theShouldNothaveAnyStudentsStoreAfterClearCommand() throws IOException {
         IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
         client.loadStudent("Zacharie");
@@ -104,7 +102,7 @@ public class RouletteV2zachnguefackTest {
     }
 
     @Test
-    @TestAuthor(githubId = {"zachnguefack","Lankeu"})
+    @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
     public void theClientMustConnectToTheRightServer() {
         RouletteV2ClientImpl client = new RouletteV2ClientImpl();
         try {
@@ -114,6 +112,5 @@ public class RouletteV2zachnguefackTest {
         }
         assertFalse(client.isConnected);
     }
-
 
 }
