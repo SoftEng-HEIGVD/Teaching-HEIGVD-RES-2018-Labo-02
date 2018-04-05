@@ -49,4 +49,6 @@ public interface IRouletteV2Client extends IRouletteV1Client {
    */  
   public int getNumberOfStudentAdded() throws IOException;
   
+  public boolean checkSuccessOfCommand() throws IOException;
+  
 }

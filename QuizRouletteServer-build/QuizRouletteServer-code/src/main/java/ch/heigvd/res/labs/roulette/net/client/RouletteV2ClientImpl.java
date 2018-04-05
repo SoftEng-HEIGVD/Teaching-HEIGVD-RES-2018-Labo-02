@@ -6,7 +6,6 @@ import ch.heigvd.res.labs.roulette.data.StudentsList;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
 import ch.heigvd.res.labs.roulette.net.protocol.ByeCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.LoadCommandResponse;
-import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
 import java.io.IOException;
 import java.util.List;
 
@@ -17,10 +16,12 @@ import java.util.List;
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
    
+   final String SUCCESS_MSG = "success";
+   
    @Override
    public int getNumberOfCommands() throws IOException {
       out.println(RouletteV2Protocol.CMD_BYE);
-      out.flush();
+      out.flush(); // sent the message procotol
       String response = in.readLine(); // read the answer from server
       ByeCommandResponse info = JsonObjectMapper.parseJson(response, ByeCommandResponse.class);
       return info.getNumberOfCommands();
@@ -29,18 +30,34 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
    @Override
    public int getNumberOfStudentAdded() throws IOException {
       out.println(RouletteV2Protocol.CMD_LOAD);
-      out.flush();
+      out.flush(); // sent the message procotol
       String response = in.readLine(); // read the answer from server
       LoadCommandResponse info = JsonObjectMapper.parseJson(response, LoadCommandResponse.class);
       return info.getNumberOfNewStudents();
    }
+
+   @Override
+   public boolean checkSuccessOfCommand() throws IOException {
+      out.println(RouletteV2Protocol.CMD_LOAD);
+      out.flush(); // sent the message procotol
+      String response = in.readLine(); // read the answer from server
+      LoadCommandResponse info = JsonObjectMapper.parseJson(response, LoadCommandResponse.class);
+      
+      // Check the status of the command and return the result
+      if (info.getStatus().equals(SUCCESS_MSG)) {
+         return true;
+      } else {
+         return false;
+      }
+   }
    
    
+
   @Override
   public void clearDataStore() throws IOException {
 
     out.println(RouletteV2Protocol.CMD_CLEAR);
-    out.flush(); // send the message
+    out.flush(); // sent the message procotol
     in.readLine(); // read the answer from server
 
     }
