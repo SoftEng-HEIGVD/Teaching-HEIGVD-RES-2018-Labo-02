@@ -13,11 +13,14 @@ import java.util.List;
  * This class implements the client side of the protocol specification (version 2).
  *
  * @author Olivier Liechti
+ * @author edited by Joel Schar and Yann Lederrey
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
 
   private int nbCommandsUsed = 0;
   private int nbStudentsLoaded = 0;
+  private Boolean successCommand = true;
+
 
   @Override
   public void clearDataStore() throws IOException {
@@ -58,7 +61,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   }
 
   public boolean checkSuccessOfCommand() throws IOException{
-    return super.checkSuccessOfCommand();
+    return successCommand;
   }
 
   public void disconnect() throws IOException{
@@ -75,6 +78,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     LOG.info("load student : " + fullname);
   }
 
+  @Override
   public void loadStudents(List<Student> students) throws IOException{
     nbCommandsUsed++;
     out.println(RouletteV2Protocol.CMD_LOAD);
@@ -93,13 +97,30 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     LOG.info(response);
 
     LoadCommandResponse ldResponse = JsonObjectMapper.parseJson(response, LoadCommandResponse.class);
+    successCommand = ldResponse.getStatus().equals("success");
+
     nbStudentsLoaded = ldResponse.getNumberOfNewStudents();
   }
 
+  @Override
   public Student pickRandomStudent() throws EmptyStoreException, IOException{
     nbCommandsUsed++;
-    return super.pickRandomStudent();
-  }
+
+      out.println(RouletteV1Protocol.CMD_RANDOM);
+      out.flush();
+
+      String response = in.readLine();
+      LOG.info(response);
+      RandomCommandResponse randomResponse = JsonObjectMapper.parseJson(response, RandomCommandResponse.class);
+
+      if(randomResponse.getError() != null){
+        LOG.info(randomResponse.getError());
+        successCommand = false;
+        throw new EmptyStoreException();
+      }
+
+      return new Student(randomResponse.getFullname());
+    }
 
   public int getNumberOfStudents() throws IOException{
     nbCommandsUsed++;

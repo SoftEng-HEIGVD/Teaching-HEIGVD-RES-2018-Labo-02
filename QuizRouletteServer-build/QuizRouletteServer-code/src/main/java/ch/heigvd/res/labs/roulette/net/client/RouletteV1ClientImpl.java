@@ -33,7 +33,6 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   private Socket socket;
   BufferedReader in;
   PrintWriter out;
-  private Boolean successCommand = true;
 
   @Override
   public void connect(String server, int port) throws IOException {
@@ -107,7 +106,6 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     if(randomResponse.getError() != null){
       LOG.info(randomResponse.getError());
-      successCommand = false;
       throw new EmptyStoreException();
     }
 
@@ -134,10 +132,6 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   @Override
   public String getProtocolVersion() throws IOException {
     return RouletteV1Protocol.VERSION;
-  }
-
-  public boolean checkSuccessOfCommand() throws IOException{
-    return successCommand;
   }
 
 }

@@ -6,6 +6,7 @@
       <change beforePath="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/IRouletteV2Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/IRouletteV2Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV1ClientImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV1ClientImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2ClientImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2ClientImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QuizRouletteServer-test/test-stats.json" beforeDir="false" afterPath="$PROJECT_DIR$/QuizRouletteServer-test/test-stats.json" afterDir="false" />
     </list>
     <ignored path="QuizRouletteServer-build.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,196 +28,7 @@
     <favorites_list name="QuizRouletteServer-build" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="RouletteV2ClientImpl.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2ClientImpl.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="458">
-                  <caret line="94" column="101" selection-start-line="94" selection-start-column="101" selection-end-line="94" selection-end-column="101" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="JsonObjectMapper.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/data/JsonObjectMapper.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="241">
-                  <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="LoadCommandResponse.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/protocol/LoadCommandResponse.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="30">
-                  <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="RouletteV1ClientImpl.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV1ClientImpl.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="300">
-                  <caret line="78" selection-start-line="78" selection-end-line="89" selection-end-column="28" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="RouletteV2rlabinotTest.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2rlabinotTest.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="197">
-                  <caret line="78" column="46" selection-start-line="78" selection-start-column="46" selection-end-line="78" selection-end-column="46" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="IRouletteV2Client.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/IRouletteV2Client.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="495">
-                  <caret line="35" column="59" selection-start-line="35" selection-start-column="59" selection-end-line="35" selection-end-column="59" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/pom.xml">
-              <provider selected="true" editor-type-id="text-editor" />
-            </entry>
-          </file>
-          <file leaf-file-name="RouletteV1WasadigiTest.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV1WasadigiTest.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="15">
-                  <caret line="16" column="3" selection-start-line="16" selection-start-column="3" selection-end-line="16" selection-end-column="3" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="RouletteV2ClientHandler.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/server/RouletteV2ClientHandler.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="270">
-                  <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                    <element signature="e#825#826#0" expanded="true" />
-                    <element signature="e#853#854#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="RouletteV2YannledTest.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2YannledTest.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="240">
-                  <caret line="16" column="41" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file leaf-file-name="RouletteV1ClientImpl.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV1ClientImpl.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="203">
-                  <caret line="47" column="34" selection-start-line="47" selection-start-column="34" selection-end-line="47" selection-end-column="34" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="RouletteV2AngoranceTest.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2AngoranceTest.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="992">
-                  <caret line="133" selection-start-line="133" selection-end-line="133" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ReflectiveCallable.java" pinned="false" current-in-tab="false">
-            <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/internal/runners/model/ReflectiveCallable.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="180">
-                  <caret line="12" selection-start-line="12" selection-end-line="12" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ExpectedException.java" pinned="false" current-in-tab="false">
-            <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/rules/ExpectedException.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="209">
-                  <caret line="240" selection-start-line="240" selection-end-line="240" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ExternalResource.java" pinned="false" current-in-tab="false">
-            <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/rules/ExternalResource.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="201">
-                  <caret line="49" selection-start-line="49" selection-end-line="49" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ParentRunner.java" pinned="false" current-in-tab="false">
-            <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/runners/ParentRunner.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="133">
-                  <caret line="286" selection-start-line="286" selection-end-line="286" />
-                  <folding>
-                    <element signature="e#2922#2923#0" expanded="true" />
-                    <element signature="e#2966#2967#0" expanded="true" />
-                    <element signature="e#10310#10449#0" expanded="true" />
-                    <element signature="e#10448#10449#0" expanded="true" />
-                    <element signature="e#11040#11204#0" expanded="true" />
-                    <element signature="e#11203#11204#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Suite.java" pinned="false" current-in-tab="false">
-            <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/runners/Suite.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="375">
-                  <caret line="128" selection-start-line="128" selection-end-line="128" />
-                  <folding>
-                    <element signature="e#4545#4546#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="BlockJUnit4ClassRunner.java" pinned="false" current-in-tab="false">
-            <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/runners/BlockJUnit4ClassRunner.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="179">
-                  <caret line="79" selection-start-line="79" selection-end-line="79" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -229,6 +41,7 @@
     <findStrings>
       <find>RouletteV2Protocol</find>
       <find>RouletteV1Protocol</find>
+      <find>load</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -249,8 +62,8 @@
         <option value="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/server/RouletteV2ClientHandler.java" />
         <option value="$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/EphemeralClientServerPair.java" />
         <option value="$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2YannledTest.java" />
-        <option value="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/IRouletteV2Client.java" />
         <option value="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV1ClientImpl.java" />
+        <option value="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/IRouletteV2Client.java" />
         <option value="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2ClientImpl.java" />
       </list>
     </option>
@@ -265,7 +78,7 @@
     <packageJsonPaths />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="46" />
     <option name="width" value="1901" />
     <option name="height" value="1001" />
@@ -276,8 +89,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AndroidView" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -422,6 +233,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -940,19 +753,11 @@
       <workItem from="1522266132067" duration="2400000" />
       <workItem from="1522301851131" duration="9864000" />
       <workItem from="1522690776007" duration="16733000" />
+      <workItem from="1522929593640" duration="2439000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="ch_heigvd_res_labs_roulette_net_client_in_QuizRouletteServer-test - 2018.04.05 at 10h 21m 38s.xml">
-      <configuration name="ch.heigvd.res.labs.roulette.net.client in QuizRouletteServer-test" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ch_heigvd_res_labs_roulette_net_client_in_QuizRouletteServer-test - 2018.04.05 at 10h 22m 34s.xml">
-      <configuration name="ch.heigvd.res.labs.roulette.net.client in QuizRouletteServer-test" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ch_heigvd_res_labs_roulette_net_client_in_QuizRouletteServer-test - 2018.04.05 at 10h 24m 12s.xml">
-      <configuration name="ch.heigvd.res.labs.roulette.net.client in QuizRouletteServer-test" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="ch_heigvd_res_labs_roulette_net_client_in_QuizRouletteServer-test - 2018.04.05 at 10h 24m 54s.xml">
       <configuration name="ch.heigvd.res.labs.roulette.net.client in QuizRouletteServer-test" configurationId="JUnit" />
     </history-entry>
@@ -974,66 +779,52 @@
     <history-entry file="ch_heigvd_res_labs_roulette_net_client_in_QuizRouletteServer-test - 2018.04.05 at 10h 28m 09s.xml">
       <configuration name="ch.heigvd.res.labs.roulette.net.client in QuizRouletteServer-test" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="ch_heigvd_res_labs_roulette_net_client_in_QuizRouletteServer-test - 2018.04.05 at 10h 42m 24s.xml">
+      <configuration name="ch.heigvd.res.labs.roulette.net.client in QuizRouletteServer-test" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="ch_heigvd_res_labs_roulette_net_client_in_QuizRouletteServer-test - 2018.04.05 at 14h 04m 13s.xml">
+      <configuration name="ch.heigvd.res.labs.roulette.net.client in QuizRouletteServer-test" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="ch_heigvd_res_labs_roulette_net_client_in_QuizRouletteServer-test - 2018.04.05 at 15h 35m 34s.xml">
+      <configuration name="ch.heigvd.res.labs.roulette.net.client in QuizRouletteServer-test" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36609000" />
+    <option name="totallyTimeSpent" value="39823000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="46" width="1901" height="1001" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="30" width="1920" height="1050" extended-state="6" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.32884398" />
-      <window_info anchor="right" id="Palette&#9;" order="3" />
-      <window_info id="Image Layers" />
-      <window_info anchor="right" id="Capture Analysis" />
-      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="right" id="Maven Projects" order="3" />
-      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32996634" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info id="Capture Tool" />
-      <window_info anchor="right" id="Remote Host" order="3" />
-      <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21988428" />
-      <window_info anchor="right" id="Database" order="3" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info id="UI Designer" order="2" />
-      <window_info anchor="right" id="Theme Preview" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39955106" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Application Servers" order="10" />
-      <window_info id="Designer" order="2" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Remote Host" order="4" />
+      <window_info anchor="right" id="Palette&#9;" order="9" />
       <window_info id="Image Layers" order="6" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info id="UI Designer" order="3" />
-      <window_info id="Favorites" order="4" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info id="Capture Tool" order="5" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19479166" />
+      <window_info anchor="right" id="Maven Projects" order="5" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="11" />
-      <window_info anchor="right" id="Maven Projects" order="5" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32978722" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info anchor="right" id="Remote Host" order="4" />
+      <window_info id="Designer" order="2" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19479166" />
       <window_info anchor="right" id="Database" order="6" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="Palette&#9;" order="9" />
-      <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info id="UI Designer" order="3" />
+      <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info id="Favorites" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32978722" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Application Servers" order="10" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1060,10 +851,10 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/schoolpulse/TestAuthor.java">
+    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2SysmohTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="13" column="18" selection-start-line="13" selection-start-column="18" selection-end-line="13" selection-end-column="18" />
+        <state relative-caret-position="555">
+          <caret line="48" column="6" selection-start-line="48" selection-start-column="6" selection-end-line="48" selection-end-column="6" />
         </state>
       </provider>
     </entry>
@@ -1249,9 +1040,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="23" column="50" selection-start-line="23" selection-start-column="50" selection-end-line="23" selection-end-column="50" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1276,13 +1064,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/IRouletteV1Client.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="21" column="14" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/EphemeralClientServerPair.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -1304,16 +1085,121 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/pom.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2YannledTest.java">
+    <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/rules/ExpectedException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="41" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
+        <state relative-caret-position="209">
+          <caret line="240" selection-start-line="240" selection-end-line="240" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/rules/ExternalResource.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="49" selection-start-line="49" selection-end-line="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/internal/runners/model/ReflectiveCallable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/runners/ParentRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="286" selection-start-line="286" selection-end-line="286" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/IRouletteV1Client.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-395">
+          <caret line="21" column="14" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2AngoranceTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="431">
+          <caret line="143" selection-start-line="143" selection-end-line="143" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2SysmohTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="48" column="6" selection-start-line="48" selection-start-column="6" selection-end-line="48" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/runners/Suite.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="446">
+          <caret line="128" selection-start-line="128" selection-end-line="128" />
+          <folding>
+            <element signature="e#4545#4546#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/runners/BlockJUnit4ClassRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="79" selection-start-line="79" selection-end-line="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/protocol/LoadCommandResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/data/JsonObjectMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2ClientImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1845">
+          <caret line="123" column="4" selection-start-line="123" selection-start-column="4" selection-end-line="123" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV1ClientImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="960">
+          <caret line="83" selection-start-line="83" selection-end-line="83" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2rlabinotTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="78" column="46" selection-start-line="78" selection-start-column="46" selection-end-line="78" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/IRouletteV2Client.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="447">
+          <caret line="45" column="87" selection-start-line="45" selection-start-column="87" selection-end-line="45" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV1WasadigiTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="16" column="3" selection-start-line="16" selection-start-column="3" selection-end-line="16" selection-end-column="3" />
         </state>
       </provider>
     </entry>
@@ -1329,112 +1215,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV1WasadigiTest.java">
+    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2YannledTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="16" column="3" selection-start-line="16" selection-start-column="3" selection-end-line="16" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/IRouletteV2Client.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="35" column="59" selection-start-line="35" selection-start-column="59" selection-end-line="35" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/rules/ExpectedException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="240" selection-start-line="240" selection-end-line="240" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/rules/ExternalResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="49" selection-start-line="49" selection-end-line="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/runners/BlockJUnit4ClassRunner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="79" selection-start-line="79" selection-end-line="79" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/runners/Suite.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="128" selection-start-line="128" selection-end-line="128" />
-          <folding>
-            <element signature="e#4545#4546#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/runners/ParentRunner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="286" selection-start-line="286" selection-end-line="286" />
-          <folding>
-            <element signature="e#2922#2923#0" expanded="true" />
-            <element signature="e#2966#2967#0" expanded="true" />
-            <element signature="e#10310#10449#0" expanded="true" />
-            <element signature="e#10448#10449#0" expanded="true" />
-            <element signature="e#11040#11204#0" expanded="true" />
-            <element signature="e#11203#11204#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.ideaLibSources/junit-4.12-sources.jar!/org/junit/internal/runners/model/ReflectiveCallable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2AngoranceTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="992">
-          <caret line="133" selection-start-line="133" selection-end-line="133" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-test/src/test/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2rlabinotTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="78" column="46" selection-start-line="78" selection-start-column="46" selection-end-line="78" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV1ClientImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="78" selection-start-line="78" selection-end-line="89" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/protocol/LoadCommandResponse.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/data/JsonObjectMapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2ClientImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="458">
-          <caret line="94" column="101" selection-start-line="94" selection-start-column="101" selection-end-line="94" selection-end-column="101" />
+        <state relative-caret-position="240">
+          <caret line="16" column="41" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
