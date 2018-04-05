@@ -48,6 +48,7 @@ public class RouletteV1WasadigiTest {
   @Test
   @TestAuthor(githubId = "wasadigi")
   public void theServerShouldReturnTheCorrectVersionNumber() throws IOException {
+    System.out.println(roulettePair.getClient().getProtocolVersion() + " --- " + RouletteV1Protocol.VERSION);
     assertEquals(RouletteV1Protocol.VERSION, roulettePair.getClient().getProtocolVersion());
   }
 
