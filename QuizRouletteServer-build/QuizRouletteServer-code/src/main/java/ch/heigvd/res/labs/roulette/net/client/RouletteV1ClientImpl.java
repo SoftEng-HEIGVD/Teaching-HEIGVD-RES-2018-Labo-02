@@ -6,6 +6,7 @@ import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RandomCommandResponse;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import java.io.*;
 import java.net.Socket;
@@ -27,6 +28,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     BufferedReader bufferedReader = null;
     PrintWriter printWriter = null;
 
+    protected boolean commandSuccess = true;
+
     @Override
     public void connect(String server, int port) throws IOException {
         try {
@@ -45,12 +48,21 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public void disconnect() throws IOException {
-
+        commandSuccess = false;
         if(socket != null && socket.isConnected()){
             printWriter.println(RouletteV1Protocol.CMD_BYE);
             printWriter.flush();
+
+            bufferedReader.close();
+            printWriter.close();
             socket.close();
+
+            bufferedReader = null;
+            printWriter = null;
+            socket = null;
+
             LOG.log(Level.INFO, "Disconected from server.");
+            commandSuccess = true;
         } else {
             LOG.log(Level.INFO, "Not conected to server.");
         }
@@ -67,6 +79,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public void loadStudent(String fullname) throws IOException {
+        commandSuccess = false;
         if(socket != null && socket.isConnected()){
 
             printWriter.println(RouletteV1Protocol.CMD_LOAD);   // load
@@ -82,6 +95,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
             LOG.log(Level.FINE, bufferedReader.readLine()); //DATA LOADED
 
+            commandSuccess = true;
+
         } else {
             LOG.log(Level.INFO, "Not conected to server.");
         }
@@ -89,6 +104,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public void loadStudents(List<Student> students) throws IOException {
+        commandSuccess = false;
         if(socket != null && socket.isConnected()){
 
             printWriter.println(RouletteV1Protocol.CMD_LOAD);   // load
@@ -106,6 +122,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
 
             LOG.log(Level.FINE, bufferedReader.readLine()); //DATA LOADED
+            commandSuccess = true;
 
         } else {
             LOG.log(Level.INFO, "Not conected to server.");
@@ -115,18 +132,21 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     @Override
     public Student pickRandomStudent() throws EmptyStoreException, IOException {
 
+        commandSuccess = false;
         if(socket != null && socket.isConnected()){
-            if(getNumberOfStudents() == 0){
-                throw new EmptyStoreException();
-            }
 
-            Student student = new Student();
 
             printWriter.println(RouletteV1Protocol.CMD_RANDOM);   // get random student
             printWriter.flush();
+            Student student;
 
-            student.setFullname(bufferedReader.readLine());
+            try {
+                student = JsonObjectMapper.parseJson(bufferedReader.readLine(), Student.class);
+            } catch (JsonMappingException e) {
+                throw new EmptyStoreException();
+            }
 
+            commandSuccess = true;
             return student;
 
         } else {
@@ -138,6 +158,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     @Override
     public int getNumberOfStudents() throws IOException {
 
+        commandSuccess = false;
         if(socket != null && socket.isConnected()){
 
             // get the outputstream to the server
@@ -145,6 +166,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
             printWriter.flush();
             InfoCommandResponse icr = JsonObjectMapper.parseJson(bufferedReader.readLine(), InfoCommandResponse.class);
 
+            commandSuccess = true;
             return icr.getNumberOfStudents();
 
         } else {
@@ -155,6 +177,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public String getProtocolVersion() throws IOException {
+        commandSuccess = false;
         if (socket != null && socket.isConnected()) {
 
             // get the outputstream to the server
@@ -164,11 +187,17 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
             InfoCommandResponse icr = JsonObjectMapper.parseJson(bufferedReader.readLine(), InfoCommandResponse.class);
 
+            commandSuccess = true;
             return icr.getProtocolVersion();
 
         } else {
             LOG.log(Level.INFO, "Not connected to server.");
             return null;
         }
+    }
+
+
+    public boolean checkSuccessOfCommand(){
+        return commandSuccess;
     }
 }
