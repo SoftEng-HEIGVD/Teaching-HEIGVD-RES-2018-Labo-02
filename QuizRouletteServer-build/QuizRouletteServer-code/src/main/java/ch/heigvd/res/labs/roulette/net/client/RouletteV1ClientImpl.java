@@ -99,7 +99,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     LOG.info(response);
     RandomCommandResponse randomResponse = JsonObjectMapper.parseJson(response, RandomCommandResponse.class);
 
-    if(!randomResponse.getError().isEmpty()){
+    if(randomResponse.getError() != null){
       LOG.info(randomResponse.getError());
       throw new EmptyStoreException();
     }
