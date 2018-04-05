@@ -49,6 +49,14 @@ public interface IRouletteV2Client extends IRouletteV1Client {
    */  
   public int getNumberOfStudentAdded() throws IOException;
   
+   /**
+   * Invokes the BYE command defined in the protocol (version 2), parses the
+   * response and converts it into a boolean (using the JsonObjectMapper
+   * class and the ByeCommandResponse class).
+   * 
+   * @return true if success, false if no a success
+   * @throws IOException 
+   */   
   public boolean checkSuccessOfCommand() throws IOException;
   
 }

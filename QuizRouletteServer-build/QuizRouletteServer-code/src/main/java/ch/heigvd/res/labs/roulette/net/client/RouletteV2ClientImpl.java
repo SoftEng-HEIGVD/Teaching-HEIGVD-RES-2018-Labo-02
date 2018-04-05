@@ -38,7 +38,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
    @Override
    public boolean checkSuccessOfCommand() throws IOException {
-      out.println(RouletteV2Protocol.CMD_LOAD);
+      out.println(RouletteV2Protocol.CMD_BYE); // check the command AFTER finishing, so BYE
       out.flush(); // sent the message procotol
       String response = in.readLine(); // read the answer from server
       LoadCommandResponse info = JsonObjectMapper.parseJson(response, LoadCommandResponse.class);
