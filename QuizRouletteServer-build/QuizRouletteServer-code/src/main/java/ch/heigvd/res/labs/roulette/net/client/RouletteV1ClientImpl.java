@@ -51,6 +51,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
    //   String resp = is.readLine();
    //   System.out.println( resp );
       LOG.info("Connected to server " + server + " on port " + port + "." );
+      is.readLine();
 
   }
 
@@ -76,9 +77,13 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
       LOG.info("Loading " + fullname + "on server...");
 
       os.println(CONNECT.LOAD.toString());
+      os.flush();
+
+      is.readLine();
       os.println(fullname);
       os.println(CONNECT.ENDOFDATA.toString());
       os.flush();
+      is.readLine();
 
       LOG.info("Loaded");
 
@@ -89,11 +94,13 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
       LOG.info("Loading list of Students on server...");
 
       os.println(CONNECT.LOAD.toString());
+      is.readLine();
       for ( Student s: students) {
           os.println( s.toString() );
       }
       os.println(CONNECT.ENDOFDATA.toString());
       os.flush();
+      is.readLine();
 
       LOG.info("Loaded");
   }
@@ -103,6 +110,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
 
       os.println(CONNECT.RANDOM.toString());
+      os.flush();
       String rep = is.readLine();
       if(getNumberOfStudents() == 0)
           throw new EmptyStoreException();
@@ -112,29 +120,22 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   @Override
   public int getNumberOfStudents() throws IOException {
 
-      os.println(CONNECT.INFO.toString());
-      os.flush();
-      String rep = is.readLine();
-    /*  JSONObject jsonObj = new JSONObject(rep);
-      if( !jsonObj.has("numberOfStudents")){
-          return 0;
-      }
-      return Integer.parseInt( jsonObj.getString("numberOfStudents") );
+ 
+      return InfoCmdRsp().getNumberOfStudents();
 
-*/
-    return 0;
   }
 
   @Override
   public String getProtocolVersion() throws IOException {
 
+     return InfoCmdRsp().getProtocolVersion();
+  }
+  private InfoCommandResponse InfoCmdRsp() throws IOException{
       os.println(CONNECT.INFO.toString());
       os.flush();
-      String rep = is.readLine();
-  /*    JSONObject jsonObj = new JSONObject(rep);
-      return jsonObj.getString("protocolVersion");
-      */
-    return "off";
+
+      InfoCommandResponse iCR = JsonObjectMapper.parseJson(is.readLine() , InfoCommandResponse.class);
+      return iCR;
   }
 
 
