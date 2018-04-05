@@ -22,11 +22,13 @@ public class RouletteV2dorianekaffoTest {
     @Rule
     public EphemeralClientServerPair roulettePair = new EphemeralClientServerPair(RouletteV2Protocol.VERSION);
 
+    /*
     @Test
     @TestAuthor(githubId = "dorianekaffo")
     public void theServerShouldListenToTheCorrectPort() {
         assertEquals(RouletteV2Protocol.DEFAULT_PORT, roulettePair.getServer().getPort());
     }
+    */
 
     @Test
     @TestAuthor(githubId = "dorianekaffo")
