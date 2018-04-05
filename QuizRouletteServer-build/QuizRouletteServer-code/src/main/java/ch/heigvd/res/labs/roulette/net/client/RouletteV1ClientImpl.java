@@ -24,11 +24,18 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
 
     Socket socket = null;
+    BufferedReader bufferedReader = null;
+    PrintWriter printWriter = null;
 
     @Override
     public void connect(String server, int port) throws IOException {
         try {
             socket = new Socket(server, port);
+            printWriter = new PrintWriter(socket.getOutputStream());
+            bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            LOG.log(Level.FINE, bufferedReader.readLine());
+
         } catch (UnknownHostException uhe){
             throw new RuntimeException("Unknown Hosts: " + server);
         }
@@ -40,7 +47,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     public void disconnect() throws IOException {
 
         if(socket != null && socket.isConnected()){
-            socket.getOutputStream().write(RouletteV1Protocol.CMD_BYE.getBytes());
+            printWriter.println(RouletteV1Protocol.CMD_BYE);
+            printWriter.flush();
             socket.close();
             LOG.log(Level.INFO, "Disconected from server.");
         } else {
@@ -60,12 +68,19 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     @Override
     public void loadStudent(String fullname) throws IOException {
         if(socket != null && socket.isConnected()){
-            // get the outputstream to the server
-            OutputStream os = socket.getOutputStream();
 
-            os.write(RouletteV1Protocol.CMD_LOAD.getBytes());   // load
-            os.write(fullname.getBytes());                      // new student
-            os.write(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER.getBytes());   // endload
+            printWriter.println(RouletteV1Protocol.CMD_LOAD);   // load
+            printWriter.flush();
+
+
+            LOG.log(Level.FINE, bufferedReader.readLine()); // Send your data [end with ENDOFDATA]
+
+            printWriter.println(fullname);                      // new student
+            printWriter.flush();
+            printWriter.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);   // endload
+            printWriter.flush();
+
+            LOG.log(Level.FINE, bufferedReader.readLine()); //DATA LOADED
 
         } else {
             LOG.log(Level.INFO, "Not conected to server.");
@@ -75,16 +90,22 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     @Override
     public void loadStudents(List<Student> students) throws IOException {
         if(socket != null && socket.isConnected()){
-            // get the outputstream to the server
-            OutputStream os = socket.getOutputStream();
 
-            os.write(RouletteV1Protocol.CMD_LOAD.getBytes());   // load
+            printWriter.println(RouletteV1Protocol.CMD_LOAD);   // load
+            printWriter.flush();
+
+            LOG.log(Level.FINE, bufferedReader.readLine()); // Send your data [end with ENDOFDATA]
 
             for(Student student : students){
-                os.write(student.getFullname().getBytes());
+                printWriter.println(student.getFullname());
+                printWriter.flush();
             }
 
-            os.write(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER.getBytes());   // endload
+            printWriter.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);   // endload
+            printWriter.flush();
+
+
+            LOG.log(Level.FINE, bufferedReader.readLine()); //DATA LOADED
 
         } else {
             LOG.log(Level.INFO, "Not conected to server.");
@@ -95,13 +116,15 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     public Student pickRandomStudent() throws EmptyStoreException, IOException {
 
         if(socket != null && socket.isConnected()){
+            if(getNumberOfStudents() == 0){
+                throw new EmptyStoreException();
+            }
+
             Student student = new Student();
 
-            // get the outputstream to the server
-            OutputStream os = socket.getOutputStream();
-            os.write(RouletteV1Protocol.CMD_RANDOM.getBytes());   // get random student
+            printWriter.println(RouletteV1Protocol.CMD_RANDOM);   // get random student
+            printWriter.flush();
 
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             student.setFullname(bufferedReader.readLine());
 
             return student;
@@ -118,10 +141,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         if(socket != null && socket.isConnected()){
 
             // get the outputstream to the server
-            OutputStream os = socket.getOutputStream();
-            os.write(RouletteV1Protocol.CMD_INFO.getBytes());   // get random student
-
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            printWriter.println(RouletteV1Protocol.CMD_INFO);   // get random student
+            printWriter.flush();
             InfoCommandResponse icr = JsonObjectMapper.parseJson(bufferedReader.readLine(), InfoCommandResponse.class);
 
             return icr.getNumberOfStudents();
@@ -137,10 +158,10 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         if (socket != null && socket.isConnected()) {
 
             // get the outputstream to the server
-            OutputStream os = socket.getOutputStream();
-            os.write(RouletteV1Protocol.CMD_INFO.getBytes());   // get random student
+            //bufferedReader.reset();
+            printWriter.println(RouletteV1Protocol.CMD_INFO);   // get random student
+            printWriter.flush();
 
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             InfoCommandResponse icr = JsonObjectMapper.parseJson(bufferedReader.readLine(), InfoCommandResponse.class);
 
             return icr.getProtocolVersion();

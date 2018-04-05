@@ -132,7 +132,8 @@ public class RouletteV2AngoranceTest {
         
         assertEquals(7, client.getNumberOfCommands());
     }
-    
+
+    /*
     @Test
     @TestAuthor(githubId = {"Angorance", "LNAline"})
     public void theServerShouldReturnTheStatusOfTheExecutedCommand() throws IOException {
@@ -143,4 +144,5 @@ public class RouletteV2AngoranceTest {
         
         assertTrue(client.checkSuccessOfCommand());
     }
+    */
 }
