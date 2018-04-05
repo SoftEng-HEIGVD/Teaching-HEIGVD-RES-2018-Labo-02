@@ -29,6 +29,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 	private BufferedReader in;
 	private PrintWriter out;
 	protected boolean connected = false;
+	protected int numberOfCommands;
+	
 	
 	@Override
 	public void connect(String server, int port) throws IOException {
@@ -50,6 +52,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 		LOG.log(Level.INFO, "** socket closed");
 		connected = false;
 		out.println(RouletteV1Protocol.CMD_BYE);
+		++numberOfCommands;
 		cleanup();
 	}
 	
@@ -61,6 +64,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 	@Override
 	public void loadStudent(String fullname) throws IOException {
 		sendServerMessage(RouletteV1Protocol.CMD_LOAD);
+		++numberOfCommands;
 		readServerMessage();
 		sendServerMessage(fullname);
 		sendServerMessage(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
@@ -70,6 +74,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 	@Override
 	public void loadStudents(List<Student> students) throws IOException {
 		sendServerMessage(RouletteV1Protocol.CMD_LOAD);
+		++numberOfCommands;
 		readServerMessage();
 		for (Student student : students) {
 			sendServerMessage(student.getFullname());
@@ -81,6 +86,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 	@Override
 	public Student pickRandomStudent() throws EmptyStoreException, IOException {
 		sendServerMessage(RouletteV1Protocol.CMD_RANDOM);
+		++numberOfCommands;
 		String student = readServerMessage();
 		
 		RandomCommandResponse randomReponse = JsonObjectMapper.parseJson(student, RandomCommandResponse.class);
@@ -94,6 +100,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 	@Override
 	public int getNumberOfStudents() throws IOException {
 		sendServerMessage(RouletteV1Protocol.CMD_INFO);
+		++numberOfCommands;
 		InfoCommandResponse info = JsonObjectMapper.parseJson(readServerMessage(), InfoCommandResponse.class);
 		return info.getNumberOfStudents();
 	}
@@ -101,6 +108,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 	@Override
 	public String getProtocolVersion() throws IOException {
 		sendServerMessage(RouletteV1Protocol.CMD_INFO);
+		++numberOfCommands;
 		InfoCommandResponse info = JsonObjectMapper.parseJson(readServerMessage(), InfoCommandResponse.class);
 		return info.getProtocolVersion();
 	}

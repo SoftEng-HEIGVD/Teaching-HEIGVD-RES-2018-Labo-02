@@ -32,4 +32,7 @@ public interface IRouletteV2Client extends IRouletteV1Client {
   
   public int getNumberOfCommands();
   
+  public boolean checkSuccessOfCommand();
+  
+  
   }

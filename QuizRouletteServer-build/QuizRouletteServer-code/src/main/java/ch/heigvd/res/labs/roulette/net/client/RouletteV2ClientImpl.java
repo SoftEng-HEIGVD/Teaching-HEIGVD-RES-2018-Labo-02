@@ -17,17 +17,19 @@ import java.util.List;
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
 
   private int numberOfStudentAdded;
-  private int numberOfCommands;
+  private boolean successOfCommand;
   
   @Override
   public void clearDataStore() throws IOException {
     sendServerMessage(RouletteV2Protocol.CMD_CLEAR);
+    ++numberOfCommands;
     readServerMessage();
   }
 
   @Override
   public List<Student> listStudents() throws IOException {
     sendServerMessage(RouletteV2Protocol.CMD_LIST);
+    ++numberOfCommands;
     StudentsList studentList = JsonObjectMapper.parseJson(readServerMessage(),StudentsList.class);
     return studentList.getStudents();
   }
@@ -35,28 +37,33 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   @Override
   public void loadStudent(String fullname) throws IOException {
     sendServerMessage(RouletteV2Protocol.CMD_LOAD);
+    ++numberOfCommands;
     readServerMessage();
     sendServerMessage(fullname);
     sendServerMessage(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
     LoadCommandResponse lcResponse = JsonObjectMapper.parseJson(readServerMessage(),LoadCommandResponse.class);
+    successOfCommand = lcResponse.getStatus().equals("success");
     numberOfStudentAdded = lcResponse.getNumberOfNewStudents();
   }
   
   @Override
   public void loadStudents(List<Student> students) throws IOException {
     sendServerMessage(RouletteV2Protocol.CMD_LOAD);
+    ++numberOfCommands;
     readServerMessage();
     for (Student student : students) {
       sendServerMessage(student.getFullname());
     }
     sendServerMessage(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
     LoadCommandResponse lcResponse = JsonObjectMapper.parseJson(readServerMessage(),LoadCommandResponse.class);
+    successOfCommand = lcResponse.getStatus().equals("success");
     numberOfStudentAdded = lcResponse.getNumberOfNewStudents();  }
   
   @Override
   public void disconnect() throws IOException {
     connected = false;
     sendServerMessage(RouletteV2Protocol.CMD_BYE);
+    ++numberOfCommands;
     ByeCommandResponse bcResponse = JsonObjectMapper.parseJson(readServerMessage(),ByeCommandResponse.class);
     numberOfCommands = bcResponse.getNumberOfCommands();
     cleanup();
@@ -70,6 +77,11 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   @Override
   public int getNumberOfCommands(){
     return numberOfCommands;
+  }
+  
+  @Override
+  public boolean checkSuccessOfCommand(){
+    return successOfCommand;
   }
   
 }
