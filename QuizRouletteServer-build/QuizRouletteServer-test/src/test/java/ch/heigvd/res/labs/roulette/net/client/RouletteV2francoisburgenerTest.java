@@ -141,7 +141,7 @@ public class RouletteV2francoisburgenerTest {
     @Test
     @TestAuthor(githubId = {"francoisburgener", "BryCur"})
     public void theServerShouldReturnTheNumberOfCommand() throws IOException {
-        IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
+        RouletteV2ClientImpl client = (RouletteV2ClientImpl) roulettePair.getClient();
         client.loadStudent("Romain");
         client.listStudents();
         client.disconnect();
