@@ -15,6 +15,9 @@ import java.util.List;
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
 
+    boolean isConnected;
+  
+
 
     @Override
     public void clearDataStore() throws IOException {
