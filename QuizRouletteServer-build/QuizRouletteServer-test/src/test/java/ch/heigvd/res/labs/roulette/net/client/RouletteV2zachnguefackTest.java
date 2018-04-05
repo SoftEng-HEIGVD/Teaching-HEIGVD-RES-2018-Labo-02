@@ -18,7 +18,7 @@ public class RouletteV2zachnguefackTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-
+    
     @Rule
     public EphemeralClientServerPair roulettePair = new EphemeralClientServerPair(RouletteV2Protocol.VERSION);
 
@@ -27,6 +27,7 @@ public class RouletteV2zachnguefackTest {
     public void theTestRouletteServerShouldRunDuringTests() throws IOException {
         assertTrue(roulettePair.getServer().isRunning());
     }
+   
 
     @Test
     @TestAuthor(githubId = "zachnguefack")
@@ -45,7 +46,7 @@ public class RouletteV2zachnguefackTest {
     }
 
     @Test
-    @TestAuthor(githubId = {"zachnguefack", "Lankeu"})
+    @TestAuthor(githubId = {"zachnguefack", "Lankeu "})
     public void theServerShouldReturnTheCorrectVersionNumber() throws IOException {
         assertEquals(RouletteV2Protocol.VERSION, roulettePair.getClient().getProtocolVersion());
     }
