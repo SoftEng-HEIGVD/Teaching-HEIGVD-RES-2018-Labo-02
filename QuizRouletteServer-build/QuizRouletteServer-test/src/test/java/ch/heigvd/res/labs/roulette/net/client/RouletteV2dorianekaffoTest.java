@@ -15,7 +15,6 @@ import org.junit.rules.ExpectedException;
  * @author Doriane Kaffo
  */
 public class RouletteV2dorianekaffoTest {
-    
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -38,6 +37,7 @@ public class RouletteV2dorianekaffoTest {
     @Test
     @TestAuthor(githubId = "dorianekaffo")
     public void theServerShouldNotHaveStudentsAfterClear() throws IOException {
+
         IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
         client.loadStudent("dodo");
         client.loadStudent("doriane");
@@ -53,7 +53,7 @@ public class RouletteV2dorianekaffoTest {
         IRouletteV2Client client = new RouletteV2ClientImpl();
         assertFalse(client.isConnected());
         client.connect("localhost", port);
-        
+
         assertTrue(client.isConnected());
         client.disconnect();
     }
