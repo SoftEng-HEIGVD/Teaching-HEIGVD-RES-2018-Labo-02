@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4c4357aa-27c5-482d-98b7-dc7fd91409ca" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/IRouletteV2Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/IRouletteV2Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2ClientImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/QuizRouletteServer-code/src/main/java/ch/heigvd/res/labs/roulette/net/client/RouletteV2ClientImpl.java" afterDir="false" />
-    </list>
+    <list default="true" id="4c4357aa-27c5-482d-98b7-dc7fd91409ca" name="Default" comment="" />
     <ignored path="QuizRouletteServer-build.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -884,7 +880,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="33499000" />
+    <option name="totallyTimeSpent" value="33815000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="46" width="1901" height="1001" extended-state="0" />
@@ -898,13 +894,13 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32996634" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32996634" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" />
       <window_info anchor="right" id="Remote Host" order="3" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21988428" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21988428" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
