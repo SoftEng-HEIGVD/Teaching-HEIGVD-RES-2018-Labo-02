@@ -69,9 +69,9 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   public void loadStudent(String fullname) throws IOException {
     LOG.info("Loading " + fullname + "on server...");
 
-    os.println(CONNECT.LOAD.toString());
+    os.println(RouletteV1Protocol.CMD_LOAD);
     os.println(fullname);
-    os.println(CONNECT.ENDOFDATA.toString());
+    os.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
     os.flush();
 
     LOG.info("Loaded");
