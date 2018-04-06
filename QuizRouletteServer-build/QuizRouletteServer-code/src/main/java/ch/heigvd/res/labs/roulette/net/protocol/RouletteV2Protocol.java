@@ -13,6 +13,8 @@ public class RouletteV2Protocol extends RouletteV1Protocol {
 
   public final static String CMD_CLEAR = "CLEAR";
   public final static String CMD_LIST = "LIST";
+  public final static String CMD_BAILLE = "BAILLE";
+
 
   public static String RESPONSE_CLEAR_DONE = "DATASTORE CLEARED";
 

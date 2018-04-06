@@ -1,10 +1,7 @@
 package ch.heigvd.res.labs.roulette.net.client;
 
 import ch.heigvd.res.labs.roulette.data.*;
-import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
-import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponseV2;
-import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponseV3;
-import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
+import ch.heigvd.res.labs.roulette.net.protocol.*;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
 import java.io.BufferedReader;
@@ -31,6 +28,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   public void clearDataStore() throws IOException {
     os.println(RouletteV2Protocol.CMD_CLEAR);
     os.flush();
+    is.readLine();
   }
 
 
@@ -38,12 +36,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   public List<Student> listStudents() throws IOException {
     os.println(RouletteV2Protocol.CMD_LIST);
     os.flush();
-    String response = is.readLine();
-    Student s = Student.fromJson(JsonObjectMapper.parseJson(response, String.class));
-    //TODO récupérer le JSON sous forme de liste de students
-    List<Student> students = new ArrayList<Student>();
-    students.add(s);
-    return students;
+    return InfoCmdStd().getStudents();
   }
 
 
@@ -92,15 +85,28 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     os.flush();
     is.readLine();
     super.disconnect();
+
   }
 
   private InfoCommandResponseV2 InfoCmdRsp2() throws IOException{
     InfoCommandResponseV2 iCR2 = JsonObjectMapper.parseJson(is.readLine() , InfoCommandResponseV2.class);
     return iCR2;
   }
+
+  // ???
   private InfoCommandResponseV3 InfoCmdRsp3() throws IOException{
+    os.println(RouletteV2Protocol.CMD_BYE);
+    os.flush();
     InfoCommandResponseV3 iCR3 = JsonObjectMapper.parseJson(is.readLine() , InfoCommandResponseV3.class);
+    super.disconnect();
     return iCR3;
+  }
+
+  private InfoCommandStudents InfoCmdStd() throws IOException{
+    os.println(RouletteV2Protocol.CMD_LIST);
+    os.flush();
+    InfoCommandStudents iCRS = JsonObjectMapper.parseJson(is.readLine() , InfoCommandStudents.class);
+    return iCRS;
   }
 
 

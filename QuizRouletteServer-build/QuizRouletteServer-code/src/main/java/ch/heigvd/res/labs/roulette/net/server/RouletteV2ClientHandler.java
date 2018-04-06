@@ -78,19 +78,29 @@ public class RouletteV2ClientHandler implements IClientHandler {
           break;
         case RouletteV2Protocol.CMD_CLEAR:
           store.clear();
-          LOG.log(Level.INFO, "CLEAR", store.getNumberOfStudents());
-
           writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
+          writer.flush();
           break;
         case RouletteV2Protocol.CMD_LIST:
-          writer.println(JsonObjectMapper.toJson(store.listStudents()));
+          InfoCommandStudents studentList = new InfoCommandStudents(store.listStudents());
+          writer.println(JsonObjectMapper.toJson(studentList));
+          writer.flush();
           break;
-
+        case RouletteV2Protocol.CMD_BAILLE:
+          writer.println("Are you French?");
+          writer.flush();
+          break;
         case RouletteV2Protocol.CMD_BYE:
+          if(numberOfCommands < 3){
+            writer.println("So soon?");
+            writer.flush();
+          }
           InfoCommandResponseV3 responseBye = new InfoCommandResponseV3(true, numberOfCommands);
           writer.println(JsonObjectMapper.toJson(responseBye));
+          writer.flush();
           done = true;
           break;
+
         default:
           --numberOfCommands;
           writer.println("Huh? please use HELP if you don't know what commands are available.");
