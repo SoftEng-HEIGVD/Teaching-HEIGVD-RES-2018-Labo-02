@@ -3,6 +3,7 @@ package ch.heigvd.res.labs.roulette.net.client;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.data.StudentsList;
+import ch.heigvd.res.labs.roulette.net.protocol.ByeCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.LoadCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -20,6 +21,15 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
   private int nbStudentsLoaded;
   private boolean loadSuccess;
+  private int nbOfCommands;
+
+  @Override
+  public void disconnect() throws IOException {
+      String message = is.readLine();
+      ByeCommandResponse bcResponse = JsonObjectMapper.parseJson(message, ByeCommandResponse.class);
+      nbOfCommands = bcResponse.getNumberOfCommands();
+      super.disconnect();
+  }
 
   @Override
   public void clearDataStore() throws IOException {
@@ -79,8 +89,9 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
       }
     }
   }
+  public int getNumberOfCommands() {return nbOfCommands;}
 
-  public int getNbStudentsLoaded() {
+  public int getNumberOfStudentAdded() {
     return nbStudentsLoaded;
   }
   public boolean checkSuccessOfCommand() {
