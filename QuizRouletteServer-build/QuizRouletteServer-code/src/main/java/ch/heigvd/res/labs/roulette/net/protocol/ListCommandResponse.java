@@ -16,11 +16,12 @@ import java.util.List;
 public class ListCommandResponse {
     List<Student> students;
 
-    public ListCommandResponse(List<Student> s){
+    public ListCommandResponse(List<Student> s) {
         students = new ArrayList<>(s);
     }
 
-    public ListCommandResponse(){}
+    public ListCommandResponse() {
+    }
 
     public List<Student> getStudents() {
         return students;
