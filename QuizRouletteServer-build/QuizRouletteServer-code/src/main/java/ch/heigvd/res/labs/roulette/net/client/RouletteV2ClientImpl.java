@@ -22,9 +22,9 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   
   private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
   
-  private int numberOfCommands = 0;
-  private int numberOfNewStudents = 0;
-  private boolean isSuccessOfCommands = true;
+  private int numberOfCommands;
+  private int numberOfNewStudents;
+  private boolean isSuccessOfCommands;
   
   @Override
   public int getNumberOfStudentAdded() {
@@ -44,7 +44,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   @Override
   public void clearDataStore() throws IOException {
     sender(RouletteV2Protocol.CMD_CLEAR);
-    if(input.readLine() == RouletteV2Protocol.RESPONSE_CLEAR_DONE){
+    if(input.readLine().equals(RouletteV2Protocol.RESPONSE_CLEAR_DONE)){
       ++numberOfCommands;
     }
   }
@@ -58,6 +58,14 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   }
   
   @Override
+  public void connect(String server, int port) throws IOException {
+    numberOfCommands = 0;
+    numberOfNewStudents = 0;
+    isSuccessOfCommands = false;
+    super.connect(server, port);
+  }
+  
+  @Override
   public void disconnect() throws IOException {
     if(!isConnected){
       return;
@@ -65,11 +73,13 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     
     // Tell to the server to close the connection.
     sender(RouletteV2Protocol.CMD_BYE);
-    
     ByeCommandResponse byeCommandResponse = JsonObjectMapper.parseJson(input.readLine(),ByeCommandResponse.class);
-    if(isSuccessOfCommands = byeCommandResponse.getStatus().equals("success")){
+    isSuccessOfCommands = byeCommandResponse.getStatus().equals("success");
+    if(isSuccessOfCommands){
       ++numberOfCommands; // = byeCommandResponse.getNumberOfCommands();
-      
+      if(numberOfCommands == byeCommandResponse.getNumberOfCommands()){
+        LOG.log(Level.INFO, "The command count on the client and the server are the same.");
+      }
       // Close all the resources
       socket.close();
       input.close();
@@ -93,9 +103,10 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     
     // Tell the server that all the data are loaded
     sender(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
-    
+
     LoadCommandResponse loadCommandResponse = JsonObjectMapper.parseJson(input.readLine(), LoadCommandResponse.class);
-    if(isSuccessOfCommands = loadCommandResponse.getStatus().equals("success")){
+    isSuccessOfCommands = loadCommandResponse.getStatus().equals("success");
+    if(isSuccessOfCommands){
       ++numberOfCommands;
       numberOfNewStudents = 1;
     }
@@ -140,14 +151,5 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     ++numberOfCommands;
     isSuccessOfCommands = true;
     return super.getProtocolVersion();
-  }
-  
-  /***
-   * This sender is used for the communication with the server.
-   * @param toServer The message to send to the server.
-   */
-  private void sender(String toServer){
-    output.println(toServer);
-    output.flush();
   }
 }

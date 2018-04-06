@@ -126,7 +126,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
    * This sender is used for the communication with the server.
    * @param toServer The message to send to the server.
    */
-  private void sender(String toServer){
+  void sender(String toServer){
     output.println(toServer);
     output.flush();
   }
