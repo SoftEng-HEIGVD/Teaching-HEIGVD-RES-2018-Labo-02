@@ -3,14 +3,13 @@ package ch.heigvd.res.labs.roulette.net.server;
 import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.IStudentsStore;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
-import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
-import ch.heigvd.res.labs.roulette.net.protocol.RandomCommandResponse;
-import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
-import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
+import ch.heigvd.res.labs.roulette.data.Student;
+import ch.heigvd.res.labs.roulette.net.protocol.*;
 import com.sun.xml.internal.bind.v2.TODO;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +21,9 @@ import java.util.logging.Logger;
 public class RouletteV2ClientHandler implements IClientHandler {
   final static Logger LOG = Logger.getLogger(RouletteV1ClientHandler.class.getName());
 
+  public static int numberOfNewStudents = 0;
+  public static int numberOfCommands = 0;
+
   private final IStudentsStore store;
 
   public RouletteV2ClientHandler(IStudentsStore store) {
@@ -30,10 +32,8 @@ public class RouletteV2ClientHandler implements IClientHandler {
 
   @Override
   public void handleClientConnection(InputStream is, OutputStream os) throws IOException {
-    /*TODO : handle les nouvelles commandes, build de nouveaux infocommands avec les variables privées
-    de rouletteV2impl, les mettre en Json et les afficher */
 
-
+    //TODO check les success comme il faut
     BufferedReader reader = new BufferedReader(new InputStreamReader(is));
     PrintWriter writer = new PrintWriter(new OutputStreamWriter(os));
 
@@ -43,6 +43,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
     String command;
     boolean done = false;
     while (!done && ((command = reader.readLine()) != null)) {
+      ++numberOfCommands;
       LOG.log(Level.INFO, "COMMAND: {0}", command);
       switch (command.toUpperCase()) {
         case RouletteV2Protocol.CMD_RANDOM:
@@ -56,7 +57,6 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_HELP:
-          //TODO ceci est une commande, on doit pouvoir faire ++numberOfCommands...
           writer.println("Commands: " + Arrays.toString(RouletteV2Protocol.SUPPORTED_COMMANDS));
           break;
         case RouletteV2Protocol.CMD_INFO:
@@ -65,23 +65,34 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_LOAD:
+          int numberOfNewStudents = store.getNumberOfStudents();
           writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
           writer.flush();
           store.importData(reader);
           writer.println(RouletteV2Protocol.RESPONSE_LOAD_DONE);
           writer.flush();
+          numberOfNewStudents = store.getNumberOfStudents() - numberOfNewStudents;
+          InfoCommandResponseV2 responseLoad = new InfoCommandResponseV2(true, numberOfNewStudents);
+          writer.println(JsonObjectMapper.toJson(responseLoad));
+          writer.flush();
           break;
         case RouletteV2Protocol.CMD_CLEAR:
+          store.clear();
+          LOG.log(Level.INFO, "CLEAR", store.getNumberOfStudents());
+
           writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
           break;
         case RouletteV2Protocol.CMD_LIST:
-
+          writer.println(JsonObjectMapper.toJson(store.listStudents()));
           break;
 
         case RouletteV2Protocol.CMD_BYE:
+          InfoCommandResponseV3 responseBye = new InfoCommandResponseV3(true, numberOfCommands);
+          writer.println(JsonObjectMapper.toJson(responseBye));
           done = true;
           break;
         default:
+          --numberOfCommands;
           writer.println("Huh? please use HELP if you don't know what commands are available.");
           writer.flush();
           break;
