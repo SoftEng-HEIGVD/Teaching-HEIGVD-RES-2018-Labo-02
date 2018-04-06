@@ -22,10 +22,10 @@ import java.util.logging.Logger;
  * @author Dejvid Muaremi
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
-  private Socket socket;
-  private boolean isConnected;
-  private BufferedReader input;
-  private PrintWriter output;
+  Socket socket;
+  boolean isConnected;
+  BufferedReader input;
+  PrintWriter output;
   
   private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
   

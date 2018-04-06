@@ -31,7 +31,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
   
   private final IStudentsStore store;
   private int commandsCount;
-
+  
   public RouletteV2ClientHandler(IStudentsStore store) {
     this.store = store;
     this.commandsCount = 0;
@@ -71,11 +71,9 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_LOAD:
-          //todo
           int tmp_NumberOfStudents = store.getNumberOfStudents();
           writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
           writer.flush();
-          
           try {
             store.importData(reader);
           }
