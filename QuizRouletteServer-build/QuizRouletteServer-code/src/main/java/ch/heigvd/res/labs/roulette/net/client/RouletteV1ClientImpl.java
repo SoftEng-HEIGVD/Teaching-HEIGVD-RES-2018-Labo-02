@@ -57,8 +57,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
       out.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
       out.flush();
 
-      LOG.log(Level.INFO, in.readLine()); // send your data
-      LOG.log(Level.INFO, in.readLine()); // data loaded
+      LOG.log(Level.INFO, in.readLine()); // "send your data..."
+      LOG.log(Level.INFO, in.readLine()); // "data loaded"
     } else {
       LOG.log(Level.SEVERE, "CLIENT NOT CONNECTED TO SERVER");
     }
@@ -113,7 +113,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     if (isConnected()) {
       out.println(RouletteV1Protocol.CMD_INFO);
       out.flush();
-      return JsonObjectMapper.parseJson( in.readLine(), InfoCommandResponse.class).getProtocolVersion();
+      return JsonObjectMapper.parseJson(in.readLine(), InfoCommandResponse.class).getProtocolVersion();
     } else {
       throw new IOException("Client not connected to server");
     }
