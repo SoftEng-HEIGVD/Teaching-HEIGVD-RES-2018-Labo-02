@@ -10,13 +10,13 @@ package ch.heigvd.res.labs.roulette.net.protocol;
 public class ByeCommandResponse {
 
   private String status;
-  private int numberOfSentCommand;
+  private int numberOfCommands;
 
   public ByeCommandResponse() { }
 
-  public ByeCommandResponse(String status, int numberOfSentCommand) {
+  public ByeCommandResponse(String status, int numberOfCommands) {
     this.status = status;
-    this.numberOfSentCommand = numberOfSentCommand;
+    this.numberOfCommands = numberOfCommands;
   }
 
   public String getStatus() { return status; }
@@ -25,12 +25,11 @@ public class ByeCommandResponse {
     this.status = status;
   }
 
-  public int getNumberOfSentCommand() {
-    return numberOfSentCommand;
+  public int getNumberOfCommands() {
+    return numberOfCommands;
   }
 
-  public void setNumberOfSentCommand(int numberOfSentCommand) {
-    this.numberOfSentCommand = numberOfSentCommand;
+  public void setNumberOfCommands(int numberOfCommands) {
+    this.numberOfCommands = numberOfCommands;
   }
-
 }

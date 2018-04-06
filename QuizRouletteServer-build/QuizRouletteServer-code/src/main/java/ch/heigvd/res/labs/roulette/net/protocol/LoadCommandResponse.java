@@ -10,27 +10,25 @@ package ch.heigvd.res.labs.roulette.net.protocol;
 public class LoadCommandResponse {
 
   private String status;
-  private int numberOfNewAddedStudent;
+  private int numberOfNewStudents;
 
   public LoadCommandResponse() { }
 
-  public LoadCommandResponse(String status, int numberOfNewAddedStudent) {
+  public LoadCommandResponse(String status, int numberOfNewStudents) {
     this.status = status;
-    this.numberOfNewAddedStudent = numberOfNewAddedStudent;
+    this.numberOfNewStudents = numberOfNewStudents;
   }
 
   public String getStatus() { return status; }
 
-  public void setStatus(String status) {
-    this.status = status;
+  public void setStatus(String status) { this.status = status; }
+
+  public int getNumberOfNewStudents() {
+    return numberOfNewStudents;
   }
 
-  public int getNumberOfNewAddedStudent() {
-    return numberOfNewAddedStudent;
-  }
-
-  public void setNumberOfNewAddedStudent(int numberOfNewAddedStudent) {
-    this.numberOfNewAddedStudent = numberOfNewAddedStudent;
+  public void setNumberOfNewStudents(int numberOfNewStudents) {
+    this.numberOfNewStudents = numberOfNewStudents;
   }
 
 }

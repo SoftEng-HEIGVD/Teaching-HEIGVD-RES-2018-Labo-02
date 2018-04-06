@@ -10,6 +10,7 @@ import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
 import java.io.*;
 import java.net.Socket;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -21,13 +22,13 @@ import java.util.logging.Logger;
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
-    private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
-    private Socket clientSocket = null;
-    private BufferedReader reader = null;
-    private PrintWriter writer = null;
+    protected static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
+    protected Socket clientSocket = null;
+    protected BufferedReader reader = null;
+    protected PrintWriter writer = null;
 
 
-    public void writeAndFlush(String s) {
+    protected void writeAndFlush(String s) {
         writer.write(s + "\n");
         writer.flush();
     }
@@ -60,16 +61,16 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         writeAndFlush(RouletteV1Protocol.CMD_LOAD);
 
         // Event if we won't need the server's response, we read it to avoid further reading problems
-        reader.readLine();
+        LOG.log(Level.INFO, reader.readLine());
         writeAndFlush(fullname);
         writeAndFlush(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
-        reader.readLine();
+        LOG.log(Level.INFO, reader.readLine());
     }
 
     @Override
     public void loadStudents(List<Student> students) throws IOException {
         writeAndFlush(RouletteV1Protocol.CMD_LOAD);
-        reader.readLine();
+        LOG.log(Level.INFO, reader.readLine());
 
         // Writing the name of each student
         for(Student s : students) {
@@ -77,7 +78,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         }
 
         writeAndFlush(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
-        reader.readLine();
+        LOG.log(Level.INFO, reader.readLine());
     }
 
     @Override
@@ -103,8 +104,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         String infoResponse = reader.readLine();
 
         // Building the InfoCommandResponse from the server's JSON String
-        InfoCommandResponse infos = JsonObjectMapper.parseJson(infoResponse, InfoCommandResponse.class);
-        return infos.getNumberOfStudents();
+        InfoCommandResponse info = JsonObjectMapper.parseJson(infoResponse, InfoCommandResponse.class);
+        return info.getNumberOfStudents();
     }
 
     @Override

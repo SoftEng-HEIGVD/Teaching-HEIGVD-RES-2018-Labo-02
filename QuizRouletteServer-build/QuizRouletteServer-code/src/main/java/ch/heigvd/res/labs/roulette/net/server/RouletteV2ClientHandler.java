@@ -66,15 +66,16 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
           writer.flush();
           String status = null;
+          int nbrStudentsBefore = store.getNumberOfStudents();
           try {
             store.importData(reader);
             status = "success";
           } catch (IOException e) {
             status = "failure";
           }
-          // TODO : Retrieve number of newly added student
-          LoadCommandResponse responseToLoad = new LoadCommandResponse(status, 0);
-          writer.println(responseToLoad);
+          int nbrStudentsAfter = store.getNumberOfStudents();
+          LoadCommandResponse responseToLoad = new LoadCommandResponse(status, nbrStudentsAfter-nbrStudentsBefore);
+          writer.println(JsonObjectMapper.toJson(responseToLoad));
           writer.flush();
           break;
 
@@ -92,8 +93,8 @@ public class RouletteV2ClientHandler implements IClientHandler {
           break;
 
         case RouletteV2Protocol.CMD_LIST:
-          // TODO : prabably improve this response
-          writer.println(JsonObjectMapper.toJson(store.listStudents()));
+          writer.println("{\"students\":" + JsonObjectMapper.toJson(store.listStudents()) + "}");
+
           writer.flush();
           break;
 
