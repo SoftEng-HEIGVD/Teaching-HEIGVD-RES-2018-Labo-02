@@ -96,11 +96,11 @@ public class RouletteV2AngoranceTest {
     
         client.loadStudents(serverStudents);
     
-        assertEquals(3, client.getNumberOfStudentsAdded());
+        assertEquals(3, client.getNumberOfStudentAdded());
         
         client.loadStudent("Lastone");
     
-        assertEquals(1, client.getNumberOfStudentsAdded());
+        assertEquals(1, client.getNumberOfStudentAdded());
     }
     
     @Test
