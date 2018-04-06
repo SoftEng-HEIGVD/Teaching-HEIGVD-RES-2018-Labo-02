@@ -14,14 +14,38 @@ import java.util.List;
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
 
-  @Override
-  public void clearDataStore() throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    public void disconnect() throws IOException {
+        // TODO - like super + check response
+    }
 
-  @Override
-  public List<Student> listStudents() throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-  
+    @Override
+    public void loadStudents(List<Student> students) throws IOException {
+        // TODO - like super + check new response
+    }
+
+    @Override
+    public void clearDataStore() throws IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Student> listStudents() throws IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int getNumberOfCommands() {
+        // TODO - Gets number of commands after BYE command
+        return 0;
+    }
+
+    public int getNumberOfStudentAdded() {
+        // TODO - Gets number of new students added
+        return 0;
+    }
+
+    public boolean checkSuccessOfCommand() {
+        // TODO - Gets the success of the command
+        return true;
+    }
 }

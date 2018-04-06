@@ -32,154 +32,156 @@ import java.util.logging.Logger;
  */
 public class RouletteServer {
 
-  final static Logger LOG = Logger.getLogger(RouletteServer.class.getName());
+    // TODO - Count number of commands + number of new students!
 
-  /*
-   * The TCP port where client connection requests are accepted. -1 indicates that
-   * we want to use an ephemeral port number, assigned by the OS
-   */
-  private int listenPort = -1;
+    final static Logger LOG = Logger.getLogger(RouletteServer.class.getName());
 
-  /*
-   * The server socket, used to accept client connection requests
-   */
-  private ServerSocket serverSocket;
+    /*
+     * The TCP port where client connection requests are accepted. -1 indicates that
+     * we want to use an ephemeral port number, assigned by the OS
+     */
+    private int listenPort = -1;
 
-  /*
-   * The server maintains a list of client workers, so that they can be notified
-   * when the server shuts down
-   */
-  List<ClientWorker> clientWorkers = new CopyOnWriteArrayList<>();
+    /*
+     * The server socket, used to accept client connection requests
+     */
+    private ServerSocket serverSocket;
 
-  /*
-   * The server uses a data store to keep track of students
-   */
-  IStudentsStore store = new StudentsStoreImpl();
+    /*
+     * The server maintains a list of client workers, so that they can be notified
+     * when the server shuts down
+     */
+    List<ClientWorker> clientWorkers = new CopyOnWriteArrayList<>();
 
-  /*
-   * A flag that indicates whether the server should continue to run (or whether
-   * a shutdown is in progress)
-   */
-  private boolean shouldRun = false;
+    /*
+     * The server uses a data store to keep track of students
+     */
+    IStudentsStore store = new StudentsStoreImpl();
 
-  private String protocolVersion;
+    /*
+     * A flag that indicates whether the server should continue to run (or whether
+     * a shutdown is in progress)
+     */
+    private boolean shouldRun = false;
 
-  /**
-   * Constructor used to create a server that will accept connections on a known
-   * TCP port
-   *
-   * @param listenPort the TCP port on which connection requests are accepted
-   */
-  public RouletteServer(int listenPort, String protocolVersion) {
-    this.listenPort = listenPort;
-    this.protocolVersion = protocolVersion;
-  }
+    private String protocolVersion;
 
-  /**
-   * Constructor used to create a server that will accept connections on an
-   * ephemeral port
-   */
-  public RouletteServer(String protocolVersion) {
-    this.listenPort = -1;
-    this.protocolVersion = protocolVersion;
-  }
-
-  public void startServer() throws IOException {
-    if (serverSocket == null || serverSocket.isBound() == false) {
-      if (listenPort == -1) {
-        bindOnEphemeralPort();
-      } else {
-        bindOnKnownPort(listenPort);
-      }
+    /**
+     * Constructor used to create a server that will accept connections on a known
+     * TCP port
+     *
+     * @param listenPort the TCP port on which connection requests are accepted
+     */
+    public RouletteServer(int listenPort, String protocolVersion) {
+        this.listenPort = listenPort;
+        this.protocolVersion = protocolVersion;
     }
 
-    Thread serverThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        shouldRun = true;
-        while (shouldRun) {
-          try {
-            LOG.log(Level.INFO, "Listening for client connection on {0}", serverSocket.getLocalSocketAddress());
-            Socket clientSocket = serverSocket.accept();
-            LOG.info("New client has arrived...");
-            ClientWorker worker = new ClientWorker(clientSocket, getClientHandler(), RouletteServer.this);
-            clientWorkers.add(worker);
-            LOG.info("Delegating work to client worker...");
-            Thread clientThread = new Thread(worker);
-            clientThread.start();
-          } catch (IOException ex) {
-            LOG.log(Level.SEVERE, "IOException in main server thread, exit: {0}", ex.getMessage());
-            shouldRun = false;
-          }
+    /**
+     * Constructor used to create a server that will accept connections on an
+     * ephemeral port
+     */
+    public RouletteServer(String protocolVersion) {
+        this.listenPort = -1;
+        this.protocolVersion = protocolVersion;
+    }
+
+    public void startServer() throws IOException {
+        if (serverSocket == null || serverSocket.isBound() == false) {
+            if (listenPort == -1) {
+                bindOnEphemeralPort();
+            } else {
+                bindOnKnownPort(listenPort);
+            }
         }
-      }
-    });
-    serverThread.start();
-  }
 
-  private IClientHandler getClientHandler() {
-    switch (protocolVersion) {
-      case RouletteV1Protocol.VERSION:
+        Thread serverThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                shouldRun = true;
+                while (shouldRun) {
+                    try {
+                        LOG.log(Level.INFO, "Listening for client connection on {0}", serverSocket.getLocalSocketAddress());
+                        Socket clientSocket = serverSocket.accept();
+                        LOG.info("New client has arrived...");
+                        ClientWorker worker = new ClientWorker(clientSocket, getClientHandler(), RouletteServer.this);
+                        clientWorkers.add(worker);
+                        LOG.info("Delegating work to client worker...");
+                        Thread clientThread = new Thread(worker);
+                        clientThread.start();
+                    } catch (IOException ex) {
+                        LOG.log(Level.SEVERE, "IOException in main server thread, exit: {0}", ex.getMessage());
+                        shouldRun = false;
+                    }
+                }
+            }
+        });
+        serverThread.start();
+    }
+
+    private IClientHandler getClientHandler() {
+        switch (protocolVersion) {
+            case RouletteV1Protocol.VERSION:
+                return new RouletteV1ClientHandler(store);
+            case RouletteV2Protocol.VERSION:
+                return new RouletteV2ClientHandler(store);
+        }
         return new RouletteV1ClientHandler(store);
-      case RouletteV2Protocol.VERSION:
-        return new RouletteV2ClientHandler(store);
     }
-    return new RouletteV1ClientHandler(store);
-  }
 
-  /**
-   * Indicates whether the server is accepting connection requests, by checking
-   * the state of the server socket
-   *
-   * @return true if the server accepts client connection requests
-   */
-  public boolean isRunning() {
-    return (serverSocket.isBound());
-  }
-
-  /**
-   * Getter for the TCP port number used by the server socket.
-   *
-   * @return the port on which client connection requests are accepted
-   */
-  public int getPort() {
-    return serverSocket.getLocalPort();
-  }
-
-  /**
-   * Requests a server shutdown. This will close the server socket and notify
-   * all client workers.
-   *
-   * @throws IOException
-   */
-  public void stopServer() throws IOException {
-    shouldRun = false;
-    serverSocket.close();
-    for (ClientWorker clientWorker : clientWorkers) {
-      clientWorker.notifyServerShutdown();
+    /**
+     * Indicates whether the server is accepting connection requests, by checking
+     * the state of the server socket
+     *
+     * @return true if the server accepts client connection requests
+     */
+    public boolean isRunning() {
+        return (serverSocket.isBound());
     }
-  }
 
-  private void bindOnKnownPort(int port) throws IOException {
-    serverSocket = new ServerSocket();
-    serverSocket.bind(new InetSocketAddress(port));
-  }
+    /**
+     * Getter for the TCP port number used by the server socket.
+     *
+     * @return the port on which client connection requests are accepted
+     */
+    public int getPort() {
+        return serverSocket.getLocalPort();
+    }
 
-  private void bindOnEphemeralPort() throws IOException {
-    serverSocket = new ServerSocket();
-    serverSocket.bind(null);
-    this.listenPort = serverSocket.getLocalPort();
-  }
+    /**
+     * Requests a server shutdown. This will close the server socket and notify
+     * all client workers.
+     *
+     * @throws IOException
+     */
+    public void stopServer() throws IOException {
+        shouldRun = false;
+        serverSocket.close();
+        for (ClientWorker clientWorker : clientWorkers) {
+            clientWorker.notifyServerShutdown();
+        }
+    }
 
-  /**
-   * This method is invoked by the client worker when it has completed its
-   * interaction with the server (e.g. the user has issued the BYE command, the
-   * connection has been closed, etc.)
-   *
-   * @param worker the worker which has completed its work
-   */
-  public void notifyClientWorkerDone(ClientWorker worker) {
-    clientWorkers.remove(worker);
-  }
+    private void bindOnKnownPort(int port) throws IOException {
+        serverSocket = new ServerSocket();
+        serverSocket.bind(new InetSocketAddress(port));
+    }
+
+    private void bindOnEphemeralPort() throws IOException {
+        serverSocket = new ServerSocket();
+        serverSocket.bind(null);
+        this.listenPort = serverSocket.getLocalPort();
+    }
+
+    /**
+     * This method is invoked by the client worker when it has completed its
+     * interaction with the server (e.g. the user has issued the BYE command, the
+     * connection has been closed, etc.)
+     *
+     * @param worker the worker which has completed its work
+     */
+    public void notifyClientWorkerDone(ClientWorker worker) {
+        clientWorkers.remove(worker);
+    }
 
 }
