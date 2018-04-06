@@ -69,6 +69,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
       } catch (IOException ex) {
          LOG.log(Level.SEVERE, ex.getMessage(), ex);
       }
+      
+      connected = false;
    }
 
    @Override
