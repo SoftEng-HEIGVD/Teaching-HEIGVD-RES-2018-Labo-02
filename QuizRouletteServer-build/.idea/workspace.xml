@@ -362,7 +362,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.ch.heigvd.res.labs.roulette.net.client in QuizRouletteServer-test">
+  <component name="RunManager" selected="JUnit.RouletteV2AdamZouariTest.theServerShouldHaveZeroStudentsAfterClear">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
     </configuration>
@@ -415,29 +415,6 @@
       </option>
       <patterns />
     </configuration>
-    <configuration name="RouletteV1AngoranceTest.theServerShouldReturnTheCorrectVersionNumber" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="QuizRouletteServer-test" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ch.heigvd.res.labs.roulette.net.client.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="ch.heigvd.res.labs.roulette.net.client" />
-      <option name="MAIN_CLASS_NAME" value="ch.heigvd.res.labs.roulette.net.client.RouletteV1AngoranceTest" />
-      <option name="METHOD_NAME" value="theServerShouldReturnTheCorrectVersionNumber" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <patterns />
-    </configuration>
     <configuration name="RouletteV1AngoranceTest.theTestRouletteServerShouldRunDuringTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="QuizRouletteServer-test" />
       <extension name="coverage">
@@ -451,6 +428,29 @@
       <option name="PACKAGE_NAME" value="ch.heigvd.res.labs.roulette.net.client" />
       <option name="MAIN_CLASS_NAME" value="ch.heigvd.res.labs.roulette.net.client.RouletteV1AngoranceTest" />
       <option name="METHOD_NAME" value="theTestRouletteServerShouldRunDuringTests" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <patterns />
+    </configuration>
+    <configuration name="RouletteV2AdamZouariTest.theServerShouldHaveZeroStudentsAfterClear" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="QuizRouletteServer-test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ch.heigvd.res.labs.roulette.net.client.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="ch.heigvd.res.labs.roulette.net.client" />
+      <option name="MAIN_CLASS_NAME" value="ch.heigvd.res.labs.roulette.net.client.RouletteV2AdamZouariTest" />
+      <option name="METHOD_NAME" value="theServerShouldHaveZeroStudentsAfterClear" />
       <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" />
@@ -831,18 +831,18 @@
     </configuration>
     <list>
       <item itemvalue="JUnit.RouletteV1AngoranceTest" />
-      <item itemvalue="JUnit.RouletteV1AngoranceTest.theServerShouldReturnTheCorrectVersionNumber" />
       <item itemvalue="JUnit.RouletteV1AngoranceTest.theServerShouldCountStudents" />
       <item itemvalue="JUnit.RouletteV1AngoranceTest.theTestRouletteServerShouldRunDuringTests" />
       <item itemvalue="JUnit.ch.heigvd.res.labs.roulette.net.client in QuizRouletteServer-test" />
+      <item itemvalue="JUnit.RouletteV2AdamZouariTest.theServerShouldHaveZeroStudentsAfterClear" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.RouletteV2AdamZouariTest.theServerShouldHaveZeroStudentsAfterClear" />
         <item itemvalue="JUnit.ch.heigvd.res.labs.roulette.net.client in QuizRouletteServer-test" />
         <item itemvalue="JUnit.RouletteV1AngoranceTest.theTestRouletteServerShouldRunDuringTests" />
         <item itemvalue="JUnit.RouletteV1AngoranceTest" />
         <item itemvalue="JUnit.RouletteV1AngoranceTest.theServerShouldCountStudents" />
-        <item itemvalue="JUnit.RouletteV1AngoranceTest.theServerShouldReturnTheCorrectVersionNumber" />
       </list>
     </recent_temporary>
   </component>
