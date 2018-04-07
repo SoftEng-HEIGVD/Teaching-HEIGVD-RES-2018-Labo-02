@@ -74,12 +74,6 @@ public class RouletteV2DumoriaTest {
 
     //------------------------------------
 
-    @Test
-    @TestAuthor(githubId = "Dumoria")
-    public void theClientShouldBeConnectedToTheRightPort() {
-        int port = roulettePair.getServer().getPort();
-        assertEquals(RouletteV2Protocol.DEFAULT_PORT, port);
-    }
 
     @Test
     @TestAuthor(githubId = "Dumoria")
@@ -160,8 +154,9 @@ public class RouletteV2DumoriaTest {
         client.clearDataStore();
         client.disconnect();
 
-        //int nbrCmd = client.getNumberOfCommands();
-        //assertEquals(5, nbrCmd);
+        int nbrCmd = client.getNumberOfCommands();
+        assertEquals(5, nbrCmd);
+
     }
 
 
