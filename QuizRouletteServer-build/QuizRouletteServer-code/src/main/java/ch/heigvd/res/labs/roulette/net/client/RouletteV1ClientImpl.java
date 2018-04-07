@@ -26,9 +26,10 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
 
-    protected Socket clientSocket = null;
+    protected Socket clientSocket   = null;
     protected BufferedReader reader = null;
-    protected PrintWriter writer = null;
+    protected PrintWriter writer    = null;
+    protected boolean isConnected   = false;
 
     @Override
     public void connect(String server, int port) throws IOException {
@@ -39,6 +40,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
             // Read communications
             reader.readLine();
             LOG.log(Level.INFO, "connected to " + server + ':' + port + " ... ");
+            isConnected = true;
         } catch (IOException e) {
             LOG.log(Level.SEVERE, "An error occured during connection to socket : {0}", e.getMessage());
             cleanSession();
@@ -60,7 +62,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public boolean isConnected() {
-        return clientSocket != null && clientSocket.isConnected();
+        return isConnected;
     }
 
     @Override
@@ -126,6 +128,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
             if (writer != null)
                 writer.close();
+            isConnected = false;
         } catch (IOException e) {
             LOG.log(Level.SEVERE, "An exception during close happened : ", e);
             throw e;

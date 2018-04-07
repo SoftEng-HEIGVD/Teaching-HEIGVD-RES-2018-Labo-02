@@ -1,5 +1,6 @@
 package ch.heigvd.res.labs.roulette.net.client;
 
+import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.data.StudentsList;
@@ -41,6 +42,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         writer.println(RouletteV2Protocol.CMD_LIST);
         writer.flush();
         StudentsList studentList = JsonObjectMapper.parseJson(reader.readLine(), StudentsList.class);
+        ++nbCommands;
         return studentList.getStudents();
     }
 
@@ -90,29 +92,46 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
             writer.println(RouletteV2Protocol.CMD_BYE);
             writer.flush();
             ByeCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), ByeCommandResponse.class);
-            nbCommands++;
             cmdSuccess = response.getStatus().equals(RouletteV2Protocol.SUCCESS);
             cleanSession();
+            ++nbCommands;
         } catch (IOException e) {
             LOG.log(Level.SEVERE, "An error occured during connection to socket : {0}", e.getMessage());
             throw e;
         }
     }
 
+    // THIS PART IS FOR REDEFINITION of V1, we need it because we have to count the commands.
     @Override
-    public int getNumberOfStudentAdded(){
+    public Student pickRandomStudent() throws EmptyStoreException, IOException {
         ++nbCommands;
+        return super.pickRandomStudent();
+    }
+
+    @Override
+    public int getNumberOfStudents() throws IOException {
+        ++nbCommands;
+        return super.getNumberOfStudents();
+    }
+
+    @Override
+    public String getProtocolVersion() throws IOException {
+        ++nbCommands;
+        return super.getProtocolVersion();
+    }
+
+    @Override
+    public int getNumberOfStudentAdded() {
         return nbStudentsAdded;
     }
 
     @Override
-    public int getNumberOfCommands(){
-        ++nbCommands;
+    public int getNumberOfCommands() {
         return nbCommands;
     }
 
     @Override
-    public boolean checkSuccessOfCommand(){
+    public boolean checkSuccessOfCommand() {
         return cmdSuccess;
     }
 
