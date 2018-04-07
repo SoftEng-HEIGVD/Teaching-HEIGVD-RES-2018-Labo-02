@@ -74,15 +74,6 @@ public class RouletteV2DumoriaTest {
 
     //------------------------------------
 
-    /*
-    @Test
-    @TestAuthor(githubId = "Dumoria")
-    public void theClientShouldBeConnectedToTheRightPort() {
-        int port = roulettePair.getServer().getPort();
-        assertEquals(RouletteV2Protocol.DEFAULT_PORT, port);
-        // Not for the ephemeral server!
-    }
-    */
 
     @Test
     @TestAuthor(githubId = "Dumoria")
@@ -165,6 +156,7 @@ public class RouletteV2DumoriaTest {
 
         int nbrCmd = client.getNumberOfCommands();
         assertEquals(5, nbrCmd);
+
     }
 
 
