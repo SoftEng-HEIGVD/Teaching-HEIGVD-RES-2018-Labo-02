@@ -12,12 +12,12 @@ import org.junit.rules.ExpectedException;
  */
 public class RouletteV2WasadigiTest {
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+  @Rule
+  public ExpectedException exception = ExpectedException.none();
 
-    @Rule
-    public EphemeralClientServerPair roulettePair = new EphemeralClientServerPair(RouletteV2Protocol.VERSION);
+  @Rule
+  public EphemeralClientServerPair roulettePair = new EphemeralClientServerPair(RouletteV2Protocol.VERSION);
 
 
-
+  
 }
