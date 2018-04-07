@@ -40,7 +40,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     public void disconnect() throws IOException {
 
         // Send the CMD_BYE to the server
-        sendToServer(RouletteV2Protocol.CMD_BYE);
+        sendCommand(RouletteV2Protocol.CMD_BYE);
 
         response = in.readLine();
 
@@ -71,7 +71,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         // TODO - like super + check new response
 
         // Send the CMD_LOAD to the server.
-        sendToServer(RouletteV1Protocol.CMD_LOAD);
+        sendCommand(RouletteV1Protocol.CMD_LOAD);
 
         // We read the response from the server.
         String response = in.readLine();
@@ -85,11 +85,11 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
             // Then for each student, we send it's fullname to the server.
             for (Student s : students) {
-                sendToServer(s.getFullname());
+                sendData(s.getFullname());
             }
 
             // And the CMD_LOAD_ENDOFDATA_MARKER to signify the end of the data.
-            sendToServer(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+            sendCommand(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
 
         } else {
 
@@ -110,7 +110,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     @Override
     public void clearDataStore() throws IOException {
 
-        sendToServer(RouletteV2Protocol.CMD_CLEAR);
+        sendCommand(RouletteV2Protocol.CMD_CLEAR);
 
         response = in.readLine();
 
@@ -132,7 +132,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     @Override
     public List<Student> listStudents() throws IOException {
 
-        sendToServer(RouletteV2Protocol.CMD_LIST);
+        sendCommand(RouletteV2Protocol.CMD_LIST);
 
         response = in.readLine();
 
@@ -170,9 +170,11 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     }
 
     @Override
-    protected void sendToServer(String data) {
-        ++commandCounter;
+    protected void sendCommand(String command) {
+        if (!command.equals(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER)) {
+            ++commandCounter;
+        }
 
-        super.sendToServer(data);
+        super.sendCommand(command);
     }
 }
