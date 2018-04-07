@@ -54,6 +54,6 @@ public interface IStudentsStore {
    * @param reader where we read student data from
    * @throws IOException
    */
-  public void importData(BufferedReader reader) throws IOException;
+  public int importData(BufferedReader reader) throws IOException;
 
 }

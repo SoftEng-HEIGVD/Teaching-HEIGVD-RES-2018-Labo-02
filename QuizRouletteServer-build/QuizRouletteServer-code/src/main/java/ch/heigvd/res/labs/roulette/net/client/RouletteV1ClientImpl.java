@@ -22,49 +22,100 @@ import java.util.logging.Logger;
  * @author Olivier Liechti
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
+  Socket clientSocket;
+  BufferedReader in;
+  PrintWriter out;
 
   private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
 
   @Override
   public void connect(String server, int port) throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    clientSocket = new Socket(server, port);
+    in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+    out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+    LOG.log(Level.INFO, in.readLine());
   }
 
   @Override
   public void disconnect() throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    if (clientSocket != null) {
+      out.println(RouletteV1Protocol.CMD_BYE);
+      clientSocket.close();
+    }
   }
 
   @Override
   public boolean isConnected() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    return (clientSocket != null && !clientSocket.isClosed() && clientSocket.isConnected());
   }
 
   @Override
   public void loadStudent(String fullname) throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    if (isConnected()) {
+      out.println(RouletteV1Protocol.CMD_LOAD);
+      out.println(fullname);
+      out.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+      out.flush();
+
+      LOG.log(Level.INFO, in.readLine()); // "send your data..."
+      LOG.log(Level.INFO, in.readLine()); // "data loaded"
+    } else {
+      LOG.log(Level.SEVERE, "CLIENT NOT CONNECTED TO SERVER");
+    }
   }
 
   @Override
   public void loadStudents(List<Student> students) throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    if (isConnected()) {
+      out.println(RouletteV1Protocol.CMD_LOAD);
+      for(Student student : students) {
+        out.println(student.getFullname());
+      }
+      out.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+      out.flush();
+      LOG.log(Level.INFO, in.readLine()); // send your data
+      LOG.log(Level.INFO, in.readLine()); // data loaded
+    } else {
+      throw new IOException("Client not connected to server");
+    }
   }
 
   @Override
   public Student pickRandomStudent() throws EmptyStoreException, IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+     if (isConnected()) {
+      out.println(RouletteV1Protocol.CMD_RANDOM);
+      out.flush();
+
+      RandomCommandResponse rdResp = JsonObjectMapper.parseJson(in.readLine(), RandomCommandResponse.class);
+      if (rdResp.getError() == null) {
+        return new Student(rdResp.getFullname());
+      } else {
+        throw new EmptyStoreException();
+      }
+    } else {
+      throw new IOException("Client not connected to server");
+    }
   }
 
   @Override
   public int getNumberOfStudents() throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    if (isConnected()) {
+      out.println(RouletteV1Protocol.CMD_INFO);
+      out.flush();
+      return JsonObjectMapper.parseJson(in.readLine(), InfoCommandResponse.class).getNumberOfStudents();
+    } else {
+      throw new IOException("Client not connected to server");
+    }
   }
 
   @Override
   public String getProtocolVersion() throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    if (isConnected()) {
+      out.println(RouletteV1Protocol.CMD_INFO);
+      out.flush();
+      return JsonObjectMapper.parseJson(in.readLine(), InfoCommandResponse.class).getProtocolVersion();
+    } else {
+      throw new IOException("Client not connected to server");
+    }
   }
-
-
-
 }
