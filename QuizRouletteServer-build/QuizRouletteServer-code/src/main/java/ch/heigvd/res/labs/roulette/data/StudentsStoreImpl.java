@@ -56,6 +56,8 @@ public class StudentsStoreImpl implements IStudentsStore {
 
   @Override
   public void importData(BufferedReader reader) throws IOException {
+
+    // Reset the number of students added
     numberOfStudentAdded = 0;
 
     LOG.log(Level.INFO, "Importing data from input reader of type {0}", reader.getClass());
@@ -69,6 +71,8 @@ public class StudentsStoreImpl implements IStudentsStore {
       } else {
         LOG.log(Level.INFO, "Adding student {0} to the store.", record);
         studentsToAdd.add(new Student(record));
+
+        // One new student is added
         ++numberOfStudentAdded;
       }
     }
