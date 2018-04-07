@@ -1,10 +1,12 @@
 package ch.heigvd.res.labs.roulette.net.client;
 
+import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.data.StudentsList;
 import ch.heigvd.res.labs.roulette.net.protocol.ByeCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.LoadCommandResponse;
+import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
 import java.io.IOException;
 import java.util.List;
@@ -22,21 +24,88 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     private int commandCounter = 0;
 
-    private String lastCommand;
-
     private ByeCommandResponse bcr;
     private LoadCommandResponse lcr;
 
     private static final Logger LOG = Logger.getLogger(RouletteV2ClientImpl.class.getName());
 
     @Override
+    public void connect(String server, int port) throws IOException {
+        super.connect(server, port);
+
+        bcr = null;
+        lcr = null;
+    }
+
+    @Override
     public void disconnect() throws IOException {
-        // TODO - like super + check response
+
+        // Send the CMD_BYE to the server
+        sendToServer(RouletteV2Protocol.CMD_BYE);
+
+        response = in.readLine();
+
+        bcr = JsonObjectMapper.parseJson(response, ByeCommandResponse.class);
+        // TODO - Check response ?
+
+        /*
+         * Then we close the socket's streams and the socket itself.
+         * Before closing, we check if the streams or the socket aren't
+         * null pointers.
+         */
+
+        if (in != null) {
+            in.close();
+        }
+
+        if (out != null) {
+            out.close();
+        }
+
+        if (clientsocket != null) {
+            clientsocket.close();
+        }
     }
 
     @Override
     public void loadStudents(List<Student> students) throws IOException {
         // TODO - like super + check new response
+
+        // Send the CMD_LOAD to the server.
+        sendToServer(RouletteV1Protocol.CMD_LOAD);
+
+        // We read the response from the server.
+        String response = in.readLine();
+
+        // If it's the answer expected
+        if (response.equals(RouletteV1Protocol.RESPONSE_LOAD_START)) {
+
+            // We create info logs.
+            LOG.log(Level.INFO, "Response sent by the server: ");
+            LOG.log(Level.INFO, response);
+
+            // Then for each student, we send it's fullname to the server.
+            for (Student s : students) {
+                sendToServer(s.getFullname());
+            }
+
+            // And the CMD_LOAD_ENDOFDATA_MARKER to signify the end of the data.
+            sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+
+        } else {
+
+            // Otherwise, we log the problem occurred.
+            LOG.log(Level.SEVERE, "Wrong response from server after COMMAND: LOAD");
+            LOG.log(Level.INFO, "Expected: " + RouletteV1Protocol.RESPONSE_LOAD_START);
+            LOG.log(Level.INFO, "Got: " + response);
+        }
+
+        // We read the response of the server after sending the data.
+        response = in.readLine();
+
+        lcr = JsonObjectMapper.parseJson(response, LoadCommandResponse.class);
+
+        // TODO - Check if success?
     }
 
     @Override
@@ -63,14 +132,17 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     @Override
     public List<Student> listStudents() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        sendToServer(RouletteV2Protocol.CMD_LIST);
+
+
     }
 
     public int getNumberOfCommands() {
 
         int numOfCommands;
 
-        if (lastCommand.equals(RouletteV2Protocol.CMD_BYE)) {
+        if (bcr != null) {
             numOfCommands = bcr.getTotalCommands();
         } else {
             numOfCommands = commandCounter;
@@ -81,11 +153,23 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     public int getNumberOfStudentAdded() {
         // TODO - Gets number of new students added
-        return 0;
+        return lcr.getTotalNewStudents();
     }
 
     public boolean checkSuccessOfCommand() {
+
         // TODO - Gets the success of the command
-        return true;
+        if (bcr != null) {
+            return bcr.getCommandStatus().equals("success");
+        } else {
+            return lcr.getCommandStatus().equals("success");
+        }
+    }
+
+    @Override
+    protected void sendToServer(String data) {
+        ++commandCounter;
+
+        super.sendToServer(data);
     }
 }
