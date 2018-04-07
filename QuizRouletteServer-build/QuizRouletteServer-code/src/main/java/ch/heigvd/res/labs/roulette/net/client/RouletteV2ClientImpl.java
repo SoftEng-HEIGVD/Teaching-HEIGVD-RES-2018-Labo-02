@@ -135,7 +135,11 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
         sendToServer(RouletteV2Protocol.CMD_LIST);
 
+        response = in.readLine();
 
+        StudentsList sl = JsonObjectMapper.parseJson(response, StudentsList.class);
+
+        return sl.getStudents();
     }
 
     public int getNumberOfCommands() {
