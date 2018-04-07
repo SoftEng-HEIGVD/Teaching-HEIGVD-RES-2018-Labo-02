@@ -3,10 +3,7 @@ package ch.heigvd.res.labs.roulette.net.server;
 import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.IStudentsStore;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
-import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
-import ch.heigvd.res.labs.roulette.net.protocol.RandomCommandResponse;
-import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
-import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
+import ch.heigvd.res.labs.roulette.net.protocol.*;
 
 import java.io.*;
 import java.util.Arrays;
@@ -37,11 +34,14 @@ public class RouletteV2ClientHandler implements IClientHandler {
         writer.flush();
 
         String command;
+        int numberOfCommands = 0;
         boolean done = false;
+
         while (!done && ((command = reader.readLine()) != null)) {
             LOG.log(Level.INFO, "COMMAND: {0}", command);
             switch (command.toUpperCase()) {
                 case RouletteV1Protocol.CMD_RANDOM:
+                    ++numberOfCommands;
                     RandomCommandResponse rcResponse = new RandomCommandResponse();
                     try {
                         rcResponse.setFullname(store.pickRandomStudent().getFullname());
@@ -52,29 +52,55 @@ public class RouletteV2ClientHandler implements IClientHandler {
                     writer.flush();
                     break;
                 case RouletteV1Protocol.CMD_HELP:
+                    ++numberOfCommands;
                     writer.println("Commands: " + Arrays.toString(RouletteV1Protocol.SUPPORTED_COMMANDS));
                     break;
                 case RouletteV1Protocol.CMD_INFO:
-                    InfoCommandResponse response = new InfoCommandResponse(RouletteV1Protocol.VERSION, store.getNumberOfStudents());
+                    ++numberOfCommands;
+                    InfoCommandResponse response = new InfoCommandResponse(RouletteV2Protocol.VERSION, store.getNumberOfStudents());
                     writer.println(JsonObjectMapper.toJson(response));
                     writer.flush();
                     break;
                 case RouletteV1Protocol.CMD_LOAD:
-                    // TODO
+                    // TODO - other tests?
+                    ++numberOfCommands;
                     writer.println(RouletteV1Protocol.RESPONSE_LOAD_START);
                     writer.flush();
-                    store.importData(reader);
+
+                    String state;
+                    try {
+                        store.importData(reader);
+                        state = "success";
+                    }
+                    catch(IOException e){
+                        state = "fail";
+                    }
+
                     writer.println(RouletteV1Protocol.RESPONSE_LOAD_DONE);
+
+                    LoadCommandResponse loadResponse = new LoadCommandResponse(state, store.getNumberOfStudentAdded());
+                    writer.println(JsonObjectMapper.toJson(loadResponse));
                     writer.flush();
                     break;
                 case RouletteV2Protocol.CMD_LIST:
-                    // TODO
+                    // TODO - other tests?
+                    ++numberOfCommands;
+                    writer.println(JsonObjectMapper.toJson(store.listStudents()));
+                    writer.flush();
                     break;
                 case RouletteV2Protocol.CMD_CLEAR:
-                    // TODO
+                    // TODO - other tests?
+                    ++numberOfCommands;
+                    store.clear();
+                    writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
+                    writer.flush();
                     break;
                 case RouletteV1Protocol.CMD_BYE:
-                    // TODO
+                    // TODO - other tests?
+                    ++numberOfCommands;
+                    ByeCommandResponse byeResponse = new ByeCommandResponse("success", numberOfCommands);
+                    writer.println(JsonObjectMapper.toJson(byeResponse));
+                    writer.flush();
                     done = true;
                     break;
                 default:
@@ -85,5 +111,4 @@ public class RouletteV2ClientHandler implements IClientHandler {
             writer.flush();
         }
     }
-
 }

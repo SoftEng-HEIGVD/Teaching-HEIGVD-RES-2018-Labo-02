@@ -21,6 +21,8 @@ public class StudentsStoreImpl implements IStudentsStore {
 
   private final List<Student> students = new LinkedList<>();
 
+  private int numberOfStudentAdded = 0;
+
   @Override
   public synchronized void clear() {
     students.clear();
@@ -42,6 +44,7 @@ public class StudentsStoreImpl implements IStudentsStore {
     if (students.isEmpty()) {
       throw new EmptyStoreException();
     }
+
     int n = (int) (Math.random() * students.size());
     return students.get(n);
   }
@@ -59,11 +62,12 @@ public class StudentsStoreImpl implements IStudentsStore {
     boolean endReached = false;
     while (!endReached && (record = reader.readLine()) != null) {
       if (record.equalsIgnoreCase(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER)) {
-        LOG.log(Level.INFO, "End of stream reached. New students have been added to the store. How many? We'll tell you when the lab is complete...");
+        LOG.log(Level.INFO, "End of stream reached. " + numberOfStudentAdded + " students have been added to the store.");
         endReached = true;
       } else {
         LOG.log(Level.INFO, "Adding student {0} to the store.", record);
         studentsToAdd.add(new Student(record));
+        ++numberOfStudentAdded;
       }
     }
     synchronized (this) {
@@ -72,4 +76,8 @@ public class StudentsStoreImpl implements IStudentsStore {
     LOG.log(Level.INFO, "There are now {0} students in the store.", getNumberOfStudents());
   }
 
+  @Override
+  public int getNumberOfStudentAdded() {
+    return numberOfStudentAdded;
+  }
 }

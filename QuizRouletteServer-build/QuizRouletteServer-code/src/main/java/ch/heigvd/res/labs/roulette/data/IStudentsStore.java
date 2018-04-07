@@ -56,4 +56,5 @@ public interface IStudentsStore {
    */
   public void importData(BufferedReader reader) throws IOException;
 
+  public int getNumberOfStudentAdded();
 }
