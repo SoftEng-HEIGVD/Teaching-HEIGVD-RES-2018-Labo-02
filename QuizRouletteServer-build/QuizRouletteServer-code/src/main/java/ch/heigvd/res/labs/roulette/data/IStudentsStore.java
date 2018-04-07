@@ -56,5 +56,10 @@ public interface IStudentsStore {
    */
   public void importData(BufferedReader reader) throws IOException;
 
+  /**
+   * This method returns the last number of students added in the data store
+   *
+   * @return the last number of students added in the data store
+   */
   public int getNumberOfStudentAdded();
 }
