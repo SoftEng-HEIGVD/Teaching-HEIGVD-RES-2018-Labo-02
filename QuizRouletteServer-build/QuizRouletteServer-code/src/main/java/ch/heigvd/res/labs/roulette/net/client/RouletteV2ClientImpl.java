@@ -15,7 +15,7 @@ import java.util.List;
  * This class implements the client side of the protocol specification (version
  * 2).
  *
- * @author Olivier Liechti
+ * @author Bryan Curchod, François Burgener
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
 
@@ -38,16 +38,16 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         answer = readFromServer();
         bye = JsonObjectMapper.parseJson(answer, ByeCommandReponse.class);
         close();
-        
+
         numberOfCommands++;
     }
 
     @Override
     public void loadStudent(String fullname) throws IOException {
         super.loadStudent(fullname);
-        
+
         load = JsonObjectMapper.parseJson(answer, LoadCommandReponse.class);
-        
+
         numberOfCommands++;
     }
 
@@ -55,21 +55,21 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     public void loadStudents(List<Student> students) throws IOException {
         super.loadStudents(students);
         load = JsonObjectMapper.parseJson(answer, LoadCommandReponse.class);
-        
+
         numberOfCommands++;
     }
-    
+
     @Override
     public Student pickRandomStudent() throws EmptyStoreException, IOException {
         numberOfCommands++;
-        
+
         return super.pickRandomStudent();
     }
 
     @Override
     public int getNumberOfStudents() throws IOException {
         numberOfCommands++;
-        
+
         return super.getNumberOfStudents();
     }
 
@@ -79,9 +79,9 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         sendToServer(RouletteV2Protocol.CMD_INFO);
         answer = readFromServer();
         InfoCommandResponse response = JsonObjectMapper.parseJson(answer, InfoCommandResponse.class);
-        
+
         numberOfCommands++;
-        
+
         return response.getProtocolVersion();
         // TODO
     }
@@ -92,7 +92,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         sendToServer(RouletteV2Protocol.CMD_CLEAR);
 
         answer = readFromServer();
-        
+
         numberOfCommands++;
 
     }
@@ -103,9 +103,9 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         sendToServer(RouletteV2Protocol.CMD_LIST);
         answer = readFromServer();
         StudentsList reponse = JsonObjectMapper.parseJson(answer, StudentsList.class);
-        
+
         numberOfCommands++;
-        
+
         return reponse.getStudents();
     }
 
@@ -121,13 +121,11 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     @Override
     public int getNumberOfCommands() {
-        /*if (bye != null) {
+        if (bye != null) {
             return bye.getNumberOfCommands();
         } else {
-            return 0;
-        }*/
-        
-        return numberOfCommands;
+            return numberOfCommands;
+        }
     }
 
     @Override
