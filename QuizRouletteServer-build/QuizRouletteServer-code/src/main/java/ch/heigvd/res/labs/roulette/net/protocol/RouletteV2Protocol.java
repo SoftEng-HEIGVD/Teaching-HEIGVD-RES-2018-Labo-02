@@ -7,13 +7,20 @@ package ch.heigvd.res.labs.roulette.net.protocol;
  */
 public class RouletteV2Protocol extends RouletteV1Protocol {
 
-  public final static String VERSION = "2.0";
+    public final static String VERSION = "2.0";
 
-  public final static String CMD_CLEAR = "CLEAR";
-  public final static String CMD_LIST = "LIST";
+    // The status response the server send
+    public final static String SUCCESS_RESPONSE = "success";
+    public final static String FAILURE_RESPONSE = "failure";
 
-  public static String RESPONSE_CLEAR_DONE = "DATASTORE CLEARED";
+    // As defined in the README for V2Protocol
+    public final static int DEFAULT_PORT = 2613;
 
-  public final static String[] SUPPORTED_COMMANDS = new String[]{CMD_HELP, CMD_RANDOM, CMD_LOAD, CMD_INFO, CMD_BYE, CMD_CLEAR, CMD_LIST};
+    public final static String CMD_CLEAR = "CLEAR";
+    public final static String CMD_LIST = "LIST";
+
+    public static String RESPONSE_CLEAR_DONE = "DATASTORE CLEARED";
+
+    public final static String[] SUPPORTED_COMMANDS = new String[]{CMD_HELP, CMD_RANDOM, CMD_LOAD, CMD_INFO, CMD_BYE, CMD_CLEAR, CMD_LIST};
 
 }

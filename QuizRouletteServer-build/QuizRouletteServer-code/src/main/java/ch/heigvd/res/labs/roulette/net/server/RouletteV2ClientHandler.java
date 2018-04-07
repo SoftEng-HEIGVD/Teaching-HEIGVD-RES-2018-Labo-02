@@ -1,9 +1,6 @@
 package ch.heigvd.res.labs.roulette.net.server;
 
-import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
-import ch.heigvd.res.labs.roulette.data.IStudentsStore;
-import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
-import ch.heigvd.res.labs.roulette.data.Student;
+import ch.heigvd.res.labs.roulette.data.*;
 import ch.heigvd.res.labs.roulette.net.protocol.*;
 
 import java.io.*;
@@ -43,6 +40,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
         while (!done && ((command = reader.readLine()) != null)) {
             LOG.log(Level.INFO, "COMMAND: {0}", command);
             ++nbCommands;
+
             switch (command.toUpperCase()) {
                 case RouletteV2Protocol.CMD_RANDOM:
                     RandomCommandResponse rcResponse = new RandomCommandResponse();
@@ -69,23 +67,27 @@ public class RouletteV2ClientHandler implements IClientHandler {
                     writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
                     writer.flush();
                     boolean isSuccess;
+                    // Store the number of students before the load so we can calculate the number of new ones after
                     int initialNbStudents = store.getNumberOfStudents();
+
+                    // If the load throws an exception, the status change to FAILURE_RESPONSE instead of SUCCESS_RESPONSE
                     try {
                         store.importData(reader);
                         isSuccess = true;
                     }catch(IOException e){
                         isSuccess = false;
                     }
+
                     int nbNewStudents = store.getNumberOfStudents() - initialNbStudents;
                     nbStudentsAdded += nbNewStudents;
-                    LoadCommandResponse ldResponse = new LoadCommandResponse(isSuccess == true ? "success" : "failure", nbNewStudents);
+                    LoadCommandResponse ldResponse = new LoadCommandResponse(isSuccess == true ? RouletteV2Protocol.SUCCESS_RESPONSE : RouletteV2Protocol.FAILURE_RESPONSE, nbNewStudents);
                     writer.println(JsonObjectMapper.toJson(ldResponse));
                     writer.flush();
                     break;
 
                 case RouletteV2Protocol.CMD_BYE:
                     done = true;
-                    ByeCommandResponse bResponse = new ByeCommandResponse("success", nbCommands);
+                    ByeCommandResponse bResponse = new ByeCommandResponse(RouletteV2Protocol.SUCCESS_RESPONSE, nbCommands);
                     writer.println(JsonObjectMapper.toJson(bResponse));
                     writer.flush();
                     break;
@@ -95,13 +97,16 @@ public class RouletteV2ClientHandler implements IClientHandler {
                     writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
                     writer.flush();
                     break;
+
                 case RouletteV2Protocol.CMD_LIST:
-                    ListCommandResponse ltResponse = new ListCommandResponse((Student[]) store.listStudents().toArray());
+                    ListCommandResponse ltResponse = new ListCommandResponse(store.listStudents());
                     writer.println(JsonObjectMapper.toJson(ltResponse));
                     writer.flush();
                     break;
 
                 default:
+                    // If a command failed, it is not count; we only count the successful ones
+                    --nbCommands;
                     writer.println("Huh? please use HELP if you don't know what commands are available.");
                     writer.flush();
                     break;
