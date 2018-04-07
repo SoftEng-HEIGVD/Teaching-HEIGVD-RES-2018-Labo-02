@@ -76,7 +76,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
    * @return the value of readLine from the bufferedReader
    * @throws IOException
    */
-  private String read() throws IOException {
+  protected String read() throws IOException {
     return bufferedReader.readLine();
   }
 
@@ -85,7 +85,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
    *
    * @param message the message that will be sent to the server
    */
-  private void write(String message) {
+  protected void write(String message) {
     printWriter.println(message);
     printWriter.flush();
   }
@@ -129,14 +129,15 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     write(RouletteV1Protocol.CMD_RANDOM);
 
-    RandomCommandResponse response = JsonObjectMapper.parseJson(read(), RandomCommandResponse.class);
+    String readStudent = read();
+    RandomCommandResponse response = JsonObjectMapper.parseJson(readStudent, RandomCommandResponse.class);
 
     if(response.getError() != null){
       LOG.info("Error while parsing Json");
       throw new EmptyStoreException();
     }
 
-    return Student.fromJson(response.getFullname());
+    return Student.fromJson(readStudent);
   }
 
   /**
@@ -145,7 +146,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
    * @return the InfoCommandResponse given by JsonObjectMapper.parseJson(...)
    * @throws IOException
    */
-  private InfoCommandResponse getInfoResponse() throws IOException {
+  protected InfoCommandResponse getInfoResponse() throws IOException {
 
     write(RouletteV1Protocol.CMD_INFO);
     return JsonObjectMapper.parseJson(read(), InfoCommandResponse.class);
@@ -165,5 +166,11 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     LOG.info("Get protocol version");
 
     return getInfoResponse().getProtocolVersion();
+  }
+
+  public void closeAll() throws IOException {
+    socket.close();
+    bufferedReader.close();
+    printWriter.close();
   }
 }
