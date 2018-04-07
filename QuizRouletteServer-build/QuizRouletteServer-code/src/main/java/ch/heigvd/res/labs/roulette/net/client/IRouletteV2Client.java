@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti, modified by Christophe Joyet and Lionel Nanchen
  */
 public interface IRouletteV2Client extends IRouletteV1Client {
 
@@ -28,4 +28,24 @@ public interface IRouletteV2Client extends IRouletteV1Client {
    */
   public List<Student> listStudents() throws IOException;
 
+  /**
+   * Get the number of student added during LOAD command
+   *
+   * @return the number of students added
+   */
+  public int getNumberOfStudentAdded();
+
+  /**
+   * Get the number of command sent to the server
+   *
+   * @return the number of commands sent to the server
+   */
+  public int getNumberOfCommands();
+
+  /**
+   * Check if the last command was done succecfully
+   *
+   * @return true if the last command passed successfully
+   */
+  public boolean checkSuccessOfCommand();
 }
