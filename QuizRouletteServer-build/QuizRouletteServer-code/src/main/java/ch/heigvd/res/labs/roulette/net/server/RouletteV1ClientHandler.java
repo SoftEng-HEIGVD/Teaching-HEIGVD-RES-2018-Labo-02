@@ -28,6 +28,7 @@ public class RouletteV1ClientHandler implements IClientHandler {
 
   private final IStudentsStore store;
 
+
   public RouletteV1ClientHandler(IStudentsStore store) {
     this.store = store;
   }

@@ -77,4 +77,6 @@ public interface IRouletteV1Client {
    */
   public String getProtocolVersion() throws IOException;
 
+  public int getNumberOfCommands();
+
 }

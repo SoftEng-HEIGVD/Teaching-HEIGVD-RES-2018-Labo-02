@@ -28,4 +28,8 @@ public interface IRouletteV2Client extends IRouletteV1Client {
    */
   public List<Student> listStudents() throws IOException;
 
+  public int getNumberOfStudentAdded();
+
+  public boolean checkSuccessOfCommand();
+
 }
