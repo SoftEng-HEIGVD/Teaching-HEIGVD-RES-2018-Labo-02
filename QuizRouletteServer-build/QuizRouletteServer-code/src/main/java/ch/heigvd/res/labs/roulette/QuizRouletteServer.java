@@ -31,6 +31,13 @@ public class QuizRouletteServer {
     } catch (IOException ex) {
       Logger.getLogger(QuizRouletteServer.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
     }
+
+    RouletteServer serverV2 = new RouletteServer(RouletteV2Protocol.DEFAULT_PORT, RouletteV2Protocol.VERSION);
+    try {
+      serverV2.startServer();
+    } catch (IOException ex) {
+      Logger.getLogger(QuizRouletteServer.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+    }
   }
 
 }
