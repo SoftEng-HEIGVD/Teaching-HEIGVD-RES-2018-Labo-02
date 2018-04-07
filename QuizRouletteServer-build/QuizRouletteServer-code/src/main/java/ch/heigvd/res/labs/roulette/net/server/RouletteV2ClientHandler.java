@@ -3,6 +3,7 @@ package ch.heigvd.res.labs.roulette.net.server;
 import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.IStudentsStore;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
+import ch.heigvd.res.labs.roulette.data.StudentsList;
 import ch.heigvd.res.labs.roulette.net.protocol.*;
 
 import java.io.*;
@@ -40,7 +41,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
         while (!done && ((command = reader.readLine()) != null)) {
             LOG.log(Level.INFO, "COMMAND: {0}", command);
             switch (command.toUpperCase()) {
-                case RouletteV1Protocol.CMD_RANDOM:
+                case RouletteV2Protocol.CMD_RANDOM:
                     ++numberOfCommands;
                     RandomCommandResponse rcResponse = new RandomCommandResponse();
                     try {
@@ -51,20 +52,20 @@ public class RouletteV2ClientHandler implements IClientHandler {
                     writer.println(JsonObjectMapper.toJson(rcResponse));
                     writer.flush();
                     break;
-                case RouletteV1Protocol.CMD_HELP:
+                case RouletteV2Protocol.CMD_HELP:
                     ++numberOfCommands;
-                    writer.println("Commands: " + Arrays.toString(RouletteV1Protocol.SUPPORTED_COMMANDS));
+                    writer.println("Commands: " + Arrays.toString(RouletteV2Protocol.SUPPORTED_COMMANDS));
                     break;
-                case RouletteV1Protocol.CMD_INFO:
+                case RouletteV2Protocol.CMD_INFO:
                     ++numberOfCommands;
                     InfoCommandResponse response = new InfoCommandResponse(RouletteV2Protocol.VERSION, store.getNumberOfStudents());
                     writer.println(JsonObjectMapper.toJson(response));
                     writer.flush();
                     break;
-                case RouletteV1Protocol.CMD_LOAD:
+                case RouletteV2Protocol.CMD_LOAD:
                     // TODO - other tests?
                     ++numberOfCommands;
-                    writer.println(RouletteV1Protocol.RESPONSE_LOAD_START);
+                    writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
                     writer.flush();
 
                     String state;
@@ -76,7 +77,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
                         state = "fail";
                     }
 
-                    writer.println(RouletteV1Protocol.RESPONSE_LOAD_DONE);
+                    //writer.println(RouletteV2Protocol.RESPONSE_LOAD_DONE);
 
                     LoadCommandResponse loadResponse = new LoadCommandResponse(state, store.getNumberOfStudentAdded());
                     writer.println(JsonObjectMapper.toJson(loadResponse));
@@ -85,7 +86,11 @@ public class RouletteV2ClientHandler implements IClientHandler {
                 case RouletteV2Protocol.CMD_LIST:
                     // TODO - other tests?
                     ++numberOfCommands;
-                    writer.println(JsonObjectMapper.toJson(store.listStudents()));
+
+                    StudentsList sl = new StudentsList();
+                    sl.setStudents(store.listStudents());
+
+                    writer.println(JsonObjectMapper.toJson(sl));
                     writer.flush();
                     break;
                 case RouletteV2Protocol.CMD_CLEAR:
@@ -95,7 +100,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
                     writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
                     writer.flush();
                     break;
-                case RouletteV1Protocol.CMD_BYE:
+                case RouletteV2Protocol.CMD_BYE:
                     // TODO - other tests?
                     ++numberOfCommands;
                     ByeCommandResponse byeResponse = new ByeCommandResponse("success", numberOfCommands);

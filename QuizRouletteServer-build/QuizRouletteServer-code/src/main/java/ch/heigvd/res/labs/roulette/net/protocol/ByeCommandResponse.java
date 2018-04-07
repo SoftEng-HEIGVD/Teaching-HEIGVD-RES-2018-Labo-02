@@ -9,27 +9,29 @@ package ch.heigvd.res.labs.roulette.net.protocol;
  */
 public class ByeCommandResponse {
 
-    private String commandStatus;
-    private int totalCommands;
+    private String status;
+    private int numberOfCommands;
 
-    public ByeCommandResponse(String commandStatus, int totalCommands) {
-        this.commandStatus = commandStatus;
-        this.totalCommands = totalCommands;
+    public ByeCommandResponse() {}
+
+    public ByeCommandResponse(String status, int numberOfCommands) {
+        this.status = status;
+        this.numberOfCommands = numberOfCommands;
     }
 
-    public String getCommandStatus() {
-        return commandStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public int getTotalCommands() {
-        return totalCommands;
+    public int getNumberOfCommands() {
+        return numberOfCommands;
     }
 
-    public void setCommandStatus(String commandStatus) {
-        this.commandStatus = commandStatus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public void setTotalCommands(int totalCommands) {
-        this.totalCommands = totalCommands;
+    public void setNumberOfCommands(int numberOfCommands) {
+        this.numberOfCommands = numberOfCommands;
     }
 }

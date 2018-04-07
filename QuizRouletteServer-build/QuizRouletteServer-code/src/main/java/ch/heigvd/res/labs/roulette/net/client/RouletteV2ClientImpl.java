@@ -1,6 +1,5 @@
 package ch.heigvd.res.labs.roulette.net.client;
 
-import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.data.StudentsList;
@@ -78,7 +77,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         String response = in.readLine();
 
         // If it's the answer expected
-        if (response.equals(RouletteV1Protocol.RESPONSE_LOAD_START)) {
+        if (response.equals(RouletteV2Protocol.RESPONSE_LOAD_START)) {
 
             // We create info logs.
             LOG.log(Level.INFO, "Response sent by the server: ");
@@ -90,7 +89,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
             }
 
             // And the CMD_LOAD_ENDOFDATA_MARKER to signify the end of the data.
-            sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+            sendToServer(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
 
         } else {
 
@@ -147,7 +146,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         int numOfCommands;
 
         if (bcr != null) {
-            numOfCommands = bcr.getTotalCommands();
+            numOfCommands = bcr.getNumberOfCommands();
         } else {
             numOfCommands = commandCounter;
         }
@@ -157,16 +156,16 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     public int getNumberOfStudentAdded() {
         // TODO - Gets number of new students added
-        return lcr.getTotalNewStudents();
+        return lcr.getNumberOfNewStudents();
     }
 
     public boolean checkSuccessOfCommand() {
 
         // TODO - Gets the success of the command
         if (bcr != null) {
-            return bcr.getCommandStatus().equals("success");
+            return bcr.getStatus().equals("success");
         } else {
-            return lcr.getCommandStatus().equals("success");
+            return lcr.getStatus().equals("success");
         }
     }
 
