@@ -69,7 +69,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     public void disconnect() throws IOException {
 
         // Send the CMD_BYE to the server
-        sendToServer(RouletteV1Protocol.CMD_BYE);
+        sendCommand(RouletteV1Protocol.CMD_BYE);
 
         /*
          * Then we close the socket's streams and the socket itself.
@@ -117,7 +117,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     public void loadStudents(List<Student> students) throws IOException {
 
         // Send the CMD_LOAD to the server.
-        sendToServer(RouletteV1Protocol.CMD_LOAD);
+        sendCommand(RouletteV1Protocol.CMD_LOAD);
 
         // We read the response from the server.
         String response = in.readLine();
@@ -131,11 +131,11 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
             // Then for each student, we send it's fullname to the server.
             for (Student s : students) {
-                sendToServer(s.getFullname());
+                sendData(s.getFullname());
             }
 
             // And the CMD_LOAD_ENDOFDATA_MARKER to signify the end of the data.
-            sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+            sendCommand(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
 
         } else {
 
@@ -168,7 +168,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     public Student pickRandomStudent() throws EmptyStoreException, IOException {
 
         // Send the CMD_RANDOM to the server.
-        sendToServer(RouletteV1Protocol.CMD_RANDOM);
+        sendCommand(RouletteV1Protocol.CMD_RANDOM);
 
         // We read the response from the server.
         String response = in.readLine();
@@ -200,7 +200,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     public int getNumberOfStudents() throws IOException {
 
         // Send the CMD_INFO to the server.
-        sendToServer(RouletteV1Protocol.CMD_INFO);
+        sendCommand(RouletteV1Protocol.CMD_INFO);
 
         // We read the response from the server.
         String response = in.readLine();
@@ -220,7 +220,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     public String getProtocolVersion() throws IOException {
 
         // Send the CMD_INFO to the server.
-        sendToServer(RouletteV1Protocol.CMD_INFO);
+        sendCommand(RouletteV1Protocol.CMD_INFO);
 
         // We read the response from the server.
         String response = in.readLine();
@@ -236,7 +236,11 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         return icr.getProtocolVersion();
     }
 
-    protected void sendToServer(String data) {
+    protected void sendCommand(String command) {
+        sendData(command);
+    }
+
+    protected void sendData(String data) {
 
         // Print the data and flush the stream.
         out.println(data);
