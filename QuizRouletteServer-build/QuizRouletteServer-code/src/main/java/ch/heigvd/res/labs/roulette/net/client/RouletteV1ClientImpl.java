@@ -2,6 +2,7 @@ package ch.heigvd.res.labs.roulette.net.client;
 
 import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
+import ch.heigvd.res.labs.roulette.net.protocol.LoadCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
@@ -23,13 +24,14 @@ import java.util.logging.Logger;
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
-  private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
-  private Socket clientSocket;
-  private BufferedReader in;
-  private PrintWriter out;
-  private String serveResponse = "";
+  protected static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
+  protected Socket clientSocket;
+  protected BufferedReader in;
+  protected PrintWriter out;
+  protected String serveResponse = "";
   private boolean connected = false;
   private boolean firstRequest = true;
+  protected int numberOfCommands;
 
 
   @Override
@@ -45,6 +47,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     LOG.log(Level.INFO, "{ClientRouletteV1} has requested to be disconnected.");
     connected = false;
     out.println(RouletteV1Protocol.CMD_BYE);
+    numberOfCommands++;
     cleanup();
   }
 
@@ -58,6 +61,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     checkForFirstRequest();
 
     out.println(RouletteV1Protocol.CMD_LOAD);
+    numberOfCommands++;
     out.flush();
 
     serveResponse = in.readLine();
@@ -78,6 +82,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     checkForFirstRequest();
 
     out.println(RouletteV1Protocol.CMD_LOAD);
+    numberOfCommands++;
     out.flush();
 
     serveResponse = in.readLine();
@@ -102,6 +107,9 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     checkForFirstRequest();
 
     out.println(RouletteV1Protocol.CMD_RANDOM);
+
+    numberOfCommands++;
+
     out.flush();
 
     serveResponse = in.readLine();
@@ -115,10 +123,16 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     return new Student(randomResponse.getFullname());
   }
 
+  public int getNumberOfCommands() {
+    return numberOfCommands;
+  }
+
   private InfoCommandResponse getInfoCommand() throws IOException {
     checkForFirstRequest();
 
     out.println(RouletteV1Protocol.CMD_INFO);
+    numberOfCommands++;
+
     out.flush();
 
     serveResponse = in.readLine();
@@ -138,7 +152,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   }
 
   //if it's the first time we make a request, we're waiting for the welcome message first
-  private void checkForFirstRequest() throws IOException {
+  protected void checkForFirstRequest() throws IOException {
     if(firstRequest) {
       while (!connected || (serveResponse = in.readLine()).isEmpty());
       firstRequest = false;
