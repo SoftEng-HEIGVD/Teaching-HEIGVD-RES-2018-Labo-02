@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
-  private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
+  protected static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
   private Socket clientSocket ;
   protected BufferedReader reader;
   protected PrintWriter writer;
@@ -36,7 +36,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     reader = new BufferedReader( new InputStreamReader(clientSocket.getInputStream()) );
     writer = new PrintWriter( new OutputStreamWriter(clientSocket.getOutputStream()) );
-    reader.readLine();
+    LOG.log(Level.INFO, "Connection. Server says: {0}", reader.readLine());
   }
 
   @Override
@@ -60,13 +60,14 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     writer.println(RouletteV1Protocol.CMD_LOAD);
     writer.flush();
-    reader.readLine();
+    LOG.log(Level.INFO, "Begin loading. Server says: {0}", reader.readLine());
+
 
     writer.println(fullname);
-    writer.flush();
     writer.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
     writer.flush();
-    reader.readLine();
+    LOG.log(Level.INFO, "End of loading. Server says: {0}", reader.readLine());
+
   }
 
   @Override
@@ -74,14 +75,15 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     writer.println(RouletteV1Protocol.CMD_LOAD);
     writer.flush();
-    reader.readLine();
+    LOG.log(Level.INFO, "Begin loading. Server says: {0}", reader.readLine());
 
     for (Student s : students) {
       writer.println(s.getFullname());
     }
     writer.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
     writer.flush();
-    reader.readLine();
+    LOG.log(Level.INFO, "End of loading. Server says: {0}", reader.readLine());
+
   }
 
   @Override
@@ -101,16 +103,14 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   public int getNumberOfStudents() throws IOException {
     writer.println(RouletteV1Protocol.CMD_INFO);
     writer.flush();
-    InfoCommandResponse parsedAnswer = JsonObjectMapper.parseJson(reader.readLine(), InfoCommandResponse.class);
-    return parsedAnswer.getNumberOfStudents();
+    return JsonObjectMapper.parseJson(reader.readLine(), InfoCommandResponse.class).getNumberOfStudents();
   }
 
   @Override
   public String getProtocolVersion() throws IOException {
-    return RouletteV1Protocol.VERSION;
+    writer.println(RouletteV1Protocol.CMD_INFO);
+    writer.flush();
+    return JsonObjectMapper.parseJson(reader.readLine(), InfoCommandResponse.class).getProtocolVersion();
   }
-
-
-
 
 }
