@@ -80,9 +80,16 @@ public class RouletteV2ClientHandler implements IClientHandler {
 
                // We know the new number of students added by minimizing the old number with the the new number
                int nbStudentsBefore = store.getNumberOfStudents();
+               String status;
+               
+               try {
                store.importData(reader);
+               status = RouletteV2Protocol.SUCCESS;
+               } catch (IOException ex){
+                 status = RouletteV2Protocol.FAILURE;
+               }
                int nbStudentsAfter = store.getNumberOfStudents();
-               writer.println(JsonObjectMapper.toJson(new LoadCommandResponse(RouletteV2Protocol.SUCCESS, nbStudentsAfter - nbStudentsBefore)));
+               writer.println(JsonObjectMapper.toJson(new LoadCommandResponse(status, nbStudentsAfter - nbStudentsBefore)));
                writer.flush();
                break;
 
