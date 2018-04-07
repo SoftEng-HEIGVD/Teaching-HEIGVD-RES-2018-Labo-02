@@ -9,14 +9,13 @@ import java.util.List;
  * when processing the "LIST" command defined in the protocol specification V2.
  * The JsonObjectMapper utility class can use this class.
  *
- * @author Lionel Nanchen
+ * @author Christophe Joyet and Lionel Nanchen
  */
 public class ListCommandResponse {
 
     private List<Student> students;
 
-    public ListCommandResponse(){
-    }
+    public ListCommandResponse() {}
 
     public ListCommandResponse(List<Student> students){
         this.students = students;
