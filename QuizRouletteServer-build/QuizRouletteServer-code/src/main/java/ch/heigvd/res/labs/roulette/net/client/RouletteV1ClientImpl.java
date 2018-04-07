@@ -24,12 +24,12 @@ import java.util.logging.Logger;
 public class RouletteV1ClientImpl implements IRouletteV1Client {
   
   // We declare the socker and the streams.
-  private Socket clientsocket = null;
-  private BufferedReader in = null;
-  private PrintWriter out = null;
+  protected Socket clientsocket = null;
+  protected BufferedReader in = null;
+  protected PrintWriter out = null;
   
   // String used for server responses.
-  private String response;
+  protected String response;
 
   private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
 
@@ -236,7 +236,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     return icr.getProtocolVersion();
   }
 
-  private void sendToServer(String data) {
+  protected void sendToServer(String data) {
     
     // Print the data and flush the stream.
     out.println(data);
