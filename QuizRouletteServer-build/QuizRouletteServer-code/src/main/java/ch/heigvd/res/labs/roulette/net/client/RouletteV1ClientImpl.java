@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author Olivier Liechti
  *
- * @modifiedBy Daniel Gonzalez Lopez, Héléna Line Reymond
+ * modifiedBy: Daniel Gonzalez Lopez, Héléna Line Reymond
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 

@@ -5,7 +5,7 @@ package ch.heigvd.res.labs.roulette.net.protocol;
  * when processing the "LOAD" command defined in the protocol specification. The
  * JsonObjectMapper utility class can use this class.
  *
- * @author Daniel Gonzalez Lopez, Héléna Line Reymond
+ * @authors Daniel Gonzalez Lopez, Héléna Line Reymond
  */
 public class LoadCommandResponse {
 
