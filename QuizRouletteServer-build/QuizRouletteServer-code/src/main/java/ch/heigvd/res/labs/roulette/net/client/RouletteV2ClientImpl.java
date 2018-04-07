@@ -12,10 +12,11 @@ import java.util.logging.Logger;
 /**
  * This class implements the client side of the protocol specification (version 2).
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti and Guillaume Hochet
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
 
+    private int lastStudentsAdded = 0;
     private int numberOfCommands = 0;
     private boolean lastCommandSuccess = false;
 
@@ -26,7 +27,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
         LOG.info("Clearing students datastore");
         numberOfCommands++;
-        out.write(RouletteV2Protocol.CMD_CLEAR);
+        out.println(RouletteV2Protocol.CMD_CLEAR);
         out.flush();
 
         in.readLine();
@@ -38,16 +39,16 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         LOG.info("Listing students");
         numberOfCommands++;
 
-        out.write(RouletteV2Protocol.CMD_LIST);
+        out.println(RouletteV2Protocol.CMD_LIST);
         out.flush();
 
         return JsonObjectMapper.parseJson(in.readLine(), ListStudentCommandResponse.class).getStudents();
     }
 
-    public int getNumberOfStudentAdded() throws IOException {
+    public int getNumberOfStudentAdded() {
 
         LOG.info("Retrieving number of students added");
-        return getServerInfo().getNumberOfStudents();
+        return lastStudentsAdded;
     }
 
     public int getNumberOfCommands() {
@@ -64,15 +65,13 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     public void disconnect() throws IOException {
 
         LOG.info("Attempting to disconnect");
+        numberOfCommands++;
 
         if(connexion == null)
             return;
 
-        numberOfCommands++;
-        out.write(RouletteV2Protocol.CMD_BYE);
+        out.println(RouletteV2Protocol.CMD_BYE);
         out.flush();
-        out.close();
-
 
         ByeCommandResponse response = JsonObjectMapper.parseJson(in.readLine(), ByeCommandResponse.class);
         lastCommandSuccess = response.getStatus().equals("success");
@@ -80,6 +79,8 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         connexion.close();
         in.close();
         out.close();
+
+        connexion = null;
     }
 
     @Override
@@ -89,8 +90,11 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         numberOfCommands++;
 
         _loadStudent(fullname);
-        lastCommandSuccess = JsonObjectMapper.parseJson(in.readLine(), LoadStudentCommandResponse.class)
-                .getStatus().equals("success");
+        LoadStudentCommandResponse response = JsonObjectMapper.parseJson(in.readLine(), LoadStudentCommandResponse.class);
+        lastCommandSuccess = response.getStatus().equals("success");
+
+        if(lastCommandSuccess)
+            lastStudentsAdded = response.getNumberOfNewStudents();
     }
 
     @Override
@@ -100,8 +104,11 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         numberOfCommands++;
 
         _loadStudents(students);
-        lastCommandSuccess = JsonObjectMapper.parseJson(in.readLine(), LoadStudentCommandResponse.class)
-                .getStatus().equals("success");
+        LoadStudentCommandResponse response = JsonObjectMapper.parseJson(in.readLine(), LoadStudentCommandResponse.class);
+        lastCommandSuccess = response.getStatus().equals("success");
+
+        if(lastCommandSuccess)
+            lastStudentsAdded = response.getNumberOfNewStudents();
     }
 
     @Override
@@ -114,7 +121,6 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     @Override
     public int getNumberOfStudents() throws IOException {
 
-        numberOfCommands++;
         return super.getNumberOfStudents();
     }
 

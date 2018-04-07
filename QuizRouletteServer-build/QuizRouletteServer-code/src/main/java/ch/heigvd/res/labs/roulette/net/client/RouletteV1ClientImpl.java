@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 /**
  * This class implements the client side of the protocol specification (version 1).
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti and Guillaume Hochet
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
@@ -119,6 +119,11 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         return getServerInfo().getProtocolVersion();
     }
 
+    /**
+     * Retrieves server information
+     * @return  Server info
+     * @throws IOException
+     */
     protected InfoCommandResponse getServerInfo() throws IOException {
 
         out.println(RouletteV1Protocol.CMD_INFO);
@@ -127,6 +132,11 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         return JsonObjectMapper.parseJson(in.readLine(), InfoCommandResponse.class);
     }
 
+    /**
+     * Logic shared among clients to load a single student
+     * @param student
+     * @throws IOException
+     */
     void _loadStudent(String student) throws IOException {
 
         out.println(RouletteV1Protocol.CMD_LOAD);
@@ -141,6 +151,11 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         out.flush();
     }
 
+    /**
+     * Logic shared among clients to load multiple students
+     * @param students
+     * @throws IOException
+     */
     void _loadStudents(List<Student> students) throws IOException {
 
         out.println(RouletteV1Protocol.CMD_LOAD);
@@ -149,7 +164,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         in.readLine();
 
         for(Student student : students)
-            out.println(student.getFullname() + System.lineSeparator());
+            out.println(student.getFullname());
 
         out.flush();
 

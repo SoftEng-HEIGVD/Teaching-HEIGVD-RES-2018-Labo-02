@@ -3,7 +3,6 @@ package ch.heigvd.res.labs.roulette.net.server;
 import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.IStudentsStore;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
-import ch.heigvd.res.labs.roulette.data.StudentsList;
 import ch.heigvd.res.labs.roulette.net.client.RouletteV2ClientImpl;
 import ch.heigvd.res.labs.roulette.net.protocol.*;
 
@@ -15,7 +14,7 @@ import java.util.logging.Logger;
 /**
  * This class implements the Roulette protocol (version 2).
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti and Guillaume Hochet
  */
 public class RouletteV2ClientHandler implements IClientHandler {
 
@@ -42,7 +41,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
 
         while (!done && ((command = reader.readLine()) != null)) {
 
-            boolean correctCommand = true;
+            commandPerformed++;
 
             LOG.log(Level.INFO, "COMMAND: {0}", command);
 
@@ -81,7 +80,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
 
                 case RouletteV2Protocol.CMD_INFO:
 
-                    InfoCommandResponse response = new InfoCommandResponse(RouletteV1Protocol.VERSION,
+                    InfoCommandResponse response = new InfoCommandResponse(RouletteV2Protocol.VERSION,
                             store.getNumberOfStudents());
                     writer.println(JsonObjectMapper.toJson(response));
                     writer.flush();
@@ -92,6 +91,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
                     int previousNumber = store.getNumberOfStudents();
                     writer.println(RouletteV1Protocol.RESPONSE_LOAD_START);
                     writer.flush();
+
                     try {
                         store.importData(reader);
                     } catch (IOException e) {
@@ -105,21 +105,18 @@ public class RouletteV2ClientHandler implements IClientHandler {
                     break;
 
                 case RouletteV2Protocol.CMD_BYE:
-                    writer.println(JsonObjectMapper.toJson(new ByeCommandResponse("success", ++commandPerformed)));
+                    writer.println(JsonObjectMapper.toJson(new ByeCommandResponse("success", commandPerformed)));
                     writer.flush();
                     done = true;
                     break;
                 default:
-                    correctCommand = false;
+                    commandPerformed--;
                     writer.println("Huh? please use HELP if you don't know what commands are available.");
                     writer.flush();
                     break;
             }
 
             writer.flush();
-
-            if(correctCommand)
-                ++commandPerformed;
         }
 
     }
