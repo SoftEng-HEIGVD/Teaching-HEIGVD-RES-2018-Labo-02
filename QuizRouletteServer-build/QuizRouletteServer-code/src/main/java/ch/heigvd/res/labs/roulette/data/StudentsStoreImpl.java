@@ -69,7 +69,6 @@ public class StudentsStoreImpl implements IStudentsStore {
       } else {
         LOG.log(Level.INFO, "Adding student {0} to the store.", record);
         studentsToAdd.add(new Student(record));
-        addStudent(new Student(record));
         ++numberOfStudentAdded;
       }
     }
