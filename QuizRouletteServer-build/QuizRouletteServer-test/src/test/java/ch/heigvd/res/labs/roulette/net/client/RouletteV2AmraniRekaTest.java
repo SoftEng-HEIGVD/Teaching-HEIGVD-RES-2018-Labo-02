@@ -90,13 +90,5 @@ public class RouletteV2AmraniRekaTest {
     LinkedList<Student> studentList = fillStudents(client);
     assertEquals(client.listStudents(), studentList);
   }
-
-  @Test
-  @TestAuthor(githubId = {"mraheigvd", "kamkill01011" } )
-  public void theServerShouldReturnNothingAfterClean() throws IOException {
-    IRouletteV2Client client = (IRouletteV2Client)roulettePair.getClient();
-    assertNull(client.listStudents());
-  }
-
 }
 
