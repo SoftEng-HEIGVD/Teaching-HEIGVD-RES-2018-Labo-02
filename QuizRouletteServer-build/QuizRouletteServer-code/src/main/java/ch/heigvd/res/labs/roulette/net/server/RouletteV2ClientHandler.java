@@ -29,10 +29,22 @@ public class RouletteV2ClientHandler implements IClientHandler {
 
     private IStudentsStore store;
 
+    /**
+     * Constructor to set the storage for the students
+     * @param store instance to use to store the students
+     */
     public RouletteV2ClientHandler(IStudentsStore store) {
         this.store = store;
     }
 
+    /**
+     * Handles the interaction with a client, by reading commands on the client's input stream
+     * and sending responses on its output stream.
+     *
+     * @param is input stream to read commands sent by the client
+     * @param os output stream to send responses back to the client
+     * @throws IOException
+     */
     @Override
     public void handleClientConnection(InputStream is, OutputStream os) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -41,7 +53,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
         int numberOfCommands = 0;
         int numberOfNewStudents = 0;
         String command;
-        boolean done = false;
+        boolean done = false; // end the connection
         writer.println("Hello. Online HELP is available. Will you find it?");
         writer.flush();
 
@@ -57,7 +69,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
                     try {
                         rcResponse.setFullname(store.pickRandomStudent().getFullname());
                     } catch (EmptyStoreException ex) {
-                        rcResponse.setError("There is no student, you cannot pick a random one");
+                        rcResponse.setError("There is no student yet, you cannot pick a random one");
                     }
                     writer.println(JsonObjectMapper.toJson(rcResponse));
                     writer.flush();
