@@ -74,7 +74,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         os.println( fullname );
         os.println(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
         os.flush();
-        LOG.info("server response " + is.readLine() );
+        //LOG.info("server response " + is.readLine() );
 
         LoadCommandResponseV2 loadCR = JsonObjectMapper.parseJson(is.readLine(), LoadCommandResponseV2.class);
         LOG.info("server response " + loadCR.getStatus() );
@@ -107,7 +107,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
         os.println(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
         os.flush();
-        LOG.info("server response " +is.readLine() );
+        //LOG.info("server response " +is.readLine() );
 
         LoadCommandResponseV2 loadCR = JsonObjectMapper.parseJson(is.readLine(), LoadCommandResponseV2.class);
         LOG.info("server response " + loadCR.getStatus() );

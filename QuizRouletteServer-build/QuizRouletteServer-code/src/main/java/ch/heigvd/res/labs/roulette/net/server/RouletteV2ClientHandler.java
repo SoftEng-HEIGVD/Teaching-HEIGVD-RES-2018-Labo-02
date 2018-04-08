@@ -65,10 +65,10 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
           writer.flush();
           store.importData(reader);
-          writer.println(RouletteV2Protocol.RESPONSE_LOAD_DONE);
-          writer.flush();
+          //writer.println(RouletteV2Protocol.RESPONSE_LOAD_DONE);
+          //writer.flush();
           numberOfNewStudents = store.getNumberOfStudents() - numberOfNewStudents;
-          LoadCommandResponseV2 responseLoad = new LoadCommandResponseV2(true, numberOfNewStudents);
+          LoadCommandResponseV2 responseLoad = new LoadCommandResponseV2("success", numberOfNewStudents);
 
           writer.println(JsonObjectMapper.toJson(responseLoad));
 
@@ -93,10 +93,6 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_BYE:
-         /* if(numberOfCommands < 3){
-            writer.println("So soon?");
-            writer.flush();
-          } */
           ByeCommandResponseV2 responseBye = new ByeCommandResponseV2("success", numberOfCommands);
           str = JsonObjectMapper.toJson(responseBye);
           writer.println(str);

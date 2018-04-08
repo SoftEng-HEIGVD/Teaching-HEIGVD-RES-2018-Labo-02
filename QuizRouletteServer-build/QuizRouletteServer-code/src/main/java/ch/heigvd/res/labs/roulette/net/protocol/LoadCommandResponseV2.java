@@ -1,13 +1,13 @@
 package ch.heigvd.res.labs.roulette.net.protocol;
 
 public class LoadCommandResponseV2 {
-    private boolean status;
+    private String status;
     private int numberOfNewStudents;
 
     public LoadCommandResponseV2() {
     }
 
-    public LoadCommandResponseV2(Boolean status, int numberOfNewStudents) {
+    public LoadCommandResponseV2(String status, int numberOfNewStudents) {
         setNumberOfNewStudents(numberOfNewStudents);
         setStatus(status);
     }
@@ -16,7 +16,7 @@ public class LoadCommandResponseV2 {
         this.numberOfNewStudents = numberOfNewStudents;
     }
 
-    public void setStatus(Boolean status){
+    public void setStatus(String status){
         this.status = status;
     }
 
@@ -26,7 +26,7 @@ public class LoadCommandResponseV2 {
         return numberOfNewStudents;
     }
 
-    public boolean getStatus() {
+    public String getStatus() {
         return status;
     }
 
