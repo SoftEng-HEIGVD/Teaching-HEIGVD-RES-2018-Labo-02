@@ -97,7 +97,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
             writer.println("So soon?");
             writer.flush();
           } */
-          ByeCommandResponseV2 responseBye = new ByeCommandResponseV2(true, numberOfCommands);
+          ByeCommandResponseV2 responseBye = new ByeCommandResponseV2("success", numberOfCommands);
           str = JsonObjectMapper.toJson(responseBye);
           writer.println(str);
           writer.flush();

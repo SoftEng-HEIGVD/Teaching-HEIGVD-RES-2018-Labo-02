@@ -1,12 +1,12 @@
 package ch.heigvd.res.labs.roulette.net.protocol;
 
 public class ByeCommandResponseV2 {
-    private Boolean status;
+    private String status;
     private int numberOfCommands;
 
     public ByeCommandResponseV2(){};
 
-    public ByeCommandResponseV2(Boolean status, int numberOfCommands) {
+    public ByeCommandResponseV2(String status, int numberOfCommands) {
         this.numberOfCommands = numberOfCommands;
         this.status = status;
     }
@@ -15,7 +15,7 @@ public class ByeCommandResponseV2 {
         this.numberOfCommands = numberOfCommands;
     }
 
-    public void setStatus(Boolean status){
+    public void setStatus(String status){
         this.status = status;
     }
 
@@ -23,6 +23,6 @@ public class ByeCommandResponseV2 {
         return numberOfCommands;
     }
 
-    public boolean getStatus() {return status;}
+    public String getStatus() {return status;}
 
 }
