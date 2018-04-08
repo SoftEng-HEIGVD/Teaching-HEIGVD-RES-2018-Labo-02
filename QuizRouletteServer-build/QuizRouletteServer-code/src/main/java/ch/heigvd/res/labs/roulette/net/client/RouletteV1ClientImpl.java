@@ -6,6 +6,7 @@ import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RandomCommandResponse;
+import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -53,7 +54,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     public void disconnect() throws IOException {
         if (isConnect) {
             isConnect = false;
-
+            out.println(RouletteV1Protocol.CMD_BYE);
             //close the input and output flows
             in.close();
             out.close();
@@ -61,6 +62,18 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
             // close the connexion 
             ClientSocket.close();
         }
+    }
+
+    InfoCommandResponse getInfoCommand() throws IOException {
+
+        out.println(RouletteV2Protocol.CMD_INFO);
+
+        out.flush();
+
+        in.readLine();
+
+        InfoCommandResponse infoResponse = JsonObjectMapper.parseJson(in.readLine(), InfoCommandResponse.class);
+        return infoResponse;
     }
 
     @Override
@@ -119,23 +132,21 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         }
     }
 
-    @Override
-    public Student pickRandomStudent() throws EmptyStoreException, IOException {
+  public Student pickRandomStudent() throws EmptyStoreException, IOException {
+     if (isConnected()) {
+      out.println(RouletteV1Protocol.CMD_RANDOM);
+      out.flush();
 
-        //send the loader command to server
-        out.println(RouletteV1Protocol.CMD_RANDOM);
-        out.flush();
-
-        // read server response and parse it to Json format
-        RandomCommandResponse ServerResponse = JsonObjectMapper.parseJson(in.readLine(), RandomCommandResponse.class);
-
-        if (ServerResponse.getError() == null && ServerResponse.getError().isEmpty() == true) {
-            return new Student(ServerResponse.getFullname());
-        } else {
-            throw new EmptyStoreException();
-        }
-
+      RandomCommandResponse rdResp = JsonObjectMapper.parseJson(in.readLine(), RandomCommandResponse.class);
+      if (rdResp.getError() == null) {
+        return new Student(rdResp.getFullname());
+      } else {
+        throw new EmptyStoreException();
+      }
+    } else {
+      throw new IOException("Client not connected to server");
     }
+  }
 
     @Override
     public int getNumberOfStudents() throws IOException {
@@ -158,5 +169,4 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
         return JsonObjectMapper.parseJson(in.readLine(), InfoCommandResponse.class).getProtocolVersion();
     }
-
 }
