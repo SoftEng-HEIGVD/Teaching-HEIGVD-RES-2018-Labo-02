@@ -30,10 +30,8 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     os.println(RouletteV2Protocol.CMD_CLEAR);
     os.flush();
     ++nbCommands;
-      System.out.println("CLEARDATA++" + nbCommands);
-      System.out.flush();
-    LOG.info("BAH ALORS");
-    LOG.info("server response BAH ALORS" + is.readLine() );
+
+    LOG.info("server response " + is.readLine() );
     validateCommand();
   }
 
@@ -43,8 +41,6 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     os.println(RouletteV2Protocol.CMD_LIST);
     os.flush();
       ++nbCommands;
-      System.out.println("LIST++" + nbCommands);
-      System.out.flush();
     StudentsList sL = JsonObjectMapper.parseJson(is.readLine() , StudentsList.class);
 
     validateCommand();
@@ -63,14 +59,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         ++nbCommands;
         return Student.fromJson(JsonObjectMapper.parseJson(rep, RandomCommandResponse.class).getFullname() );
     }
-    /*
- @Override
- public Student pickRandomStudent() throws EmptyStoreException, IOException {
-     System.out.println("RANDOM++" + nbCommands);
-     System.out.flush();
-     ++nbCommands;
-     return super.pickRandomStudent();
- }*/
+
 
   @Override
   public void loadStudent(String fullname) throws IOException {
@@ -80,8 +69,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         os.println(RouletteV2Protocol.CMD_LOAD);
         os.flush();
         ++nbCommands;
-        System.out.println("LOAD++" + nbCommands);
-        System.out.flush();
+
         LOG.info("server response " +is.readLine() );
         os.println( fullname );
         os.println(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
@@ -111,8 +99,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         os.println(RouletteV2Protocol.CMD_LOAD);
         os.flush();
         ++nbCommands;
-        System.out.println("LOADS++" + nbCommands);
-        System.out.flush();
+
         LOG.info("server response " +is.readLine() );
         for ( Student s: students) {
             os.println( s.getFullname() );
@@ -157,8 +144,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     @Override
     public int getNumberOfCommands() throws IOException {
-        System.out.println(nbCommands);
-        System.out.flush();
+
         return nbCommands;
     }
 
@@ -172,8 +158,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     os.println(RouletteV2Protocol.CMD_BYE);
     os.flush();
       ++nbCommands;
-      System.out.println("BYE++" + nbCommands);
-      System.out.flush();
+
       ByeCommandResponseV2 byeCR = JsonObjectMapper.parseJson(is.readLine(), ByeCommandResponseV2.class);
       nbCommands = byeCR.getNumberOfCommands();
       is.close();
@@ -184,8 +169,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     @Override
     public String getProtocolVersion() throws IOException {
-        System.out.println("INFO++" + nbCommands);
-        System.out.flush();
+
       ++nbCommands;
       return super.getProtocolVersion();
     }
@@ -193,8 +177,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     @Override
     public int getNumberOfStudents() throws IOException {
-        System.out.println("INFO++" + nbCommands);
-        System.out.flush();
+
         ++nbCommands;
         return super.getNumberOfStudents();
     }

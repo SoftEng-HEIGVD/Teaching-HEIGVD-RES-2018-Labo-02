@@ -39,7 +39,6 @@ public class RouletteV2ClientHandler implements IClientHandler {
     String command;
     boolean done = false;
     while (!done && ((command = reader.readLine()) != null)) {
-      System.out.println("PLUSPLUS");
       ++numberOfCommands;
       LOG.log(Level.INFO, "COMMAND: {0}", command);
       switch (command.toUpperCase()) {
