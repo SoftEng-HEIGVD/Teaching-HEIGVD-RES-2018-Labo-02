@@ -21,6 +21,7 @@ import java.util.logging.Logger;
  * This class implements the Roulette protocol (version 1).
  *
  * @author Olivier Liechti
+ * @author Iando Rafidimalala
  */
 public class RouletteV1ClientHandler implements IClientHandler {
 
