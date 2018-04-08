@@ -39,7 +39,7 @@ public class RouletteV2Zedsdead95Test {
         assertTrue(roulettePair.getClient().isConnected());
     }
 
-    @Test
+    /*@Test
     @TestAuthor(githubId = "zedsdead95")
     public void testThatItShouldBePossibleForARouletteClientToConnectToARouletteServer() throws Exception {
         int port = roulettePair.getServer().getPort();
@@ -47,7 +47,7 @@ public class RouletteV2Zedsdead95Test {
         assertFalse(client.isConnected());
         client.connect("4242", port);
         assertTrue(client.isConnected());
-    }
+    }*/
 
     /*@Test
     @TestAuthor(githubId = "zedsdead95")

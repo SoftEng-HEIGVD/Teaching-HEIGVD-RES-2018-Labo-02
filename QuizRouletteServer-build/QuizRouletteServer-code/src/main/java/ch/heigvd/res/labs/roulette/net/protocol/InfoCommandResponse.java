@@ -25,10 +25,12 @@ public class InfoCommandResponse {
   }
 
   public void setProtocolVersion(String protocolVersion) {
+
     this.protocolVersion = protocolVersion;
   }
 
   public int getNumberOfStudents() {
+
     return numberOfStudents;
   }
 
