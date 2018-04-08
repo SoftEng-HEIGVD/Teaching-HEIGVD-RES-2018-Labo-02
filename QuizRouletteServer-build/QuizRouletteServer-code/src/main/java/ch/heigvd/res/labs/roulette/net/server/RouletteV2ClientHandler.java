@@ -29,15 +29,38 @@ import java.util.logging.Level;
  */
 public class RouletteV2ClientHandler implements IClientHandler {
 
+  /**
+   * container of students data
+   */
   private final IStudentsStore store;
+  
+  /**
+   * total of commands received for this client
+   */
   private int numberOfCommands;
+  
+  /**
+   * nuber of student added in the last load-type command
+   */
   private int numberOfStudentAdded = 0;
   
+  /**
+   * constructor
+   * 
+   * @param store container of students data
+   */
   public RouletteV2ClientHandler(IStudentsStore store) {
     this.store = store;
     numberOfCommands = 0;
   }
 
+  /**
+   * method where are handled the requests received from the client
+   * 
+   * @param is reader from the client stream
+   * @param os writer to the client stream
+   * @throws IOException if a write or read exception happen
+   */
   @Override
   public void handleClientConnection(InputStream is, OutputStream os) throws IOException {
     BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -83,7 +106,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
           int numberOfStudent = store.getNumberOfStudents();
           store.importData(reader);
           numberOfStudentAdded = store.getNumberOfStudents() - numberOfStudent;
-          EndLoadCommandResponse endLoadResponse = new EndLoadCommandResponse("success", numberOfStudentAdded);
+          EndLoadCommandResponse endLoadResponse = new EndLoadCommandResponse(RouletteV2Protocol.SUCCESS, numberOfStudentAdded);
           writer.println(JsonObjectMapper.toJson(endLoadResponse));
           writer.flush();
           break;
@@ -97,10 +120,12 @@ public class RouletteV2ClientHandler implements IClientHandler {
           store.clear();
           writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
           writer.flush();
+          break;
         case RouletteV2Protocol.CMD_LIST:
-           ListCommandResponse listResponse = new ListCommandResponse((Student[])store.listStudents().toArray());
+           ListCommandResponse listResponse = new ListCommandResponse(store.listStudents());
            writer.println(JsonObjectMapper.toJson(listResponse));
            writer.flush();
+           break;
         default:
           writer.println("Huh? please use HELP if you don't know what commands are available.");
           writer.flush();
@@ -111,10 +136,20 @@ public class RouletteV2ClientHandler implements IClientHandler {
 
   }
   
+  /**
+   * return the number of student added in the last load-type request
+   * 
+   * @return the number of student added in the last load-type request
+   */
   public int getnumberOfStudentAdded() {
      return numberOfStudentAdded;
   }
   
+  /**
+   * return the current total of commands sent by this client
+   * 
+   * @return the current total of commands sent by this client
+   */
   public int getNumberOfCommands() {
      return numberOfCommands;
   }

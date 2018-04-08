@@ -24,14 +24,32 @@ import java.util.logging.Logger;
  */
 public class RouletteV1ClientHandler implements IClientHandler {
 
+   /**
+    * logger helps the debug
+    */
   final static Logger LOG = Logger.getLogger(RouletteV1ClientHandler.class.getName());
-
+  
+  /**
+   * container of students data
+   */
   private final IStudentsStore store;
 
+  /**
+   * constructor
+   * 
+   * @param store container of students data
+   */
   public RouletteV1ClientHandler(IStudentsStore store) {
     this.store = store;
   }
 
+  /**
+   * method where are handled the requests received from the client
+   * 
+   * @param is reader from the client stream
+   * @param os writer to the client stream
+   * @throws IOException if a write or read exception happen
+   */
   @Override
   public void handleClientConnection(InputStream is, OutputStream os) throws IOException {
     BufferedReader reader = new BufferedReader(new InputStreamReader(is));
