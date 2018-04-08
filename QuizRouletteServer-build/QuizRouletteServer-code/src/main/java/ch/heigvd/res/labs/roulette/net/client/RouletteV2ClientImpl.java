@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl
         implements IRouletteV2Client {
 
-    private int commandCounter = 0;
+    private int commandCounter;
 
     private ByeCommandResponse bcr;
     private LoadCommandResponse lcr;
@@ -40,6 +40,9 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl
         // to null, to avoid recovering data from older connections
         bcr = null;
         lcr = null;
+
+        // And we set back commandCounter to 0
+        commandCounter = 0;
     }
 
     @Override
@@ -49,6 +52,10 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl
         sendCommand(RouletteV2Protocol.CMD_BYE);
 
         response = in.readLine();
+
+        // We create info logs
+        LOG.log(Level.INFO, "Response sent by the server:");
+        LOG.log(Level.INFO, response);
 
         // We recover the response in the ByeCommandResponse instance
         bcr = JsonObjectMapper.parseJson(response, ByeCommandResponse.class);
@@ -146,6 +153,10 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl
         sendCommand(RouletteV2Protocol.CMD_LIST);
 
         response = in.readLine();
+
+        // We create info logs
+        LOG.log(Level.INFO, "Response sent by the server:");
+        LOG.log(Level.INFO, response);
 
         // Recover the response and save it in a StudentList instance
         StudentsList sl =
