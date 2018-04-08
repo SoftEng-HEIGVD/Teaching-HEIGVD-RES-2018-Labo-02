@@ -2,22 +2,22 @@ package ch.heigvd.res.labs.roulette.net.protocol;
 
 public class LoadCommandResponse {
     private String status;
-    private int nbStudents;
+    private int numberOfNewStudents;
 
     public LoadCommandResponse(){
 
     }
 
-    public LoadCommandResponse(String status, int nbStudents){
+    public LoadCommandResponse(String status, int numberOfNewStudents){
         this.status = status;
-        this.nbStudents = nbStudents;
+        this.numberOfNewStudents = numberOfNewStudents;
     }
 
     public String getStatus(){
         return status;
     }
 
-    public int getNbStudents(){
-        return nbStudents;
+    public int getNumberOfNewStudents(){
+        return numberOfNewStudents;
     }
 }

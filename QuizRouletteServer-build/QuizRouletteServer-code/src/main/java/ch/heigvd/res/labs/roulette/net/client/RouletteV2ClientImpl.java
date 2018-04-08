@@ -26,14 +26,14 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     // Not realy usefull just for log
     public void disconnect() throws IOException {
-        nbCommands++;
+        numberOfCommands++;
         LOG.log(Level.INFO, "client has request to be disconnect.");
         if(isConnected()) {
             sendToServer(RouletteV2Protocol.CMD_BYE);
             ByeCommandResponse byeCmdResp = JsonObjectMapper.parseJson(in.readLine(), ByeCommandResponse.class);
 
             LOG.log(Level.INFO, "Status: " + byeCmdResp.getStatus());
-            LOG.log(Level.INFO, "Number of commands on the server " + String.valueOf(byeCmdResp.getNbCommands()));
+            LOG.log(Level.INFO, "Number of commands on the server " + String.valueOf(byeCmdResp.getNumberOfCommands()));
 
             connected = false;
 
@@ -45,14 +45,14 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     @Override
     public void clearDataStore() throws IOException {
-        nbCommands++;
+        numberOfCommands++;
         sendToServer(RouletteV2Protocol.CMD_CLEAR);
         skipMessageServer();
     }
 
     @Override
     public List<Student> listStudents() throws IOException {
-        nbCommands++;
+        numberOfCommands++;
         sendToServer(RouletteV2Protocol.CMD_LIST);
         String s = in.readLine();
         StudentsList studentList = JsonObjectMapper.parseJson(s,StudentsList.class);
@@ -60,20 +60,20 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     }
     @Override
     public void loadStudent(String fullname) throws IOException {
-        nbCommands++;
+        numberOfCommands++;
         sendToServer(RouletteV2Protocol.CMD_LOAD);
         skipMessageServer(); // Read: Send your data [end with ENDOFDATA]
         sendToServer(fullname); // Send name of the student to load
         sendToServer(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
         LoadCommandResponse lcr = JsonObjectMapper.parseJson(in.readLine(), LoadCommandResponse.class);
-        nbNewStudent = lcr.getNbStudents();
+        nbNewStudent = lcr.getNumberOfNewStudents();
         SucessStatus = lcr.getStatus();
-        LOG.log(Level.INFO, "Nb Student added: " + lcr.getNbStudents() + " status: " + lcr.getStatus());
+        LOG.log(Level.INFO, "Nb Student added: " + lcr.getNumberOfNewStudents() + " status: " + lcr.getStatus());
     }
 
     @Override
     public void loadStudents(List<Student> students) throws IOException {
-        nbCommands++;
+        numberOfCommands++;
         LOG.log(Level.INFO, "Load students", students);
         sendToServer(RouletteV2Protocol.CMD_LOAD);
         skipMessageServer(); // Read: Send your data [end with ENDOFDATA]
@@ -83,9 +83,9 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         }
         sendToServer(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER); // END of loading data
         LoadCommandResponse lcr = JsonObjectMapper.parseJson(in.readLine(), LoadCommandResponse.class);
-        nbNewStudent = lcr.getNbStudents();
+        nbNewStudent = lcr.getNumberOfNewStudents();
         SucessStatus = lcr.getStatus();
-        LOG.log(Level.INFO, "Nb Student added: " + lcr.getNbStudents() + " status: " + lcr.getStatus());
+        LOG.log(Level.INFO, "Nb Student added: " + lcr.getNumberOfNewStudents() + " status: " + lcr.getStatus());
     }
 
     public int getNumberOfStudentAdded() {
@@ -94,8 +94,8 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     }
 
     public int getNumberOfCommands() {
-        LOG.log(Level.INFO, "get number of commands " + nbCommands);
-        return nbCommands;
+        LOG.log(Level.INFO, "get number of commands " + numberOfCommands);
+        return numberOfCommands;
     }
 
     public boolean checkSuccessOfCommand(){

@@ -23,7 +23,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
 
-    protected int nbCommands = 0;
+    protected int numberOfCommands;
     protected boolean connected;
 
 
@@ -40,6 +40,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             skipMessageServer(); // Read: welcome message
             connected = true;
+            numberOfCommands = 0;
         } catch(IOException e){
             LOG.log(Level.SEVERE, "Unable to connect to server: {0}", e.getMessage());
             cleanup();
@@ -49,8 +50,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public void disconnect() throws IOException {
-        nbCommands++;
         if(isConnected()) {
+            numberOfCommands++;
             LOG.log(Level.INFO, "client has request to be disconnect.");
             sendToServer(RouletteV1Protocol.CMD_BYE);
             connected = false;
@@ -65,7 +66,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public void loadStudent(String fullname) throws IOException {
-        nbCommands++;
+        numberOfCommands++;
         sendToServer(RouletteV1Protocol.CMD_LOAD);
         skipMessageServer(); // Read: Send your data [end with ENDOFDATA]
         sendToServer(fullname); // Send name of the student to load
@@ -75,7 +76,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public void loadStudents(List<Student> students) throws IOException {
-        nbCommands++;
+        numberOfCommands++;
         LOG.log(Level.INFO, "Load students", students);
         sendToServer(RouletteV1Protocol.CMD_LOAD);
         skipMessageServer(); // Read: Send your data [end with ENDOFDATA]
@@ -90,7 +91,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public Student pickRandomStudent() throws EmptyStoreException, IOException {
-        nbCommands++;
+        numberOfCommands++;
         sendToServer(RouletteV1Protocol.CMD_RANDOM);
         String s = in.readLine(); // get response from server
 
@@ -107,7 +108,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public int getNumberOfStudents() throws IOException {
-        nbCommands++;
+        numberOfCommands++;
         sendToServer(RouletteV1Protocol.CMD_INFO);
         String s = in.readLine(); // Read response from server
 
@@ -120,7 +121,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public String getProtocolVersion() throws IOException {
-        nbCommands++;
+        numberOfCommands++;
         sendToServer(RouletteV1Protocol.CMD_INFO);
         String s = in.readLine();
 

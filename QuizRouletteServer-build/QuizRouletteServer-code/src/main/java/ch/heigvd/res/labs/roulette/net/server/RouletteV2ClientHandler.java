@@ -22,12 +22,12 @@ public class RouletteV2ClientHandler implements IClientHandler {
     final static Logger LOG = Logger.getLogger(RouletteV1ClientHandler.class.getName());
 
     private final IStudentsStore store;
-    private int nbCommands;
+    private int numberOfCommands;
     private int nbNewStudents;
 
     public RouletteV2ClientHandler(IStudentsStore store) {
         this.store = store;
-        this.nbCommands = 0;
+        this.numberOfCommands = 0;
         this.nbNewStudents = 0;
     }
 
@@ -41,9 +41,9 @@ public class RouletteV2ClientHandler implements IClientHandler {
 
         String command;
         boolean done = false;
-        nbCommands = 0;
+        numberOfCommands = 0;
         while (!done && ((command = reader.readLine()) != null)) {
-            nbCommands++;
+            numberOfCommands++;
             LOG.log(Level.INFO, "COMMAND: {0}", command);
             switch (command.toUpperCase()) {
                 case RouletteV2Protocol.CMD_RANDOM:
@@ -79,7 +79,8 @@ public class RouletteV2ClientHandler implements IClientHandler {
                     break;
                 case RouletteV2Protocol.CMD_BYE:
                     done = true;
-                    ByeCommandResponse byeCmdResp = new ByeCommandResponse("success",nbCommands);
+                    ByeCommandResponse byeCmdResp = new ByeCommandResponse("success",numberOfCommands);
+                    System.out.println(JsonObjectMapper.toJson(byeCmdResp));
                     writer.println(JsonObjectMapper.toJson(byeCmdResp));
                     writer.flush();
                     break;

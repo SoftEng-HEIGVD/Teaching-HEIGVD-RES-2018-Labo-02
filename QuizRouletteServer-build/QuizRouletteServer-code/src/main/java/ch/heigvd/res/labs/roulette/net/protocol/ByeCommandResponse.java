@@ -16,7 +16,7 @@ public class ByeCommandResponse {
         return status;
     }
 
-    public int getNbCommands(){
+    public int getNumberOfCommands(){
         return numberOfCommands;
     }
 }
