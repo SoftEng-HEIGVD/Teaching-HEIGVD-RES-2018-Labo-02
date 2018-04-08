@@ -22,7 +22,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   public void clearDataStore() throws IOException {
     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
-    nbCommamde++;
+    nbCommand++;
     os.println(RouletteV2Protocol.CMD_CLEAR);
     os.flush();
     
@@ -33,7 +33,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   @Override
   public List<Student> listStudents() throws IOException {
     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        ++nbCommamde;
+        ++nbCommand;
         StudentsList studentList = new StudentsList();
         os.println(RouletteV2Protocol.CMD_LIST);
         os.flush();
@@ -49,7 +49,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
 
   public int getNumberOfCommands() throws IOException{
-      return nbCommamde;
+      return nbCommand;
   }
 
 
