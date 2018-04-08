@@ -2,8 +2,10 @@ package ch.heigvd.res.labs.roulette.net.protocol;
 
 /**
  * Created on 05.04.18.
+ * This class is used to serialize/deserialize the response sent by the server
+ * when processing the "LOAD" command defined in the protocol specification.
  *
- * @author Max
+ * @author Max Caduff
  */
 public class LoadCommandResponse {
     private String status = "new";

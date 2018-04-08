@@ -59,7 +59,7 @@ public class StudentsStoreImpl implements IStudentsStore {
     boolean endReached = false;
     while (!endReached && (record = reader.readLine()) != null) {
       if (record.equalsIgnoreCase(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER)) {
-        LOG.log(Level.INFO, "End of stream reached. New students have been added to the store. How many? We'll tell you when the lab is complete...");
+        LOG.log(Level.INFO, "End of stream reached. {0} New students have been added to the store.", studentsToAdd.size());
         endReached = true;
       } else {
         LOG.log(Level.INFO, "Adding student {0} to the store.", record);

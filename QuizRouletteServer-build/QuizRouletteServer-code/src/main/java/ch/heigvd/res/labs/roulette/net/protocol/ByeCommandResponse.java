@@ -2,8 +2,9 @@ package ch.heigvd.res.labs.roulette.net.protocol;
 
 /**
  * Created on 05.04.18.
- *
- * @author Max
+ * This class is used to serialize/deserialize the response sent by the server
+ * when processing the "BYE" command defined in the protocol specification.
+ * @author Max Caduff
  */
 public class ByeCommandResponse {
     private String status = "failed";
