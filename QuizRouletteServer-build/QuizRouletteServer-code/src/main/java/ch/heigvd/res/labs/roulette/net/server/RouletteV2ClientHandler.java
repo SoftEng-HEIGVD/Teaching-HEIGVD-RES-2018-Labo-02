@@ -19,8 +19,8 @@ import java.util.logging.Logger;
 public class RouletteV2ClientHandler implements IClientHandler {
   final static Logger LOG = Logger.getLogger(RouletteV1ClientHandler.class.getName());
 
-  public static int numberOfNewStudents = 0;
-  public static int numberOfCommands = 0;
+  public int numberOfNewStudents = 0;
+  public int numberOfCommands = 0;
 
   private final IStudentsStore store;
 
@@ -41,6 +41,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
     String command;
     boolean done = false;
     while (!done && ((command = reader.readLine()) != null)) {
+      System.out.println("PLUSPLUS");
       ++numberOfCommands;
       LOG.log(Level.INFO, "COMMAND: {0}", command);
       switch (command.toUpperCase()) {
@@ -67,11 +68,13 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
           writer.flush();
           store.importData(reader);
-          writer.println(RouletteV2Protocol.RESPONSE_LOAD_DONE);
-          writer.flush();
+          //writer.println(RouletteV2Protocol.RESPONSE_LOAD_DONE);
+          //writer.flush();
           numberOfNewStudents = store.getNumberOfStudents() - numberOfNewStudents;
           LoadCommandResponseV2 responseLoad = new LoadCommandResponseV2(true, numberOfNewStudents);
+
           writer.println(JsonObjectMapper.toJson(responseLoad));
+
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_CLEAR:
@@ -94,7 +97,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
             writer.println("So soon?");
             writer.flush();
           } */
-          ByeCommandResponseV2 responseBye = new ByeCommandResponseV2(true, 42);
+          ByeCommandResponseV2 responseBye = new ByeCommandResponseV2(true, numberOfCommands);
           String str = JsonObjectMapper.toJson(responseBye);
           writer.println(str);
           writer.flush();

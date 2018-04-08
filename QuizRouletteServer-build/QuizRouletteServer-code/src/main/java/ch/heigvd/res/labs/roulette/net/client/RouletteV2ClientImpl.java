@@ -29,6 +29,9 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   public void clearDataStore() throws IOException {
     os.println(RouletteV2Protocol.CMD_CLEAR);
     os.flush();
+    ++nbCommands;
+      System.out.println("CLEARDATA++" + nbCommands);
+      System.out.flush();
     LOG.info("BAH ALORS");
     LOG.info("server response BAH ALORS" + is.readLine() );
     validateCommand();
@@ -39,6 +42,9 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   public List<Student> listStudents() throws IOException {
     os.println(RouletteV2Protocol.CMD_LIST);
     os.flush();
+      ++nbCommands;
+      System.out.println("LIST++" + nbCommands);
+      System.out.flush();
     StudentsList sL = JsonObjectMapper.parseJson(is.readLine() , StudentsList.class);
     validateCommand();
     return sL.getStudents();
@@ -52,12 +58,14 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
         os.println(RouletteV2Protocol.CMD_LOAD);
         os.flush();
-
+        ++nbCommands;
+        System.out.println("LOAD++" + nbCommands);
+        System.out.flush();
         LOG.info("server response " +is.readLine() );
         os.println( fullname );
         os.println(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
         os.flush();
-        LOG.info("server response " + is.readLine() );
+        //LOG.info("server response " + is.readLine() );
         LoadCommandResponseV2 loadCR = JsonObjectMapper.parseJson(is.readLine(), LoadCommandResponseV2.class);
         LOG.info("server response " + loadCR.getStatus() );
         LOG.info("Loaded");
@@ -80,11 +88,14 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
         os.println(RouletteV2Protocol.CMD_LOAD);
         os.flush();
-
+        ++nbCommands;
+        System.out.println("LOADS++" + nbCommands);
+        System.out.flush();
         LOG.info("server response " +is.readLine() );
         for ( Student s: students) {
             os.println( s.toString() );
         }
+
         os.println(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
         os.flush();
 
@@ -101,6 +112,15 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
       throw e;
     }
   }
+
+  @Override
+  public Student pickRandomStudent() throws EmptyStoreException, IOException {
+      System.out.println("RANDOM++" + nbCommands);
+      System.out.flush();
+      ++nbCommands;
+      return super.pickRandomStudent();
+  }
+
     @Override
   public int getNumberOfStudentAdded() {
     return nbStudentsAdded;
@@ -108,6 +128,8 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     @Override
     public int getNumberOfCommands() throws IOException {
+        System.out.println(nbCommands);
+        System.out.flush();
         return nbCommands;
     }
 
@@ -120,6 +142,9 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   public void disconnect() throws IOException {
     os.println(RouletteV2Protocol.CMD_BYE);
     os.flush();
+      ++nbCommands;
+      System.out.println("BYE++" + nbCommands);
+      System.out.flush();
       ByeCommandResponseV2 byeCR = JsonObjectMapper.parseJson(is.readLine(), ByeCommandResponseV2.class);
       nbCommands = byeCR.getNumberOfCommands();
       is.close();
@@ -127,6 +152,23 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
       socket.close();
       LOG.info("Disconnected from server.");
   }
+
+    @Override
+    public String getProtocolVersion() throws IOException {
+        System.out.println("INFO++" + nbCommands);
+        System.out.flush();
+      ++nbCommands;
+      return super.getProtocolVersion();
+    }
+
+
+    @Override
+    public int getNumberOfStudents() throws IOException {
+        System.out.println("INFO++" + nbCommands);
+        System.out.flush();
+        ++nbCommands;
+        return super.getNumberOfStudents();
+    }
 
     private void validateCommand(){
         nbCommands++;
