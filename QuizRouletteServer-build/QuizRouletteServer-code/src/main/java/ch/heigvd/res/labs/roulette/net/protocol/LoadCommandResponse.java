@@ -14,11 +14,11 @@ package ch.heigvd.res.labs.roulette.net.protocol;
  */
 
 public class LoadCommandResponse {
-    private String status;
-    private int numberOfNewStudents;
+    private final String status;
+    private final int numberOfNewStudents;
 
-    public LoadCommandResponse(Status status, int nbNewSt) {
-        this.status = status.toString();
+    public LoadCommandResponse(String status, int nbNewSt) {
+        this.status = status;
         numberOfNewStudents = nbNewSt;
     }
 

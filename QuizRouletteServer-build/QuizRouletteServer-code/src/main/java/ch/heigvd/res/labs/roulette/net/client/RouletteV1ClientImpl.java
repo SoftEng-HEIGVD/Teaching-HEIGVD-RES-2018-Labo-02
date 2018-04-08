@@ -4,8 +4,7 @@ import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
 import ch.heigvd.res.labs.roulette.data.Student;
-import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
-import ch.heigvd.res.labs.roulette.net.protocol.RandomCommandResponse;
+import ch.heigvd.res.labs.roulette.net.protocol.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -26,9 +25,11 @@ import java.util.logging.Logger;
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
   private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
-  private Socket clientSocket;
+  protected Socket clientSocket;
   protected BufferedReader in;
   protected PrintWriter out;
+
+
   
   @Override
   public void connect(String server, int port) throws IOException {
@@ -37,16 +38,14 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream())));
     
     //read the hello line
-    in.readLine();
-   
-      
+    in.readLine();  
         
   }
 
   @Override
   public void disconnect() throws IOException {
     out.println(RouletteV1Protocol.CMD_BYE);
-    out.flush();
+    out.flush();    
     in.close();
     out.close();
     clientSocket.close();
@@ -80,6 +79,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
       }
       out.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
       out.flush();
+      in.readLine(); //read the "send data" line
+      in.readLine();// read the data      
   }
 
   @Override

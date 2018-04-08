@@ -6,11 +6,10 @@ import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
 import ch.heigvd.res.labs.roulette.data.StudentsList;
 import ch.heigvd.res.labs.roulette.net.protocol.ByeCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
+import ch.heigvd.res.labs.roulette.net.protocol.LoadCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RandomCommandResponse;
-import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
 import ch.heigvd.res.labs.roulette.net.protocol.Status;
-import static ch.heigvd.res.labs.roulette.net.server.RouletteV1ClientHandler.LOG;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,9 +48,10 @@ public class RouletteV2ClientHandler implements IClientHandler {
     int nbCommands = 0;
     
     while (!done && ((command = reader.readLine()) != null)) {
+      nbCommands++;  
       LOG.log(Level.INFO, "COMMAND: {0}", command);
       switch (command.toUpperCase()) {
-        case RouletteV1Protocol.CMD_RANDOM:
+        case RouletteV2Protocol.CMD_RANDOM:
           RandomCommandResponse rcResponse = new RandomCommandResponse();
           try {
             rcResponse.setFullname(store.pickRandomStudent().getFullname());
@@ -61,44 +61,53 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.println(JsonObjectMapper.toJson(rcResponse));
           writer.flush();
           break;
-        case RouletteV1Protocol.CMD_HELP:
-          writer.println("Commands: " + Arrays.toString(RouletteV1Protocol.SUPPORTED_COMMANDS));
+          
+        case RouletteV2Protocol.CMD_HELP:
+          writer.println("Commands: " + Arrays.toString(RouletteV2Protocol.SUPPORTED_COMMANDS));
           break;
-        case RouletteV1Protocol.CMD_INFO:
-          InfoCommandResponse response = new InfoCommandResponse(RouletteV1Protocol.VERSION, store.getNumberOfStudents());
+          
+        case RouletteV2Protocol.CMD_INFO:
+          InfoCommandResponse response = new InfoCommandResponse(RouletteV2Protocol.VERSION, store.getNumberOfStudents());
           writer.println(JsonObjectMapper.toJson(response));
           writer.flush();
           break;
-        case RouletteV1Protocol.CMD_LOAD:
-          writer.println(RouletteV1Protocol.RESPONSE_LOAD_START);
+          
+        case RouletteV2Protocol.CMD_LOAD:
+          writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
           writer.flush();
+          int nbStudentBeforeLoad = store.getNumberOfStudents();
           store.importData(reader);
-          writer.println(RouletteV1Protocol.RESPONSE_LOAD_DONE);
+          int nbStudentAdded = store.getNumberOfStudents() - nbStudentBeforeLoad;
+          LoadCommandResponse responseLoad = new LoadCommandResponse(Status.Success.toString(), nbStudentAdded);
+          writer.println(JsonObjectMapper.toJson(responseLoad));
           writer.flush();
           break;
+          
         case RouletteV2Protocol.CMD_CLEAR:
             store.clear();
             writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
-            writer.flush();
+            writer.flush();            
             break;
         
         case RouletteV2Protocol.CMD_LIST:
-        //transform in StudentList to serialize
-        StudentsList studentsList = new StudentsList();
-        studentsList.addAll(store.listStudents());
-        writer.println(JsonObjectMapper.toJson(studentsList));
-        writer.flush();        
-        break;
+            //transform in StudentList to serialize
+            StudentsList studentsList = new StudentsList();
+            studentsList.addAll(store.listStudents());
+            writer.println(JsonObjectMapper.toJson(studentsList));
+            writer.flush();        
+            break;
         
-        case RouletteV1Protocol.CMD_BYE:
-          ByeCommandResponse responseBye = new ByeCommandResponse(Status.Success, nbCommands);
+        case RouletteV2Protocol.CMD_BYE:
+          ByeCommandResponse responseBye = new ByeCommandResponse(Status.Success.toString(), nbCommands);
           writer.println(JsonObjectMapper.toJson(responseBye));
           writer.flush();
           done = true;
           break;
+          
         default:
           writer.println("Huh? please use HELP if you don't know what commands are available.");
           writer.flush();
+          nbCommands--;
           break;
       }
       writer.flush();
