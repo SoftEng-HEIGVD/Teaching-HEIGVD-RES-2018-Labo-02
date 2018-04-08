@@ -1,14 +1,17 @@
 package ch.heigvd.res.labs.roulette.net.client;
 
-import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
-import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
+import ch.heigvd.res.labs.roulette.QuizRouletteServer;
+import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
+import ch.heigvd.res.labs.roulette.net.server.RouletteServer;
 import ch.heigvd.schoolpulse.TestAuthor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -18,9 +21,9 @@ import static org.junit.Assert.assertTrue;
  * This class contains automated tests to validate the client and the server
  * implementation of the Roulette Protocol (version 1)
  *
- * @author Patrick Neto
+ * @author Olivier Liechti
  */
-public class RouletteV2PstackouseTest {
+public class RouletteV2SachaKorTest {
 
   @Rule
   public ExpectedException exception = ExpectedException.none();
@@ -29,19 +32,19 @@ public class RouletteV2PstackouseTest {
   public EphemeralClientServerPair roulettePair = new EphemeralClientServerPair(RouletteV2Protocol.VERSION);
 
   @Test
-  @TestAuthor(githubId = "p-stackouse")
+  @TestAuthor(githubId = "sachakor")
   public void theTestRouletteServerShouldRunDuringTests() throws IOException {
     assertTrue(roulettePair.getServer().isRunning());
   }
 
   @Test
-  @TestAuthor(githubId = "p-stackouse")
+  @TestAuthor(githubId = "sachakor")
   public void theTestRouletteClientShouldBeConnectedWhenATestStarts() throws IOException {
     assertTrue(roulettePair.getClient().isConnected());
   }
 
   @Test
-  @TestAuthor(githubId = "p-stackouse")
+  @TestAuthor(githubId = "sachakor")
   public void itShouldBePossibleForARouletteClientToConnectToARouletteServer() throws Exception {
     int port = roulettePair.getServer().getPort();
     IRouletteV2Client client = new RouletteV2ClientImpl();
@@ -50,50 +53,42 @@ public class RouletteV2PstackouseTest {
     assertTrue(client.isConnected());
   }
 
-  /*
   @Test
-  @TestAuthor(githubId = "p-stackouse")
+  @TestAuthor(githubId = "sachakor")
   public void theServerShouldReturnTheCorrectVersionNumber() throws IOException {
-    assertEquals(RouletteV1Protocol.VERSION, roulettePair.getClient().getProtocolVersion());
-  }
-  */
-
-  @Test
-  @TestAuthor(githubId = "p-stackouse")
-  public void theServerShouldHaveZeroStudentsAtStart() throws IOException {
-    int port = roulettePair.getServer().getPort();
-    IRouletteV2Client client = new RouletteV2ClientImpl();
-    client.connect("localhost", port);
-    int numberOfStudents = client.getNumberOfStudents();
-    assertEquals(0, numberOfStudents);
+    assertEquals(RouletteV2Protocol.VERSION, roulettePair.getClient().getProtocolVersion());
   }
 
   @Test
-  @TestAuthor(githubId = {"p-stackouse", "SoftEng-HEIGVD"})
-  public void theServerShouldStillHaveZeroStudentsAtStart() throws IOException {
-    assertEquals(0, roulettePair.getClient().getNumberOfStudents());
-  }
-
-  @Test
-  @TestAuthor(githubId = "SoftEng-HEIGVD")
-  public void theServerShouldCountStudents() throws IOException {
+  @TestAuthor(githubId = "sachakor")
+  public void theServerShouldHaveZeroStudentsAfterClearingDataStore() throws IOException {
     IRouletteV2Client client = (IRouletteV2Client)roulettePair.getClient();
+    client.loadStudent("sacha");
+    client.loadStudent("steven");
+    client.clearDataStore();
     assertEquals(0, client.getNumberOfStudents());
-    client.loadStudent("Patrick");
-    assertEquals(1, client.getNumberOfStudents());
-    client.loadStudent("Guillaume");
-    assertEquals(2, client.getNumberOfStudents());
-    client.loadStudent("Toto");
-    assertEquals(3, client.getNumberOfStudents());
   }
 
   @Test
-  @TestAuthor(githubId = "p-stackouse")
-  public void theServerShouldSendAnErrorResponseWhenRandomIsCalledAndThereIsNoStudent() throws IOException, EmptyStoreException {
+  @TestAuthor(githubId = "sachakor")
+  public void theServerShouldSendTheListOfStudents() throws IOException {
     IRouletteV2Client client = (IRouletteV2Client)roulettePair.getClient();
-    exception.expect(EmptyStoreException.class);
-    client.pickRandomStudent();
+    List<Student> studentList = new LinkedList<>();
+    studentList.add(new Student("sasha"));
+    studentList.add(new Student("sam"));
+    client.loadStudents(studentList);
+    List<Student> actual = client.listStudents();
+    assertEquals(studentList, actual);
   }
 
-  
+  @Test
+  @TestAuthor(githubId = "Etnarion")
+  public void itShouldBePossibleToConnectToTheServerWithTheDefaultPort() throws IOException {
+    RouletteServer server = new RouletteServer(RouletteV2Protocol.DEFAULT_PORT, RouletteV2Protocol.VERSION);
+    server.startServer();
+    IRouletteV2Client client = new RouletteV2ClientImpl();
+    client.connect("localhost", server.getPort());
+    assertTrue(client.isConnected());
+    server.stopServer();
+  }
 }

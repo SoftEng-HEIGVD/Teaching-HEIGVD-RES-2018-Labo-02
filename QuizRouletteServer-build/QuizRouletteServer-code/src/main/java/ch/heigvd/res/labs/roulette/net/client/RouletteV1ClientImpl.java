@@ -15,14 +15,14 @@ import java.util.logging.Logger;
 
 /**
  * This class implements the client side of the protocol specification (version 1).
- * 
+ *
  * @author Olivier Liechti
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
-  private Socket clientSocket = null;
-  private PrintWriter out = null;
-  private BufferedReader br = null;
-  private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
+  protected Socket clientSocket = null;
+  protected PrintWriter out = null;
+  protected BufferedReader br = null;
+  protected static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
 
   @Override
   public void connect(String server, int port) throws IOException {
@@ -42,7 +42,6 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
     } else{
       LOG.log(Level.WARNING, "Client is already disconnected!");
     }
-
   }
 
   @Override

@@ -54,8 +54,8 @@ public class StudentsStoreImpl implements IStudentsStore {
   }
 
   public int getNumberOfNewStudents() {
-        return numberOfNewStudents;
-    }
+    return numberOfNewStudents;
+  }
 
   @Override
   public void importData(BufferedReader reader) throws IOException {

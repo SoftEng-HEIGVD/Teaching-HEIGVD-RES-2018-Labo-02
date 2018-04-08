@@ -13,8 +13,9 @@ import java.util.logging.Logger;
  *
  * @author Olivier Liechti
  */
+
 public class RouletteV2ClientHandler implements IClientHandler {
-  
+
   final static Logger LOG = Logger.getLogger(RouletteV2ClientHandler.class.getName());
 
   private final IStudentsStore store;
@@ -26,7 +27,8 @@ public class RouletteV2ClientHandler implements IClientHandler {
   @Override
   public void handleClientConnection(InputStream is, OutputStream os) throws IOException {
     BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-    PrintWriter writer = new PrintWriter(new OutputStreamWriter(os));
+    PrintWriter writer = new PrintWriter(new OutputStreamWriter(os),true);
+
 
     writer.println("Hello. Online HELP is available. Will you find it?");
     writer.flush();
@@ -34,11 +36,12 @@ public class RouletteV2ClientHandler implements IClientHandler {
     int numberOfCommands = 0;
     String command;
     boolean done = false;
+
     while (!done && ((command = reader.readLine()) != null)) {
       LOG.log(Level.INFO, "COMMAND: {0}", command);
-      switch (command.toUpperCase()) {
+        numberOfCommands++;
+        switch (command.toUpperCase()) {
         case RouletteV2Protocol.CMD_RANDOM:
-          numberOfCommands++;
           RandomCommandResponse rcResponse = new RandomCommandResponse();
           try {
             rcResponse.setFullname(store.pickRandomStudent().getFullname());
@@ -48,55 +51,60 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.println(JsonObjectMapper.toJson(rcResponse));
           writer.flush();
           break;
-        case RouletteV2Protocol.CMD_HELP:
-          numberOfCommands++;
+         case RouletteV2Protocol.CMD_HELP:
           writer.println("Commands: " + Arrays.toString(RouletteV2Protocol.SUPPORTED_COMMANDS));
           break;
         case RouletteV2Protocol.CMD_INFO:
-          numberOfCommands++;
           InfoCommandResponse response = new InfoCommandResponse(RouletteV2Protocol.VERSION, store.getNumberOfStudents());
           writer.println(JsonObjectMapper.toJson(response));
           writer.flush();
           break;
-        case RouletteV2Protocol.CMD_LOAD:
-          numberOfCommands++;
-          try {
+      case RouletteV2Protocol.CMD_LOAD:
+          writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
+            try {
             store.importData(reader);
           }catch (Exception e){
             RouletteV2Protocol.etat = "fail";
           }
-          LoadCommandResponse lRep = new LoadCommandResponse(RouletteV2Protocol.etat, store.getNumberOfNewStudents());
+          LoadCommandResponse lRep = new LoadCommandResponse(RouletteV2Protocol.RESPONSE_SUCCESS, store.getNumberOfNewStudents());
           writer.println(JsonObjectMapper.toJson(lRep));
           writer.flush();
           break;
+
         case RouletteV2Protocol.CMD_BYE:
-          numberOfCommands++;
-          ByeCommandResponse bRep = new ByeCommandResponse(RouletteV2Protocol.etat = "success",numberOfCommands);
+          ByeCommandResponse bRep = new ByeCommandResponse(RouletteV2Protocol.RESPONSE_SUCCESS, numberOfCommands);
           writer.println(JsonObjectMapper.toJson(bRep));
           writer.flush();
           done = true;
           break;
-        case RouletteV2Protocol.CMD_CLEAR:
-          numberOfCommands++;
+          case RouletteV2Protocol.CMD_CLEAR:
           store.clear();
           writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
           writer.flush();
           break;
-        case RouletteV2Protocol.CMD_LIST:
-          numberOfCommands++;
+       case RouletteV2Protocol.CMD_LIST:
           StudentsList listOfStudent = new StudentsList();
           listOfStudent.setStudents(store.listStudents());
           writer.println(JsonObjectMapper.toJson(listOfStudent));
           writer.flush();
           break;
-        default:
+       default:
           writer.println("Huh? please use HELP if you don't know what commands are available.");
           writer.flush();
           break;
-      }
+       }
+
       writer.flush();
     }
 
   }
 
 }
+
+
+
+
+
+
+
+
