@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 /**
  * This class implements the client side of the protocol specification (version 1).
- * 
+ *
  * @author Olivier Liechti
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
@@ -25,6 +25,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   private Socket clientSocket;
   BufferedReader is;
   PrintWriter os;
+  private int nbStudents;
 
   @Override
   public void connect(String server, int port) throws IOException {
@@ -36,14 +37,20 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
   @Override
   public void disconnect() throws IOException {
-    is.close();
-    os.close();
+    clientSocket.close();
   }
 
   @Override
   public boolean isConnected() {
     if (clientSocket != null) {
-      return clientSocket.isConnected();
+      return clientSocket.isConnected() && !clientSocket.isClosed();
+    }
+    return false;
+  }
+
+  public boolean isClosed() {
+    if (clientSocket != null) {
+      return clientSocket.isClosed();
     }
     return false;
   }
@@ -91,14 +98,9 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   public int getNumberOfStudents() throws IOException {
     os.println(RouletteV1Protocol.CMD_INFO);
     os.flush();
-    String response;
-    response = is.readLine();
-    int nbStudents = -1;
-    if (response != null) {
-      String[] splitted = response.split(":");
-      nbStudents = splitted[splitted.length-1].charAt(0) - '0';
-    }
-    os.flush();
+    String response = is.readLine();
+    InfoCommandResponse infoCommandResponse = JsonObjectMapper.parseJson(response, InfoCommandResponse.class);
+    nbStudents = infoCommandResponse.getNumberOfStudents();
     return nbStudents;
   }
 
@@ -106,7 +108,6 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   public String getProtocolVersion() throws IOException {
     return RouletteV1Protocol.VERSION;
   }
-
 
 
 }
