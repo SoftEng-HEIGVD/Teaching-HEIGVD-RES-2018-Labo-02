@@ -113,14 +113,17 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         return super.getProtocolVersion();
     }
 
+    @Override
     public int getNumberOfStudentAdded() {
         return loadJson.getNumberOfNewStudents();
     }
 
+    @Override
     public int getNumberOfCommands() {
         return nbOfCommands;
     }
 
+    @Override
     public boolean checkSuccessOfCommand() {
         return status;
     }
