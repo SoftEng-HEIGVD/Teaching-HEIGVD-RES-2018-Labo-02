@@ -28,9 +28,9 @@ import java.util.logging.Logger;
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
-    private Socket clientSocket;
-    private BufferedReader in;
-    private PrintWriter out;
+    protected Socket clientSocket;
+    protected BufferedReader in;
+    protected PrintWriter out;
 
     @Override
     public void connect(String server, int port) throws IOException {
@@ -38,17 +38,22 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         out = new PrintWriter((clientSocket.getOutputStream()));
 
-        // consume the welcolm messsage from the server
-        in.readLine();
+        // consume the welcome messsage from the server
+        readFromServer();
     }
 
     @Override
     public void disconnect() throws IOException {
-        sendToServer(RouletteV1Protocol.CMD_BYE);
+        if (clientSocket != null) {
+            
+            sendToServer(RouletteV1Protocol.CMD_BYE);
 
-        in.close();
-        out.close();
-        clientSocket.close();
+            // free all ressources
+            clientSocket.close();
+            clientSocket = null;
+            in.close();
+            out.close();
+        }
     }
 
     @Override
@@ -58,39 +63,36 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public void loadStudent(String fullname) throws IOException {
-
         sendToServer(RouletteV1Protocol.CMD_LOAD);
-        in.readLine();
+        readFromServer();
 
         sendToServer(fullname);
 
         sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
-        in.readLine();
-
+        readFromServer();
     }
 
     @Override
     public void loadStudents(List<Student> students) throws IOException {
         sendToServer(RouletteV1Protocol.CMD_LOAD);
-        in.readLine();
+        readFromServer();
 
         for (Student s : students) {
             sendToServer(s.getFullname());
         }
         sendToServer(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
-        in.readLine();
+        readFromServer();
     }
 
     @Override
     public Student pickRandomStudent() throws EmptyStoreException, IOException {
         sendToServer(RouletteV1Protocol.CMD_RANDOM);
 
-        RandomCommandResponse studentJson = JsonObjectMapper.parseJson(in.readLine(), RandomCommandResponse.class);
+        RandomCommandResponse studentJson = JsonObjectMapper.parseJson(readFromServer(), RandomCommandResponse.class);
         if (studentJson.getError() != null) {
             throw new EmptyStoreException();
         }
-        return Student.fromJson(studentJson.getFullname());
-
+        return new Student(studentJson.getFullname());
     }
 
     @Override
@@ -103,13 +105,17 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         return getInfos().getProtocolVersion();
     }
 
-    private void sendToServer(String s) {
+    public InfoCommandResponse getInfos() throws IOException {
+        sendToServer(RouletteV1Protocol.CMD_INFO);
+        return JsonObjectMapper.parseJson(in.readLine(), InfoCommandResponse.class);
+    }
+
+    protected void sendToServer(String s) {
         out.println(s);
         out.flush();
     }
 
-    private InfoCommandResponse getInfos() throws IOException {
-        sendToServer(RouletteV1Protocol.CMD_INFO);
-        return JsonObjectMapper.parseJson(in.readLine(), InfoCommandResponse.class);
+    protected String readFromServer() throws IOException {
+        return in.readLine();
     }
 }

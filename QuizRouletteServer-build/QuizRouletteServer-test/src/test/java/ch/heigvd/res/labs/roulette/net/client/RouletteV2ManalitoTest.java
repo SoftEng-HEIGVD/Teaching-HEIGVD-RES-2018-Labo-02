@@ -96,7 +96,7 @@ public class RouletteV2ManalitoTest {
         client.getProtocolVersion();
         client.getNumberOfStudents();
         
-        assertEquals(client.getNumberOfCommands(), 3);
+        assertEquals(3, client.getNumberOfCommands());
     }
     
     

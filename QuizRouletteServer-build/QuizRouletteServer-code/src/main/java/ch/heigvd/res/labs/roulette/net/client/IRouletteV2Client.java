@@ -27,5 +27,5 @@ public interface IRouletteV2Client extends IRouletteV1Client {
    * @throws IOException 
    */
   public List<Student> listStudents() throws IOException;
-
+  
 }
