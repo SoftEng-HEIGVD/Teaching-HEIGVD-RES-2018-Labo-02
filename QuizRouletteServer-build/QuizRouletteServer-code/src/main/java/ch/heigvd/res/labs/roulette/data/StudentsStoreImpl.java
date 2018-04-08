@@ -16,28 +16,27 @@ import java.util.logging.Logger;
  * @author Olivier Liechti
  */
 public class StudentsStoreImpl implements IStudentsStore {
-
+  
   static final Logger LOG = Logger.getLogger(StudentsStoreImpl.class.getName());
-
+  
   private final List<Student> students = new LinkedList<>();
-  private int numberOfNewStudentsAdded;
   
   @Override
   public synchronized void clear() {
     students.clear();
   }
-
+  
   @Override
   public synchronized void addStudent(Student student) {
     students.add(student);
   }
-
+  
   @Override
   public synchronized List<Student> listStudents() {
     List<Student> result = new LinkedList<>(students);
     return result;
   }
-
+  
   @Override
   public synchronized Student pickRandomStudent() throws EmptyStoreException {
     if (students.isEmpty()) {
@@ -46,32 +45,25 @@ public class StudentsStoreImpl implements IStudentsStore {
     int n = (int) (Math.random() * students.size());
     return students.get(n);
   }
-
+  
   @Override
   public synchronized int getNumberOfStudents() {
     return students.size();
   }
   
   @Override
-  public synchronized int getNumberOfNewStudentsAddedStudents() {
-    return numberOfNewStudentsAdded;
-  }
-
-  @Override
   public void importData(BufferedReader reader) throws IOException {
     LOG.log(Level.INFO, "Importing data from input reader of type {0}", reader.getClass());
     List<Student> studentsToAdd = new ArrayList<>();
     String record;
-    numberOfNewStudentsAdded = 0;
     boolean endReached = false;
     while (!endReached && (record = reader.readLine()) != null) {
       if (record.equalsIgnoreCase(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER)) {
-        LOG.log(Level.INFO, "End of stream reached. New students have been added to the store. There are now {0} students in the store", numberOfNewStudentsAdded);
+        LOG.log(Level.INFO, "End of stream reached. New students have been added to the store. How many? We'll tell you when the lab is complete...");
         endReached = true;
       } else {
         LOG.log(Level.INFO, "Adding student {0} to the store.", record);
         studentsToAdd.add(new Student(record));
-        ++numberOfNewStudentsAdded;
       }
     }
     synchronized (this) {
@@ -79,5 +71,5 @@ public class StudentsStoreImpl implements IStudentsStore {
     }
     LOG.log(Level.INFO, "There are now {0} students in the store.", getNumberOfStudents());
   }
-
+  
 }

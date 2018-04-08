@@ -11,26 +11,26 @@ import java.util.List;
  * @author Olivier Liechti
  */
 public interface IStudentsStore {
-
+  
   /**
    * This method clears the data store by deleting all of the content
    */
   public void clear();
-
+  
   /**
    * This method is used to add a student to the data store
    *
    * @param student the student to add
    */
   public void addStudent(Student student);
-
+  
   /**
    * This method is used to get the list of students currently in the data store
    *
    * @return the list of students int the data store
    */
   public List<Student> listStudents();
-
+  
   /**
    * This method is used to randomly select one student in the data store
    *
@@ -38,14 +38,14 @@ public interface IStudentsStore {
    * @throws ch.heigvd.res.labs.roulette.data.EmptyStoreException
    */
   public Student pickRandomStudent() throws EmptyStoreException;
-
+  
   /**
    * This method returns the number of students currently in the data store
    *
    * @return the current number of students in the data store
    */
   public int getNumberOfStudents();
-
+  
   /**
    * This method is used to import students, by consuming lines from the
    * BufferedReader passed in argument. Data is read line by line and the whole
@@ -56,6 +56,4 @@ public interface IStudentsStore {
    */
   public void importData(BufferedReader reader) throws IOException;
   
-  public int getNumberOfNewStudentsAddedStudents();
-
 }

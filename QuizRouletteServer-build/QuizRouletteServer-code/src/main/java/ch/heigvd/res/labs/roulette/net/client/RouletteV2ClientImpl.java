@@ -1,5 +1,6 @@
 package ch.heigvd.res.labs.roulette.net.client;
 
+import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.data.StudentsList;
@@ -13,11 +14,13 @@ import java.util.List;
  * This class implements the client side of the protocol specification (version 2).
  *
  * @author Olivier Liechti
+ * @author Antoine Rochat & Benoit Schopfer
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
 
   private int numberOfStudentAdded;
   private boolean successOfCommand;
+  private int numberOfCommands;
   
   @Override
   public void clearDataStore() throws IOException {
@@ -58,6 +61,24 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     LoadCommandResponse lcResponse = JsonObjectMapper.parseJson(readServerMessage(),LoadCommandResponse.class);
     successOfCommand = lcResponse.getStatus().equals("success");
     numberOfStudentAdded = lcResponse.getNumberOfNewStudents();  }
+  
+  @Override
+  public Student pickRandomStudent() throws EmptyStoreException, IOException {
+    ++numberOfCommands;
+    return super.pickRandomStudent();
+  }
+  
+  @Override
+  public int getNumberOfStudents() throws IOException {
+    ++numberOfCommands;
+    return super.getNumberOfStudents();
+  }
+  
+  @Override
+  public String getProtocolVersion() throws IOException {
+    ++numberOfCommands;
+    return super.getProtocolVersion();
+  }
   
   @Override
   public void disconnect() throws IOException {
