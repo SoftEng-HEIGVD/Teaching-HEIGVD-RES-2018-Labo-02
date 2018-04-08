@@ -9,9 +9,11 @@ import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.LoadCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.ByeCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
+import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
 import java.util.List;
 import java.util.logging.Level;
 import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
+import java.util.logging.Logger;
 
 /**
  * This class implements the client side of the protocol specification (version 2).
@@ -22,64 +24,63 @@ import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
  
-    private int numberOfStudentAdded=0;
-    private int numberOfCommands=0;
-    private boolean commandStatus=false;
-    
-    
+     private int numberOfCommands = 0;
+    private boolean commandStatus = false;
+    private int numberOfStudentsAdded = 0;
+   
+    private static final Logger LOG = Logger.getLogger(RouletteV2ClientImpl.class.getName());
+
+
     @Override
- public void clearDataStore() throws IOException {
-        os.write(RouletteV2Protocol.CMD_CLEAR);
-        os.flush();
-        if (!readline().equalsIgnoreCase(RouletteV2Protocol.RESPONSE_CLEAR_DONE))
-            LOG.log(Level.SEVERE, "remote server did not reply {0}", RouletteV2Protocol.RESPONSE_CLEAR_DONE);
-        
-        numberOfCommands++;
-        
+    public void clearDataStore() throws IOException {
+        writer.println(RouletteV2Protocol.CMD_CLEAR);
+        writer.flush();
+        reader.readLine();
+        ++numberOfCommands;
     }
 
     @Override
     public List<Student> listStudents() throws IOException {
-        os.write(RouletteV2Protocol.CMD_LIST);
-        os.flush();
-        numberOfCommands++;
-        return JsonObjectMapper.parseJson(readline(), StudentsList.class).getStudents();
-        
+        writer.println(RouletteV2Protocol.CMD_LIST);
+        writer.flush();
+        StudentsList studentList = JsonObjectMapper.parseJson(reader.readLine(), StudentsList.class);
+        ++numberOfCommands;
+        return studentList.getStudents();
     }
-    
+
     @Override
     public void loadStudent(String fullname) throws IOException {
-        os.write(RouletteV2Protocol.CMD_LOAD);
-        os.flush();
-        is.readLine();
-        os.write(fullname);
-        os.flush();
-        os.write(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
-        os.flush();
-        LoadCommandResponse cmdResponse = JsonObjectMapper.parseJson(is.readLine(), LoadCommandResponse.class);
+        writer.println(RouletteV2Protocol.CMD_LOAD);
+        writer.flush();
+        reader.readLine();
+        writer.println(fullname);
+        writer.flush();
+        writer.println(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+        writer.flush();
+        LoadCommandResponse cmdResponse = JsonObjectMapper.parseJson(reader.readLine(), LoadCommandResponse.class);
         commandStatus = cmdResponse.getStatus().equals(RouletteV2Protocol.SUCCESS);
-        numberOfStudentAdded = cmdResponse.getNumberOfStudents();
+        numberOfStudentsAdded = cmdResponse.getNumberOfNewStudents();
         ++numberOfCommands;
     }
-    
-     @Override
+
+    @Override
     public void loadStudents(List<Student> students) throws IOException {
         try {
-            os.write(RouletteV2Protocol.CMD_LOAD);
-            os.flush();
-            is.readLine();
+            writer.println(RouletteV2Protocol.CMD_LOAD);
+            writer.flush();
+            reader.readLine();
 
             for (Student student : students) {
-                os.write(student.getFullname());
-                os.flush();
+                writer.println(student.getFullname());
+                writer.flush();
             }
 
-            os.write(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
-            os.flush();
+            writer.println(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+            writer.flush();
 
-            LoadCommandResponse cmdResponse = JsonObjectMapper.parseJson(is.readLine(), LoadCommandResponse.class);
+            LoadCommandResponse cmdResponse = JsonObjectMapper.parseJson(reader.readLine(), LoadCommandResponse.class);
             commandStatus = cmdResponse.getStatus().equals(RouletteV2Protocol.SUCCESS);
-            numberOfStudentAdded = cmdResponse.getNumberOfStudents();
+            numberOfStudentsAdded = cmdResponse.getNumberOfNewStudents();
             ++numberOfCommands;
         } catch (IOException e) {
             LOG.log(Level.SEVERE, "An error occured during loadStudents : {0}", e.getMessage());
@@ -90,11 +91,11 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     @Override
     public void disconnect() throws IOException {
         try {
-            os.write(RouletteV2Protocol.CMD_BYE);
-            os.flush();
-            ByeCommandResponse response = JsonObjectMapper.parseJson(is.readLine(), ByeCommandResponse.class);
+            writer.println(RouletteV2Protocol.CMD_BYE);
+            writer.flush();
+            ByeCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), ByeCommandResponse.class);
             commandStatus = response.getStatus().equals(RouletteV2Protocol.SUCCESS);
-            sessionCleaner();
+            sessionClean();
             ++numberOfCommands;
         } catch (IOException e) {
             LOG.log(Level.SEVERE, "An error occured during connection to socket : {0}", e.getMessage());
@@ -102,7 +103,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         }
     }
 
-    //  we need this part to count the commands.
+  
     @Override
     public Student pickRandomStudent() throws EmptyStoreException, IOException {
         ++numberOfCommands;
@@ -114,21 +115,22 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         ++numberOfCommands;
         return super.getNumberOfStudents();
     }
-
-    @Override
-    public String getProtocolVersion() throws IOException {
-        ++numberOfCommands;
-        return super.getProtocolVersion();
-    }
-
+    
+    
     @Override
     public int getNumberOfStudentAdded() {
-        return numberOfStudentAdded;
+        return numberOfStudentsAdded;
     }
 
     @Override
     public int getNumberOfCommands() {
         return numberOfCommands;
+    }
+    
+        @Override
+    public String getProtocolVersion() throws IOException {
+        ++numberOfCommands;
+        return super.getProtocolVersion();
     }
 
     @Override
