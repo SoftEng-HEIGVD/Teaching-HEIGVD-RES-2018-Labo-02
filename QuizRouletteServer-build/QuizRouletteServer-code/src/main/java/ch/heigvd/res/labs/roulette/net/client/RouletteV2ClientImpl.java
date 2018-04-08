@@ -42,6 +42,8 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
         writeInWriter(RouletteV2Protocol.CMD_LIST);
 
+        nbCommands++;
+
         return JsonObjectMapper.parseJson(reader.readLine(), ListStudentCommandResponse.class).getStudents();
     }
 

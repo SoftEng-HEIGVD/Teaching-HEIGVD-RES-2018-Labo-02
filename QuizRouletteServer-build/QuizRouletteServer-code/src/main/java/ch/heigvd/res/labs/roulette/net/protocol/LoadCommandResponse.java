@@ -10,8 +10,8 @@ package ch.heigvd.res.labs.roulette.net.protocol;
  */
 public class LoadCommandResponse {
 
-    private int numberOfNewStudents;
     private String status;
+    private int numberOfNewStudents;
 
     public LoadCommandResponse() {}
 

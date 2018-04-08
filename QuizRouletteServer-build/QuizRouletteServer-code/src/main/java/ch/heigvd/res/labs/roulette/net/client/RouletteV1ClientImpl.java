@@ -21,6 +21,8 @@ import java.util.logging.Logger;
  * This class implements the client side of the protocol specification (version 1).
  *
  * @author Olivier Liechti
+ * @author Vincent Guidoux
+ * @author David Jaquet
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
@@ -51,6 +53,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         LOG.log(Level.INFO, "Attempting to disconnect...");
         closeConnection();
         LOG.log(Level.INFO, "Disconnected");
+        nbCommands++;
     }
 
     @Override
@@ -97,13 +100,13 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
         writeInWriter(RouletteV1Protocol.CMD_RANDOM);
 
+        nbCommands++;
+
         RandomCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), RandomCommandResponse.class);
 
         // There is no student stored
         if (response.getError() != null)
             throw new EmptyStoreException();
-
-        nbCommands++;
 
         return Student.fromJson(response.toString());
     }
