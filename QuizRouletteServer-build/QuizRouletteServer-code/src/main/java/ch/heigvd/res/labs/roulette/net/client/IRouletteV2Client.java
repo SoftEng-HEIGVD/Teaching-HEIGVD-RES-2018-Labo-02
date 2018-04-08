@@ -1,14 +1,13 @@
 package ch.heigvd.res.labs.roulette.net.client;
 
 import ch.heigvd.res.labs.roulette.data.Student;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
 import java.io.IOException;
 import java.util.List;
 
 /**
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti, Samuel Mayor, Alexandra Korukova
  */
 public interface IRouletteV2Client extends IRouletteV1Client {
 
@@ -30,10 +29,26 @@ public interface IRouletteV2Client extends IRouletteV1Client {
      */
     public List<Student> listStudents() throws IOException;
 
+    /**
+     * Returns the number of students added the last time loadStudent() or loadStudents() was called
+     * @return the number of students added during the last load
+     * @throws IOException
+     */
     public int getNumberOfStudentAdded() throws IOException;
 
+    /**
+     * Returns the number of commands invoked
+     * @return number of commands invoked
+     * @throws IOException
+     */
     public int getNumberOfCommands() throws IOException;
 
+    /**
+     * Checks the status of LOAD and BYE commands.
+     * @return true if the command in question is BYE, true if the command in question is LOAD and the server
+     * has succeeded to import the students to the store, false otherwise
+     * @throws IOException
+     */
     public boolean checkSuccessOfCommand() throws IOException;
 
 }
