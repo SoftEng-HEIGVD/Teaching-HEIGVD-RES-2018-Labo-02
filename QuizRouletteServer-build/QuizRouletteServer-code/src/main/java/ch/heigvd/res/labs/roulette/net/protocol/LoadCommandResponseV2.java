@@ -1,10 +1,10 @@
 package ch.heigvd.res.labs.roulette.net.protocol;
 
-public class InfoCommandResponseV2 {
-    private String status;
+public class LoadCommandResponseV2 {
+    private boolean status;
     private int numberOfNewStudents;
 
-    public InfoCommandResponseV2(Boolean status, int numberOfNewStudents) {
+    public LoadCommandResponseV2(Boolean status, int numberOfNewStudents) {
         setNumberOfNewStudents(numberOfNewStudents);
         setStatus(status);
     }
@@ -14,7 +14,7 @@ public class InfoCommandResponseV2 {
     }
 
     public void setStatus(Boolean status){
-        this.status = status? "success" : "failure";
+        this.status = status;
     }
 
 
@@ -23,7 +23,7 @@ public class InfoCommandResponseV2 {
         return numberOfNewStudents;
     }
 
-    public String getStatus() {
+    public boolean getStatus() {
         return status;
     }
 

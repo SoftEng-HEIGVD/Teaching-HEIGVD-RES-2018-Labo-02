@@ -3,13 +3,11 @@ package ch.heigvd.res.labs.roulette.net.server;
 import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.IStudentsStore;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
-import ch.heigvd.res.labs.roulette.data.Student;
+import ch.heigvd.res.labs.roulette.data.StudentsList;
 import ch.heigvd.res.labs.roulette.net.protocol.*;
-import com.sun.xml.internal.bind.v2.TODO;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -72,7 +70,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.println(RouletteV2Protocol.RESPONSE_LOAD_DONE);
           writer.flush();
           numberOfNewStudents = store.getNumberOfStudents() - numberOfNewStudents;
-          InfoCommandResponseV2 responseLoad = new InfoCommandResponseV2(true, numberOfNewStudents);
+          LoadCommandResponseV2 responseLoad = new LoadCommandResponseV2(true, numberOfNewStudents);
           writer.println(JsonObjectMapper.toJson(responseLoad));
           writer.flush();
           break;
@@ -82,21 +80,23 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_LIST:
-          InfoCommandStudents studentList = new InfoCommandStudents(store.listStudents());
-          writer.println(JsonObjectMapper.toJson(studentList));
-          writer.flush();
+            StudentsList sL = new StudentsList();
+            sL.setStudents( store.listStudents() );
+            writer.println(JsonObjectMapper.toJson(sL));
+            writer.flush();
           break;
         case RouletteV2Protocol.CMD_BAILLE:
           writer.println("Are you French?");
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_BYE:
-          if(numberOfCommands < 3){
+         /* if(numberOfCommands < 3){
             writer.println("So soon?");
             writer.flush();
-          }
-          InfoCommandResponseV3 responseBye = new InfoCommandResponseV3(true, numberOfCommands);
-          writer.println(JsonObjectMapper.toJson(responseBye));
+          } */
+          ByeCommandResponseV2 responseBye = new ByeCommandResponseV2(true, 42);
+          String str = JsonObjectMapper.toJson(responseBye);
+          writer.println(str);
           writer.flush();
           done = true;
           break;

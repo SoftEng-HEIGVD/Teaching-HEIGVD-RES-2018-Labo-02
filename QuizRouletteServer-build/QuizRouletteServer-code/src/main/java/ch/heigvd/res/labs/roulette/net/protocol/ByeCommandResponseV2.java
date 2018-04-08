@@ -1,12 +1,14 @@
 package ch.heigvd.res.labs.roulette.net.protocol;
 
-public class InfoCommandResponseV3 {
-    private String status;
+public class ByeCommandResponseV2 {
+    private Boolean status;
     private int numberOfCommands;
 
-    public InfoCommandResponseV3(Boolean status, int numberOfCommands) {
-        setNumberOfCommands(numberOfCommands);
-        setStatus(status);
+    public ByeCommandResponseV2(){};
+
+    public ByeCommandResponseV2(Boolean status, int numberOfCommands) {
+        this.numberOfCommands = numberOfCommands;
+        this.status = status;
     }
 
     public void setNumberOfCommands(int numberOfCommands) {
@@ -14,11 +16,13 @@ public class InfoCommandResponseV3 {
     }
 
     public void setStatus(Boolean status){
-        this.status = status? "success" : "failure";
+        this.status = status;
     }
 
     public int getNumberOfCommands(){
         return numberOfCommands;
     }
+
+    public boolean getStatus() {return status;}
 
 }

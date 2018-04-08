@@ -6,6 +6,7 @@ import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RandomCommandResponse;
+import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
 
 import java.io.*;
 import java.net.Socket;
@@ -37,10 +38,10 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
             return this.name;
         }}
 
-    private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
-    private BufferedReader is;
-    private PrintWriter os;
-    private Socket socket;
+    protected static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
+    protected BufferedReader is;
+    protected PrintWriter os;
+    protected Socket socket;
 
 
     @Override
@@ -57,6 +58,10 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
   @Override
   public void disconnect() throws IOException {
+
+      os.println(RouletteV2Protocol.CMD_BYE);
+      os.flush();
+
       is.close();
       os.close();
       socket.close();
@@ -94,13 +99,13 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
       LOG.info("Loading list of Students on server...");
 
       os.println(CONNECT.LOAD.toString());
-      is.readLine();
+      LOG.info("server response " +is.readLine() );
       for ( Student s: students) {
           os.println( s.toString() );
       }
       os.println(CONNECT.ENDOFDATA.toString());
       os.flush();
-      is.readLine();
+      LOG.info("server response " +is.readLine() );
 
       LOG.info("Loaded");
   }
@@ -120,7 +125,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   @Override
   public int getNumberOfStudents() throws IOException {
 
- 
+      System.out.print("COUCOU");
       return InfoCmdRsp().getNumberOfStudents();
 
   }
@@ -130,10 +135,12 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
      return InfoCmdRsp().getProtocolVersion();
   }
-  private InfoCommandResponse InfoCmdRsp() throws IOException{
-      os.println(CONNECT.INFO.toString());
-      os.flush();
 
+  private InfoCommandResponse InfoCmdRsp() throws IOException{
+      os.println(RouletteV1Protocol.CMD_INFO);
+      os.flush();
+    // is.readLine();
+   // is.readLine();
       InfoCommandResponse iCR = JsonObjectMapper.parseJson(is.readLine() , InfoCommandResponse.class);
       return iCR;
   }
