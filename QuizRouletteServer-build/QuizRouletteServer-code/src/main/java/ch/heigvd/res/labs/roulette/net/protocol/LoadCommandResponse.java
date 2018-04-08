@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package ch.heigvd.res.labs.roulette.net.protocol;
 
 /**
@@ -10,7 +6,7 @@ package ch.heigvd.res.labs.roulette.net.protocol;
  * when processing the "LOAD" command defined in the protocol specification. The
  * JsonObjectMapper utility class can use this class. 
  * 
- * @author fidimala
+ * @author Iando Rafidimalala
  */
 
 public class LoadCommandResponse {

@@ -45,15 +45,18 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   @Override
   public void disconnect() throws IOException {
     out.println(RouletteV1Protocol.CMD_BYE);
-    out.flush();    
-    in.close();
-    out.close();
-    clientSocket.close();
+    if(isConnected()){
+        out.flush();    
+        in.close();
+        out.close();
+        clientSocket.close();    
+    }
+
   }
 
   @Override
   public boolean isConnected() {
-      if(clientSocket == null)
+      if(clientSocket == null || clientSocket.isClosed())
           return false;
       
     return clientSocket.isConnected(); 
