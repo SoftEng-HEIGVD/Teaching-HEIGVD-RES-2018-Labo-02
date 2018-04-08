@@ -25,11 +25,11 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
 
-    private Socket clientSocket = null;
+    protected Socket clientSocket = null;
 
-    BufferedReader reader = null;
+    protected BufferedReader reader = null;
     //BufferedWriter writer = null;
-    PrintWriter    writer = null;
+    protected PrintWriter    writer = null;
 
     // initially not connected
     private boolean connectionStatus = false;
@@ -59,7 +59,6 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public boolean isConnected() {
-        // TODO: Use isConnected() ?
         return connectionStatus;
     }
 
@@ -77,9 +76,17 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public void loadStudents(List<Student> students) throws IOException {
+
+        writer.println(RouletteV1Protocol.CMD_LOAD);
+        writer.flush();
+        reader.readLine();
         for(Student student : students) {
-            loadStudent(student.getFullname());
+            writer.println(student.getFullname());
+            writer.flush();
         }
+        writer.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+        writer.flush();
+        reader.readLine();
     }
 
     @Override
@@ -87,7 +94,12 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         if(getNumberOfStudents() == 0)
             throw new EmptyStoreException();
 
-        return null;
+        writer.println(RouletteV1Protocol.CMD_RANDOM);
+        writer.flush();
+
+        RandomCommandResponse randResponse = JsonObjectMapper.parseJson(reader.readLine(), RandomCommandResponse.class);
+
+        return new Student(randResponse.getFullname());
     }
 
     @Override
@@ -102,7 +114,12 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public String getProtocolVersion() throws IOException {
-        return RouletteV1Protocol.VERSION;
+        writer.println(RouletteV1Protocol.CMD_INFO);
+        writer.flush();
+
+        InfoCommandResponse infoCommandResponse = JsonObjectMapper.parseJson(reader.readLine(), InfoCommandResponse.class);
+
+        return infoCommandResponse.getProtocolVersion();
     }
 
 
