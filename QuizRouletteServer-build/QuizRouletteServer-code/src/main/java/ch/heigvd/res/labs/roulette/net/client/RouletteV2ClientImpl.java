@@ -21,7 +21,6 @@ import java.util.logging.Logger;
  * @author Olivier Liechti
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
-
     private static final Logger LOG = Logger.getLogger(RouletteV2ClientImpl.class.getName());
 
     private boolean statusLastCommand = false;
@@ -67,11 +66,15 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         writeInWriter(fullname);
         writeInWriter(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
 
+//        String responseReader = reader.readLine();
+
         LoadCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), LoadCommandResponse.class);
         statusLastCommand = response.getStatus().equals("success");
 
         if(statusLastCommand)
             nbNewStudents = response.getNumberOfNewStudents();
+
+        nbCommands++;
     }
 
     @Override
@@ -92,6 +95,8 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
         if(statusLastCommand)
             nbNewStudents = response.getNumberOfNewStudents();
+
+        nbCommands++;
     }
 
 }
