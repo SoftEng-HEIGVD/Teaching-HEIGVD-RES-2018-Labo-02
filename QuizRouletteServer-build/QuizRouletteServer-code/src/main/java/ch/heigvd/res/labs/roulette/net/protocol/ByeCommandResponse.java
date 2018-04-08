@@ -3,6 +3,9 @@ package ch.heigvd.res.labs.roulette.net.protocol;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
+ * This class is used to serialize/deserialize the response sent by the server
+ * when processing the "BYE" command defined in the protocol specification. The
+ * JsonObjectMapper utility class can use this class.
  *
  * @author Marc Labie
  */
@@ -13,9 +16,7 @@ public class ByeCommandResponse {
 
     private String status;
 
-    private int nbrOfCommands = 0;
-
-    private String numberOfCommands = "" + nbrOfCommands;
+    private int numberOfCommands = 0;
 
     public String getError() {
         return error;
@@ -33,14 +34,13 @@ public class ByeCommandResponse {
         this.status = status;
     }
 
-    public String getNumberOfCommands() {
+    public int getNumberOfCommands() {
         return numberOfCommands;
     }
 
 
     public void incrNbrOfCommands(){
-        nbrOfCommands++;
-        numberOfCommands = "" + nbrOfCommands;
+        numberOfCommands++;
     }
 
 
