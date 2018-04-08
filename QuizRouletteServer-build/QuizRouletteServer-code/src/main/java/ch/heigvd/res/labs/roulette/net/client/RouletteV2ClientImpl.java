@@ -58,8 +58,14 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     @Override
     public void loadStudent(String fullname) throws IOException {
-        // nbCommand is increment in the function super.loadStudent()
-        super.loadStudent(fullname);
+        LOG.log(Level.INFO, "Loading student " + fullname);
+
+        writeInWriter(RouletteV2Protocol.CMD_LOAD);
+
+        reader.readLine();
+
+        writeInWriter(fullname);
+        writeInWriter(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
 
         LoadCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), LoadCommandResponse.class);
         statusLastCommand = response.getStatus().equals("success");
@@ -70,8 +76,16 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
     @Override
     public void loadStudents(List<Student> students) throws IOException {
-        // nbCommand is increment in the function super.loadStudent()
-        super.loadStudents(students);
+        LOG.log(Level.INFO, "Loading a list of students");
+
+        writeInWriter(RouletteV2Protocol.CMD_LOAD);
+
+        reader.readLine();
+
+        for (Student student : students)
+            writeInWriter(student.getFullname() + System.lineSeparator());
+
+        writeInWriter(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
 
         LoadCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), LoadCommandResponse.class);
         statusLastCommand = response.getStatus().equals("success");
