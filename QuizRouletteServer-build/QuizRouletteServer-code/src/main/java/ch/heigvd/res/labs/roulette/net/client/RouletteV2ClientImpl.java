@@ -88,7 +88,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         reader.readLine();
 
         for (Student student : students)
-            writeInWriter(student.getFullname() + System.lineSeparator());
+            writeInWriter(student.getFullname() );
 
         writeInWriter(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
 

@@ -85,7 +85,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         reader.readLine();
 
         for (Student student : students)
-            writeInWriter(student.getFullname() + System.lineSeparator());
+            writeInWriter(student.getFullname());
 
         writeInWriter(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
 
