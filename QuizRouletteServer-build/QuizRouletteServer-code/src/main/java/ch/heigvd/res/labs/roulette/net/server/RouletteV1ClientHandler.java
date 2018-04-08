@@ -74,6 +74,7 @@ public class RouletteV1ClientHandler implements IClientHandler {
           done = true;
           break;
         default:
+          
           writer.println("Huh? please use HELP if you don't know what commands are available.");
           writer.flush();
           break;
