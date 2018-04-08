@@ -28,4 +28,25 @@ public interface IRouletteV2Client extends IRouletteV1Client {
    */
   public List<Student> listStudents() throws IOException;
 
+  /**
+   * This returns the number of student added in the last load
+   * @return the number of sutdent added
+   * @throws IOException
+   */
+  public int getNumberOfStudentAdded() throws IOException;
+
+  /**
+   * This methode give the number of commands send by the client to the server
+   *
+   * @return the number of command sent to the server
+   * @throws IOException
+   */
+  public int getNumberOfCommands() throws IOException;
+
+  /**
+   *
+   *
+   * @return
+   */
+  public boolean checkSuccessOfCommand();
 }
