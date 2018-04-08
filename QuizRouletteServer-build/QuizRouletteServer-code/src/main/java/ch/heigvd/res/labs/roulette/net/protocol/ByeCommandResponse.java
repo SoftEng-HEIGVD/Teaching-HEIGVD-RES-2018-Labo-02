@@ -15,5 +15,19 @@ package ch.heigvd.res.labs.roulette.net.protocol;
  */
 
 public class ByeCommandResponse {
-    
+    private String status;
+    private int numberOfCommands;
+
+    public ByeCommandResponse(Status status, int nbOfCommands) {
+        this.status = status.toString();
+        this.numberOfCommands = nbOfCommands;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public int getNumberOfCommands() {
+        return numberOfCommands;
+    }
 }

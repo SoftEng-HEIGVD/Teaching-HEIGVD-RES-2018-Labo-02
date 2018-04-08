@@ -4,10 +4,12 @@ import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.IStudentsStore;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
 import ch.heigvd.res.labs.roulette.data.StudentsList;
+import ch.heigvd.res.labs.roulette.net.protocol.ByeCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RandomCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV1Protocol;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
+import ch.heigvd.res.labs.roulette.net.protocol.Status;
 import static ch.heigvd.res.labs.roulette.net.server.RouletteV1ClientHandler.LOG;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,6 +46,8 @@ public class RouletteV2ClientHandler implements IClientHandler {
 
     String command;
     boolean done = false;
+    int nbCommands = 0;
+    
     while (!done && ((command = reader.readLine()) != null)) {
       LOG.log(Level.INFO, "COMMAND: {0}", command);
       switch (command.toUpperCase()) {
@@ -73,23 +77,23 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_CLEAR:
-            writer.println(RouletteV2Protocol.CMD_CLEAR);
-            writer.flush();
             store.clear();
             writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
             writer.flush();
             break;
         
         case RouletteV2Protocol.CMD_LIST:
-            //transform in StudentList to serialize
-            StudentsList studentsList = new StudentsList();
-            studentsList.addAll(store.listStudents());
-            writer.println(JsonObjectMapper.toJson(studentsList));
-            writer.flush();        
-            break;
+        //transform in StudentList to serialize
+        StudentsList studentsList = new StudentsList();
+        studentsList.addAll(store.listStudents());
+        writer.println(JsonObjectMapper.toJson(studentsList));
+        writer.flush();        
+        break;
         
         case RouletteV1Protocol.CMD_BYE:
-            
+          ByeCommandResponse responseBye = new ByeCommandResponse(Status.Success, nbCommands);
+          writer.println(JsonObjectMapper.toJson(responseBye));
+          writer.flush();
           done = true;
           break;
         default:
