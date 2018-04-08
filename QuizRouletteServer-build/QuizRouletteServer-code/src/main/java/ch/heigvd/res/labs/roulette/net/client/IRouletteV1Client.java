@@ -69,6 +69,7 @@ public interface IRouletteV1Client {
    * @throws IOException
    */
   public int getNumberOfStudents() throws IOException;
+ 
   
   /**
    * Returns the protocol version implemented by the server
@@ -77,4 +78,8 @@ public interface IRouletteV1Client {
    */
   public String getProtocolVersion() throws IOException;
 
+    
+  
 }
+
+

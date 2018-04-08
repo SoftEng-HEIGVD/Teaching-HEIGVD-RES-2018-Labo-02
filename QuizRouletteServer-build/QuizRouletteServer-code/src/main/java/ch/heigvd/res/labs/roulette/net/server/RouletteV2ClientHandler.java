@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  */
 public class RouletteV2ClientHandler implements IClientHandler {
 
-    private int numberOfCommands;
+  
     final static Logger LOG = Logger.getLogger(RouletteV2ClientHandler.class.getName());
     private final IStudentsStore store;
   public RouletteV2ClientHandler(IStudentsStore store) {
@@ -45,12 +45,14 @@ public class RouletteV2ClientHandler implements IClientHandler {
     
     writer.println("Hello. Online HELP is available. Will you find it?");
     writer.flush();
-
+    
+    int numberOfCommands=0;
     String command;
     boolean done = false;
     while (!done && ((command = reader.readLine()) != null)) {
-        numberOfCommands++;
+        
       LOG.log(Level.INFO, "COMMAND: {0}", command);
+      numberOfCommands++;
       switch (command.toUpperCase()) {
         case RouletteV2Protocol.CMD_RANDOM:
           RandomCommandResponse rcResponse = new RandomCommandResponse();
@@ -62,14 +64,17 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.println(JsonObjectMapper.toJson(rcResponse));
           writer.flush();
           break;
+          
         case RouletteV2Protocol.CMD_HELP:
           writer.println("Commands: " + Arrays.toString(RouletteV2Protocol.SUPPORTED_COMMANDS));
           break;
+          
         case RouletteV2Protocol.CMD_INFO:
           InfoCommandResponse response = new InfoCommandResponse(RouletteV2Protocol.VERSION, store.getNumberOfStudents());
           writer.println(JsonObjectMapper.toJson(response));
           writer.flush();
           break;
+          
         case RouletteV2Protocol.CMD_LOAD:
           
           writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
@@ -81,11 +86,13 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.println(JsonObjectMapper.toJson(lcResponse));
           writer.flush();
           break;
+          
         case RouletteV2Protocol.CMD_BYE:
           ByeCommandResponse bcResponse = new ByeCommandResponse("success", numberOfCommands);
           writer.println(JsonObjectMapper.toJson(bcResponse));
           done = true;
           break;  
+          
         case RouletteV2Protocol.CMD_CLEAR:
            store.clear();
            writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
