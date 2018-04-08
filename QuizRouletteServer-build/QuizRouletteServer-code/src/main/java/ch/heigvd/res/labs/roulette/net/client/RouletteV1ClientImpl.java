@@ -34,6 +34,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         socket = new Socket(server, port);
         buffReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         printWriter = new PrintWriter(socket.getOutputStream());
+        buffReader.readLine();
     }
 
     @Override
@@ -51,6 +52,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public boolean isConnected() {
+        if(socket==null)
+            return false;
         return socket.isConnected();
     }
 
