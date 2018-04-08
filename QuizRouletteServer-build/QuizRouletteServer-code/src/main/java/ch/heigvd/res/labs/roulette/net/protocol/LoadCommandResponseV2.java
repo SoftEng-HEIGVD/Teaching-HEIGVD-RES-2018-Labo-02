@@ -4,6 +4,9 @@ public class LoadCommandResponseV2 {
     private boolean status;
     private int numberOfNewStudents;
 
+    public LoadCommandResponseV2() {
+    }
+
     public LoadCommandResponseV2(Boolean status, int numberOfNewStudents) {
         setNumberOfNewStudents(numberOfNewStudents);
         setStatus(status);

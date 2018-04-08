@@ -1,13 +1,11 @@
 package ch.heigvd.res.labs.roulette.net.server;
 
-import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
-import ch.heigvd.res.labs.roulette.data.IStudentsStore;
-import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
-import ch.heigvd.res.labs.roulette.data.StudentsList;
+import ch.heigvd.res.labs.roulette.data.*;
 import ch.heigvd.res.labs.roulette.net.protocol.*;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -68,8 +66,8 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
           writer.flush();
           store.importData(reader);
-          //writer.println(RouletteV2Protocol.RESPONSE_LOAD_DONE);
-          //writer.flush();
+          writer.println(RouletteV2Protocol.RESPONSE_LOAD_DONE);
+          writer.flush();
           numberOfNewStudents = store.getNumberOfStudents() - numberOfNewStudents;
           LoadCommandResponseV2 responseLoad = new LoadCommandResponseV2(true, numberOfNewStudents);
 
@@ -84,8 +82,11 @@ public class RouletteV2ClientHandler implements IClientHandler {
           break;
         case RouletteV2Protocol.CMD_LIST:
             StudentsList sL = new StudentsList();
+            List<Student> li = store.listStudents();
+            String kk = li.get(0).getFullname();
             sL.setStudents( store.listStudents() );
-            writer.println(JsonObjectMapper.toJson(sL));
+            String str = JsonObjectMapper.toJson(sL);
+            writer.println(str);
             writer.flush();
           break;
         case RouletteV2Protocol.CMD_BAILLE:
@@ -98,7 +99,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
             writer.flush();
           } */
           ByeCommandResponseV2 responseBye = new ByeCommandResponseV2(true, numberOfCommands);
-          String str = JsonObjectMapper.toJson(responseBye);
+          str = JsonObjectMapper.toJson(responseBye);
           writer.println(str);
           writer.flush();
           done = true;

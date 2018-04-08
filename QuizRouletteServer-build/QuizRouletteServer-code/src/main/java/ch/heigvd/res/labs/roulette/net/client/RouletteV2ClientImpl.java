@@ -46,10 +46,31 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
       System.out.println("LIST++" + nbCommands);
       System.out.flush();
     StudentsList sL = JsonObjectMapper.parseJson(is.readLine() , StudentsList.class);
+
     validateCommand();
     return sL.getStudents();
   }
 
+    @Override
+    public Student pickRandomStudent() throws EmptyStoreException, IOException {
+
+
+        os.println(RouletteV2Protocol.CMD_RANDOM);
+        os.flush();
+        String rep = is.readLine();
+        if(getNumberOfStudents() == 0)
+            throw new EmptyStoreException();
+        ++nbCommands;
+        return Student.fromJson(JsonObjectMapper.parseJson(rep, RandomCommandResponse.class).getFullname() );
+    }
+    /*
+ @Override
+ public Student pickRandomStudent() throws EmptyStoreException, IOException {
+     System.out.println("RANDOM++" + nbCommands);
+     System.out.flush();
+     ++nbCommands;
+     return super.pickRandomStudent();
+ }*/
 
   @Override
   public void loadStudent(String fullname) throws IOException {
@@ -65,7 +86,8 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         os.println( fullname );
         os.println(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
         os.flush();
-        //LOG.info("server response " + is.readLine() );
+        LOG.info("server response " + is.readLine() );
+
         LoadCommandResponseV2 loadCR = JsonObjectMapper.parseJson(is.readLine(), LoadCommandResponseV2.class);
         LOG.info("server response " + loadCR.getStatus() );
         LOG.info("Loaded");
@@ -93,11 +115,12 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
         System.out.flush();
         LOG.info("server response " +is.readLine() );
         for ( Student s: students) {
-            os.println( s.toString() );
+            os.println( s.getFullname() );
         }
 
         os.println(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
         os.flush();
+        LOG.info("server response " +is.readLine() );
 
         LoadCommandResponseV2 loadCR = JsonObjectMapper.parseJson(is.readLine(), LoadCommandResponseV2.class);
         LOG.info("server response " + loadCR.getStatus() );
@@ -113,18 +136,24 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     }
   }
 
-  @Override
-  public Student pickRandomStudent() throws EmptyStoreException, IOException {
-      System.out.println("RANDOM++" + nbCommands);
-      System.out.flush();
-      ++nbCommands;
-      return super.pickRandomStudent();
-  }
+
 
     @Override
   public int getNumberOfStudentAdded() {
     return nbStudentsAdded;
   }
+/*
+    public int getNumberOfStudents() throws IOException {
+        nbCommands++;
+        return super.getNumberOfStudents();
+    }
+
+    @Override
+    public String getProtocolVersion() throws IOException {
+        nbCommands++;
+        return super.getProtocolVersion();
+    }
+    */
 
     @Override
     public int getNumberOfCommands() throws IOException {
@@ -171,7 +200,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     }
 
     private void validateCommand(){
-        nbCommands++;
+       // nbCommands++;
         commandSucceded = true;
     }
 

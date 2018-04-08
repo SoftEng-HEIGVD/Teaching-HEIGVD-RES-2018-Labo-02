@@ -101,11 +101,13 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
       os.println(CONNECT.LOAD.toString());
       LOG.info("server response " +is.readLine() );
       for ( Student s: students) {
-          os.println( s.toString() );
+          os.println( s.getFullname() );
       }
       os.println(CONNECT.ENDOFDATA.toString());
       os.flush();
       LOG.info("server response " +is.readLine() );
+
+      LOG.info("server response 2 " +is.readLine() );
 
       LOG.info("Loaded");
   }
@@ -125,7 +127,6 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   @Override
   public int getNumberOfStudents() throws IOException {
 
-      System.out.print("COUCOU");
       return InfoCmdRsp().getNumberOfStudents();
 
   }
@@ -139,8 +140,8 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
   private InfoCommandResponse InfoCmdRsp() throws IOException{
       os.println(RouletteV1Protocol.CMD_INFO);
       os.flush();
-    // is.readLine();
-   // is.readLine();
+      //is.readLine();
+      //is.readLine();
       InfoCommandResponse iCR = JsonObjectMapper.parseJson(is.readLine() , InfoCommandResponse.class);
       return iCR;
   }
