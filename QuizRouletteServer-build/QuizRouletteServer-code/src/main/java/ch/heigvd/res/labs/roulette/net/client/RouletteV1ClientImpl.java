@@ -24,118 +24,135 @@ import java.util.logging.Logger;
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
-  private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
+    private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
 
-  private Socket socket = null;
-  private BufferedReader reader = null;
-  private PrintWriter writer = null;
+    protected Socket socket = null;
+    protected BufferedReader reader = null;
+    protected PrintWriter writer = null;
 
-  @Override
-  public void connect(String server, int port) throws IOException {
-    LOG.log(Level.INFO, "Attempting to connect...");
+    protected int nbCommands = 0;
 
-    socket = new Socket(server, port);
-    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-    writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+    @Override
+    public void connect(String server, int port) throws IOException {
+        LOG.log(Level.INFO, "Attempting to connect...");
 
-    if (isConnected())
-      reader.readLine();
+        socket = new Socket(server, port);
+        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
 
-    LOG.log(Level.INFO, "Connected");
-  }
+        if (isConnected())
+            reader.readLine();
 
-  @Override
-  public void disconnect() throws IOException {
-    LOG.log(Level.INFO, "Attempting to disconnect...");
-    closeConnection();
-    LOG.log(Level.INFO, "Disconnected");
-  }
+        LOG.log(Level.INFO, "Connected");
+    }
 
-  @Override
-  public boolean isConnected() {
-    return socket != null && socket.isConnected();
-  }
+    @Override
+    public void disconnect() throws IOException {
+        LOG.log(Level.INFO, "Attempting to disconnect...");
+        closeConnection();
+        LOG.log(Level.INFO, "Disconnected");
+    }
 
-  @Override
-  public void loadStudent(String fullname) throws IOException {
-    LOG.log(Level.INFO, "Loading student " + fullname);
+    @Override
+    public boolean isConnected() {
+        return socket != null && socket.isConnected();
+    }
 
-    writeInWriter(RouletteV1Protocol.CMD_LOAD);
+    @Override
+    public void loadStudent(String fullname) throws IOException {
+        LOG.log(Level.INFO, "Loading student " + fullname);
 
-    reader.readLine();
+        writeInWriter(RouletteV1Protocol.CMD_LOAD);
 
-    writeInWriter(fullname);
-    writeInWriter(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+        reader.readLine();
 
-    reader.readLine();
-  }
+        writeInWriter(fullname);
+        writeInWriter(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
 
-  @Override
-  public void loadStudents(List<Student> students) throws IOException {
-    LOG.log(Level.INFO, "Loading a list of students");
+        reader.readLine();
 
-    writeInWriter(RouletteV1Protocol.CMD_LOAD);
+        nbCommands++;
+    }
 
-    reader.readLine();
+    @Override
+    public void loadStudents(List<Student> students) throws IOException {
+        LOG.log(Level.INFO, "Loading a list of students");
 
-    for(Student student : students)
-      writeInWriter(student.getFullname() + System.lineSeparator());
+        writeInWriter(RouletteV1Protocol.CMD_LOAD);
 
-    writeInWriter(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+        reader.readLine();
 
-    reader.readLine();
-  }
+        for (Student student : students)
+            writeInWriter(student.getFullname() + System.lineSeparator());
 
-  @Override
-  public Student pickRandomStudent() throws EmptyStoreException, IOException {
-    LOG.log(Level.INFO, "Pick a random student");
+        writeInWriter(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
 
-    writeInWriter(RouletteV1Protocol.CMD_RANDOM);
+        reader.readLine();
 
-    RandomCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), RandomCommandResponse.class);
+        nbCommands++;
+    }
 
-    // There is no student stored
-    if (response.getError() != null)
-      throw new EmptyStoreException();
+    @Override
+    public Student pickRandomStudent() throws EmptyStoreException, IOException {
+        LOG.log(Level.INFO, "Pick a random student");
 
-    return Student.fromJson(response.toString());
-  }
+        writeInWriter(RouletteV1Protocol.CMD_RANDOM);
 
-  @Override
-  public int getNumberOfStudents() throws IOException {
-    LOG.log(Level.INFO, "Counting the number of students...");
+        RandomCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), RandomCommandResponse.class);
 
-    writeInWriter(RouletteV1Protocol.CMD_INFO);
+        // There is no student stored
+        if (response.getError() != null)
+            throw new EmptyStoreException();
 
-    InfoCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), InfoCommandResponse.class);
+        nbCommands++;
 
-    return response.getNumberOfStudents();
-  }
+        return Student.fromJson(response.toString());
+    }
 
-  @Override
-  public String getProtocolVersion() throws IOException {
-    LOG.log(Level.INFO, "Getting the protocol version...");
+    @Override
+    public int getNumberOfStudents() throws IOException {
+        LOG.log(Level.INFO, "Counting the number of students...");
 
-    writeInWriter(RouletteV1Protocol.CMD_INFO);
+        writeInWriter(RouletteV1Protocol.CMD_INFO);
 
-    InfoCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), InfoCommandResponse.class);
+        InfoCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), InfoCommandResponse.class);
 
-    return response.getProtocolVersion();
-  }
+        nbCommands++;
 
-  private void closeConnection() throws IOException {
-    if(writer != null)
-      writer.close();
+        return response.getNumberOfStudents();
+    }
 
-    if(reader != null)
-      reader.close();
+    @Override
+    public String getProtocolVersion() throws IOException {
+        LOG.log(Level.INFO, "Getting the protocol version...");
 
-    if(socket != null)
-      socket.close();
-  }
+        writeInWriter(RouletteV1Protocol.CMD_INFO);
 
-  private void writeInWriter(String value){
-    writer.println(value);
-    writer.flush();
-  }
+        InfoCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), InfoCommandResponse.class);
+
+        nbCommands++;
+
+        return response.getProtocolVersion();
+    }
+
+    public int getNumberOfCommands() throws IOException {
+        return nbCommands;
+    }
+
+    private void closeConnection() throws IOException {
+        if (writer != null)
+            writer.close();
+
+        if (reader != null)
+            reader.close();
+
+
+        if (socket != null)
+            socket.close();
+    }
+
+    protected void writeInWriter(String value) {
+        writer.println(value);
+        writer.flush();
+    }
 }

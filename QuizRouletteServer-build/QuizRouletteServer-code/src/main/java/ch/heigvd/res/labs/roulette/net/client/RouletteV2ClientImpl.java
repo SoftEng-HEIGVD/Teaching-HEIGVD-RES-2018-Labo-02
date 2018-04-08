@@ -3,10 +3,17 @@ package ch.heigvd.res.labs.roulette.net.client;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.data.StudentsList;
+import ch.heigvd.res.labs.roulette.net.protocol.ListStudentCommandResponse;
+import ch.heigvd.res.labs.roulette.net.protocol.LoadCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class implements the client side of the protocol specification (version 2).
@@ -15,28 +22,62 @@ import java.util.List;
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
 
+    private static final Logger LOG = Logger.getLogger(RouletteV2ClientImpl.class.getName());
+
+    private boolean statusLastCommand = false;
+    private int nbNewStudents = 0;
+
     @Override
     public void clearDataStore() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LOG.log(Level.INFO, "Clearing the data store...");
+
+        writeInWriter(RouletteV2Protocol.CMD_CLEAR);
+        reader.readLine();
+
+        nbCommands++;
     }
 
     @Override
     public List<Student> listStudents() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        LOG.log(Level.INFO, "Listing the students...");
 
+        writeInWriter(RouletteV2Protocol.CMD_LIST);
+
+        return JsonObjectMapper.parseJson(reader.readLine(), ListStudentCommandResponse.class).getStudents();
     }
 
     @Override
     public int getNumberOfStudentAdded() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public int getNumberOfCommands() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return nbNewStudents;
     }
 
     @Override
     public boolean checkSuccessOfCommand() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return statusLastCommand;
     }
+
+    @Override
+    public void loadStudent(String fullname) throws IOException {
+        // nbCommand is increment in the function super.loadStudent()
+        super.loadStudent(fullname);
+
+        LoadCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), LoadCommandResponse.class);
+        statusLastCommand = response.getStatus().equals("success");
+
+        if(statusLastCommand)
+            nbNewStudents = response.getNumberOfNewStudents();
+    }
+
+    @Override
+    public void loadStudents(List<Student> students) throws IOException {
+        // nbCommand is increment in the function super.loadStudent()
+        super.loadStudents(students);
+
+        LoadCommandResponse response = JsonObjectMapper.parseJson(reader.readLine(), LoadCommandResponse.class);
+        statusLastCommand = response.getStatus().equals("success");
+
+        if(statusLastCommand)
+            nbNewStudents = response.getNumberOfNewStudents();
+    }
+
 }
