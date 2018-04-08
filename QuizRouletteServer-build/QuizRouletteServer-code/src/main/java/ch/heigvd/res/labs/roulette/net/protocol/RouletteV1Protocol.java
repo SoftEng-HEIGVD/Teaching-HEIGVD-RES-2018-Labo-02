@@ -9,7 +9,7 @@ public class RouletteV1Protocol {
   
   public final static String VERSION = "1.0";
 
-  public final static int DEFAULT_PORT = 1313;
+  public final static int DEFAULT_PORT = 2613;
 
   public final static String CMD_HELP = "HELP";
   public final static String CMD_RANDOM = "RANDOM";
