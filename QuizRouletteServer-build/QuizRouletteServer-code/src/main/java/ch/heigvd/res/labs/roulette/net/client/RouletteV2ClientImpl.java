@@ -1,5 +1,6 @@
 package ch.heigvd.res.labs.roulette.net.client;
 
+import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.data.StudentsList;
@@ -12,6 +13,7 @@ import java.util.logging.Level;
  * This class implements the client side of the protocol specification (version 2).
  *
  * @author Olivier Liechti
+ * @author Iando Rafidimalala
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
   
@@ -28,10 +30,11 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
       
   }   
 
+  @Override
   public String getProtocolVersion() throws IOException {
       commandStatus = false;
-      String protoVersion = super.getProtocolVersion();
       numberOfCommand++;
+      String protoVersion = super.getProtocolVersion();      
       commandStatus = true; 
       
       return protoVersion;
@@ -39,45 +42,72 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   
   @Override
   public void clearDataStore() throws IOException {
-    commandStatus = false;  
+    commandStatus = false;
+    numberOfCommand++;
     out.println(RouletteV2Protocol.CMD_CLEAR);
     out.flush();
     
     LOG.log(Level.INFO, "Data erased. Server notifies: {0}", in.readLine());
-    numberOfCommand++;
+    
     commandStatus = true;
   }
 
   @Override
   public void loadStudent(String fullname) throws IOException {
       commandStatus = false;
+      numberOfCommand++;
       super.loadStudent(fullname);
       NumberOfStudentAdded = 1;
-      numberOfCommand++;
+      
       commandStatus = true;
   }
 
   @Override
   public void loadStudents(List<Student> students) throws IOException {
       commandStatus = false;
+      numberOfCommand++;
       super.loadStudents(students);
       NumberOfStudentAdded = students.size();
-      numberOfCommand++;
+      
       commandStatus = true;    
   }
   
   @Override
   public List<Student> listStudents() throws IOException {
     commandStatus = false;
+    numberOfCommand++;
     out.println(RouletteV2Protocol.CMD_LIST);
     out.flush();  
     String response = in.readLine();
     List<Student> listS = JsonObjectMapper.parseJson(response, StudentsList.class).getStudents();
-    numberOfCommand++;
+    
     commandStatus = true;
     return listS;
   }
- 
+
+  @Override
+  public int getNumberOfStudents() throws IOException {  
+    commandStatus = false;
+    numberOfCommand++;
+    int count = super.getNumberOfStudents();
+    
+    commandStatus = true;
+      
+    return count;
+  }  
+
+  
+  @Override
+  public Student pickRandomStudent() throws EmptyStoreException, IOException {
+    commandStatus = false;
+    numberOfCommand++;
+    Student student = super.pickRandomStudent();
+    
+    commandStatus = true;
+      
+    return student;      
+  } 
+  
   @Override
   public int getNumberOfCommands()throws IOException{
     return numberOfCommand;
