@@ -88,6 +88,7 @@ public class RouletteV2AmadeousTest {
         } catch (EmptyStoreException e) {
             exceptionThrown = true;
         }
+
         client.disconnect();
 
         assertTrue(exceptionThrown);

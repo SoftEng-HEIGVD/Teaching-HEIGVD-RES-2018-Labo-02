@@ -13,7 +13,6 @@ public class RouletteV2Protocol extends RouletteV1Protocol {
   public final static String CMD_LIST = "LIST";
   public final static int DEFAULT_PORT = 2613;
 
-  public final static String RESPONSE_LOAD_DONE = "{\"status\":\"success\",\"numberOfNewStudents\":";
   public static String RESPONSE_CLEAR_DONE = "DATASTORE CLEARED";
 
   public final static String[] SUPPORTED_COMMANDS = new String[]{CMD_HELP, CMD_RANDOM, CMD_LOAD, CMD_INFO, CMD_BYE, CMD_CLEAR, CMD_LIST};

@@ -14,6 +14,14 @@ public class StudentsList {
   
   private final List<Student> students = new ArrayList<>();
 
+  public StudentsList(){
+
+  }
+
+  public StudentsList(List<Student> list){
+    students.addAll(list);
+  }
+
   public List<Student> getStudents() {
     ArrayList<Student> list = new ArrayList<>();
     list.addAll(students);
