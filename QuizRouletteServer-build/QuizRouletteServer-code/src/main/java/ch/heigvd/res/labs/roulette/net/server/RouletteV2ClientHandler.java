@@ -6,6 +6,7 @@ import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
 import ch.heigvd.res.labs.roulette.data.Student;
 import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponseV2;
+import ch.heigvd.res.labs.roulette.net.protocol.InfoNewStudent;
 import ch.heigvd.res.labs.roulette.net.protocol.ListCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RandomCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
@@ -31,6 +32,8 @@ public class RouletteV2ClientHandler implements IClientHandler {
     final static Logger LOG = Logger.getLogger(RouletteV1ClientHandler.class.getName());
 
     private final IStudentsStore store;
+    private int numberOfCommands=0;
+    private int numberOfStudentsAdded=0;
 
     public RouletteV2ClientHandler(IStudentsStore store) {
         this.store = store;
@@ -50,6 +53,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
             LOG.log(Level.INFO, "COMMAND: {0}", command);
             switch (command.toUpperCase()) {
                 case RouletteV2Protocol.CMD_RANDOM:
+                    numberOfCommands++;
                     RandomCommandResponse rcResponse = new RandomCommandResponse();
                     try {
                         rcResponse.setFullname(store.pickRandomStudent().getFullname());
@@ -60,37 +64,43 @@ public class RouletteV2ClientHandler implements IClientHandler {
                     writer.flush();
                     break;
                 case RouletteV2Protocol.CMD_HELP:
+                    numberOfCommands++;
                     writer.println("Commands: " + Arrays.toString(RouletteV2Protocol.SUPPORTED_COMMANDS));
                     break;
                 case RouletteV2Protocol.CMD_INFO:
+                    numberOfCommands++;
                     InfoCommandResponse response = new InfoCommandResponse(RouletteV2Protocol.VERSION, store.getNumberOfStudents());
                     writer.println(JsonObjectMapper.toJson(response));
                     writer.flush();
                     break;
                 case RouletteV2Protocol.CMD_LOAD:
+                    numberOfCommands++;
                     writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
                     writer.flush();
+                    int numberStudentsAtBegining=store.getNumberOfStudents();
                     store.importData(reader);
-                    writer.println(RouletteV2Protocol.RESPONSE_LOAD_DONE);
-                    writer.flush();
-                    InfoCommandResponseV2 respons = new InfoCommandResponseV2("success", store.getNumberOfStudents());
+                    numberOfStudentsAdded+=store.getNumberOfStudents()-numberStudentsAtBegining;
+                    InfoNewStudent respons = new InfoNewStudent("success", store.getNumberOfStudents());
                     writer.println(JsonObjectMapper.toJson(respons));
                     writer.flush();
                     break;
                 case RouletteV2Protocol.CMD_BYE:
-                    respons = new InfoCommandResponseV2("success", store.getNumberOfStudents());
-                    writer.println(JsonObjectMapper.toJson(respons));
+                    numberOfCommands++;
+                    InfoCommandResponseV2 responsInfo = new InfoCommandResponseV2("success", numberOfCommands);
+                    writer.println(JsonObjectMapper.toJson(responsInfo));
                     writer.flush();
                     done = true;
                     break;
                 case RouletteV2Protocol.CMD_CLEAR:
+                    numberOfCommands++;
                     store.clear();
                     writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
                     writer.flush();
                     break;
                 case RouletteV2Protocol.CMD_LIST:
+                    numberOfCommands++;
                     List<Student> students = store.listStudents();
-                    ListCommandResponse responseList=new ListCommandResponse(students);
+                    ListCommandResponse responseList = new ListCommandResponse(students);
                     writer.println(JsonObjectMapper.toJson(responseList));
                     writer.flush();
                     break;

@@ -9,17 +9,17 @@ package ch.heigvd.res.labs.roulette.net.protocol;
  *
  * @author Oussama Lagha
  */
-public class InfoCommandResponseV2 {
+public class InfoNewStudent {
 
     private String status;
-    private int numberOfCommands;
+    private int numberOfNewStudent;
 
-    public InfoCommandResponseV2() {
+    public InfoNewStudent() {
     }
 
-    public InfoCommandResponseV2(String status, int numberOfCommands) {
+    public InfoNewStudent(String status, int numberOfStudents) {
         this.status = status;
-        this.numberOfCommands = numberOfCommands;
+        this.numberOfNewStudent = numberOfStudents;
     }
 
     public String getStatus() {
@@ -30,12 +30,12 @@ public class InfoCommandResponseV2 {
         this.status = status;
     }
 
-    public int getNumberOfCommands() {
-        return numberOfCommands;
+    public int getNumberOfStudents() {
+        return numberOfNewStudent;
     }
 
-    public void setNumberOfCommands(int numberOfCommands) {
-        this.numberOfCommands = numberOfCommands;
+    public void setNumberOfStudents(int numberOfStudents) {
+        this.numberOfNewStudent = numberOfStudents;
     }
 
 }
