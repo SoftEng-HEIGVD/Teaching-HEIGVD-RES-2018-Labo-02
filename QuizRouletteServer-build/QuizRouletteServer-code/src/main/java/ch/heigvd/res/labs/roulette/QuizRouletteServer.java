@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * This class provides the main() method for starting the application. It creates an
  * instance of RouletteServer and starts it (it will bind on the default port specified
  * in the protocol).
- * 
+ *
  * @author Olivier Liechti
  */
 public class QuizRouletteServer {
@@ -19,7 +19,7 @@ public class QuizRouletteServer {
   /**
    * The main method creates a new Roulette server, which will accept TCP connection
    * requests on the default port defined in the Roulette Protocol specification.
-   * 
+   *
    * @param args the command line arguments
    * @throws java.io.IOException
    */
@@ -28,6 +28,13 @@ public class QuizRouletteServer {
     RouletteServer server = new RouletteServer(RouletteV1Protocol.DEFAULT_PORT, RouletteV1Protocol.VERSION);
     try {
       server.startServer();
+    } catch (IOException ex) {
+      Logger.getLogger(QuizRouletteServer.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+    }
+
+    RouletteServer serverV2 = new RouletteServer(RouletteV2Protocol.DEFAULT_PORT, RouletteV2Protocol.VERSION);
+    try {
+      serverV2.startServer();
     } catch (IOException ex) {
       Logger.getLogger(QuizRouletteServer.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
     }
