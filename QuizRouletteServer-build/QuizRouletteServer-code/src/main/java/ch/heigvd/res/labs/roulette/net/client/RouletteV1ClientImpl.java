@@ -13,7 +13,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -27,9 +26,12 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
 
-    private Socket socket = null;
-    private BufferedReader reader = null;
-    private PrintWriter writer = null;
+    /**
+     * protected : to be used by subclasses outside the package 
+     */
+    protected Socket socket = null;
+    protected BufferedReader reader = null;
+    protected PrintWriter writer = null;
 
     @Override
     public void connect(String server, int port) throws IOException {
@@ -42,7 +44,9 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
          * 2.creation of reader and writer to communicate with the server
          */
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+        // writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+        writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+
 
         /**
          * 3.read the 1st line
@@ -55,8 +59,10 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         /**
          * 1. send the BYE command throw the writer to close the connection
          */
-        writer.println(RouletteV1Protocol.CMD_BYE);
+        writer.println(RouletteV1Protocol.CMD_BYE);         
         writer.flush();
+        
+        reader.readLine();
         /**
          * 2.close the objects used to communicate with the server
          */
@@ -103,13 +109,15 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     @Override
     public void loadStudents(List<Student> students) throws IOException {
-        /**
-         * load the list of student by loading each student fullname (using
-         * loadStudent method)
-         */
+                        
+        writer.println(RouletteV1Protocol.CMD_LOAD);
+        reader.readLine();
         for (Student s : students) {
-            writer.println(s.getFullname());
+          writer.println(s.getFullname());
         }
+        writer.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
+        reader.readLine();
+        
     }
 
     @Override
@@ -123,8 +131,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         /**
          * 2. load information to read the random name sent from the server
          */ 
-        RandomCommandResponse randomResponse = JsonObjectMapper.parseJson(reader.readLine(),
-                RandomCommandResponse.class);
+        RandomCommandResponse randomResponse = JsonObjectMapper.parseJson(reader.readLine(), RandomCommandResponse.class);
 
         /** 
          * if information sent from the server is an error
@@ -147,8 +154,10 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         /**
          * 2. return the number of Students using information sent from the server
          */ 
-        return JsonObjectMapper.parseJson(reader.readLine(),
-                InfoCommandResponse.class).getNumberOfStudents();
+        
+        InfoCommandResponse res = JsonObjectMapper.parseJson(reader.readLine(), InfoCommandResponse.class);
+                       
+        return res.getNumberOfStudents();
     }
 
     @Override
