@@ -62,6 +62,7 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         out.flush();
         in.readLine(); // we read the message of the server 
         out.println(fullname);
+        out.flush();
         out.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
         out.flush();
         in.readLine(); // we Read the message the server about ENDOFDATA
@@ -119,5 +120,6 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
         serverResponse = JsonObjectMapper.parseJson(serverResponseJson, InfoCommandResponse.class);
         return serverResponse.getProtocolVersion();
     }
+
 
 }
