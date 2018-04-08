@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "copy the RES.csv file"
+cp data/RES.csv docker-client/RES.csv
+
+echo "build of Dockerfile"
+docker build -t labo2-client ./docker-client
+
+echo "run image"
+docker run -p 1414:1414 labo2-client
