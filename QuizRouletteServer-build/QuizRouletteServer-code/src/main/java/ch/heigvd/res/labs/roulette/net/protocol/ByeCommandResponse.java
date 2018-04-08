@@ -6,6 +6,8 @@ public class ByeCommandResponse {
 
     private int numberOfCommands;
 
+    public ByeCommandResponse() { }
+
     public ByeCommandResponse(String status, int numberOfCommands) {
         this.status = status;
         this.numberOfCommands = numberOfCommands;
@@ -19,4 +21,11 @@ public class ByeCommandResponse {
         return status;
     }
 
+    public void setNumberOfCommands(int numberOfCommands) {
+        this.numberOfCommands = numberOfCommands;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
