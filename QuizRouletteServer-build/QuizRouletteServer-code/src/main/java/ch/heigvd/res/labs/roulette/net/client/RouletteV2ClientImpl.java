@@ -20,9 +20,9 @@ import java.util.logging.Level;
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
 
-    private ByeCommandReponse bye = null;
-    private LoadCommandReponse load = null;
-    private int numberOfCommands = 0;
+    private ByeCommandReponse bye;
+    private LoadCommandReponse load;
+    private int numberOfCommands;
 
     /**
      * Connect the client to a server and reset the attributes
