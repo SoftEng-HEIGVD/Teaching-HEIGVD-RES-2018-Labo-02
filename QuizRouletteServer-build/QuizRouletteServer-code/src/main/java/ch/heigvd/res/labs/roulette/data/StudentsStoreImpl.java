@@ -56,7 +56,7 @@ public class StudentsStoreImpl implements IStudentsStore {
     LOG.log(Level.INFO, "Importing data from input reader of type {0}", reader.getClass());
     List<Student> studentsToAdd = new ArrayList<>();
     String record;
-    boolean endReached = false;
+    boolean endReached = false;   
     while (!endReached && (record = reader.readLine()) != null) {
       if (record.equalsIgnoreCase(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER)) {
         LOG.log(Level.INFO, "End of stream reached. New students have been added to the store. How many? We'll tell you when the lab is complete...");
@@ -68,8 +68,7 @@ public class StudentsStoreImpl implements IStudentsStore {
     }
     synchronized (this) {
       students.addAll(studentsToAdd);
-    }
+    }  
     LOG.log(Level.INFO, "There are now {0} students in the store.", getNumberOfStudents());
   }
-
 }
