@@ -1,6 +1,7 @@
 package ch.heigvd.res.labs.roulette.net.server;
 
 import ch.heigvd.res.labs.roulette.data.*;
+import ch.heigvd.res.labs.roulette.net.protocol.ByeCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RandomCommandResponse;
 import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
@@ -33,12 +34,14 @@ public class RouletteV2ClientHandler implements IClientHandler {
     writer.println("Hello. Online HELP is available. Will you find it?");
     writer.flush();
 
+    int numberOfCommands = 0;
     String command;
     boolean done = false;
     while (!done && ((command = reader.readLine()) != null)) {
       LOG.log(Level.INFO, "COMMAND: {0}", command);
       switch (command.toUpperCase()) {
         case RouletteV2Protocol.CMD_RANDOM:
+          numberOfCommands++;
           RandomCommandResponse rcResponse = new RandomCommandResponse();
           try {
             rcResponse.setFullname(store.pickRandomStudent().getFullname());
@@ -49,14 +52,17 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_HELP:
+          numberOfCommands++;
           writer.println("Commands: " + Arrays.toString(RouletteV2Protocol.SUPPORTED_COMMANDS));
           break;
         case RouletteV2Protocol.CMD_INFO:
+          numberOfCommands++;
           InfoCommandResponse response = new InfoCommandResponse(RouletteV2Protocol.VERSION, store.getNumberOfStudents());
           writer.println(JsonObjectMapper.toJson(response));
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_LOAD:
+          numberOfCommands++;
           writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
           writer.flush();
           store.importData(reader);
@@ -64,16 +70,20 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_BYE:
-          writer.println(RouletteV2Protocol.RESPONSE_LOAD_DONE);
+          numberOfCommands++;
+          ByeCommandResponse bRep = new ByeCommandResponse(RouletteV2Protocol.ETAT,numberOfCommands);
+          writer.println(JsonObjectMapper.toJson(bRep));
           writer.flush();
           done = true;
           break;
         case RouletteV2Protocol.CMD_CLEAR:
+          numberOfCommands++;
           store.clear();
           writer.println(RouletteV2Protocol.RESPONSE_CLEAR_DONE);
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_LIST:
+          numberOfCommands++;
           StudentsList listOfStudent = new StudentsList();
           listOfStudent.setStudents(store.listStudents());
           writer.println(JsonObjectMapper.toJson(listOfStudent));
