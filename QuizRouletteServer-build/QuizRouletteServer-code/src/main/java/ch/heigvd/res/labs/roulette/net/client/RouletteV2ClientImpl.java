@@ -13,15 +13,35 @@ import java.util.List;
  * @author Olivier Liechti
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
-
+  
+  private int numberOfCommande;
+  private int NumberOfStudentAdded;
+    
   @Override
   public void clearDataStore() throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    out.println(RouletteV2Protocol.CMD_CLEAR);
+    out.flush();
+    super.in.readLine();
   }
 
   @Override
   public List<Student> listStudents() throws IOException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    out.println(RouletteV2Protocol.CMD_LIST);
+    out.flush();
+    String response = in.readLine();
+
+    return JsonObjectMapper.parseJson(response, StudentsList.class).getStudents();
+  }
+ 
+  public int getNumberOfCommands()throws IOException{
+  throw new UnsupportedOperationException("Not supported yet.");
   }
   
+  public int getNumberOfStudentAdded() throws IOException{
+      throw new UnsupportedOperationException("Not supported yet.");
+  }
+  
+  public boolean checkSuccessOfCommand()throws IOException{
+  throw new UnsupportedOperationException("Not supported yet.");
+  }
 }
