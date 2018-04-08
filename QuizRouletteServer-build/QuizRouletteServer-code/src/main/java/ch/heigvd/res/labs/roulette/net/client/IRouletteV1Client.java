@@ -58,6 +58,7 @@ public interface IRouletteV1Client {
    *
    * @return an instance of Student randomly selected by the server
    * @throws IOException
+   * @throws EmptyStoreException
    */
   public Student pickRandomStudent() throws EmptyStoreException, IOException;
 

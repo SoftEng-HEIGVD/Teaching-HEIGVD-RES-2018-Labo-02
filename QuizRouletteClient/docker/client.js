@@ -1,8 +1,12 @@
+var  myArgs = process.argv.slice(2);
+
 var net = require('net');
 fs = require('fs');
 
-var HOST = '127.0.0.1';
+
+var HOST = myArgs[0];
 var PORT = 1313;
+
 
 var client = new net.Socket();
 
@@ -15,7 +19,7 @@ var client = new net.Socket();
 // memory. Another approach would be to read the file as we need it and to pipe it through the
 // socket connecting us to the server
 
-fs.readFile('../data/RES.csv', 'utf8', function (err,data) {
+fs.readFile('/opt/res/RES.csv', 'utf8', function (err,data) {
 	if (err) {
 		return console.log(err);
 	}
