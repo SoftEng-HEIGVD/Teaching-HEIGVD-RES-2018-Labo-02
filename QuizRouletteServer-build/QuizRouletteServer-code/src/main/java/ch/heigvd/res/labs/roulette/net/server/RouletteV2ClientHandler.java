@@ -1,33 +1,28 @@
 package ch.heigvd.res.labs.roulette.net.server;
 
-import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
-import ch.heigvd.res.labs.roulette.data.IStudentsStore;
-import ch.heigvd.res.labs.roulette.data.JsonObjectMapper;
-import ch.heigvd.res.labs.roulette.data.Student;
+import ch.heigvd.res.labs.roulette.data.*;
 import ch.heigvd.res.labs.roulette.net.protocol.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Iterator;
 
 
 /**
  * This class implements the Roulette protocol (version 2).
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti, Samuel Mayor, Alexandra Korukova
  */
 public class RouletteV2ClientHandler implements IClientHandler {
 
   final static Logger LOG = Logger.getLogger(RouletteV1ClientHandler.class.getName());
   private final IStudentsStore store;
+  // counts the number of commands
   private int nbCommands;
 
   public RouletteV2ClientHandler(IStudentsStore store) {
-     this.store = store;
+    this.store = store;
   }
 
   @Override
@@ -67,15 +62,15 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
           writer.flush();
           LoadCommandResponse lcResponse = new LoadCommandResponse();
+          // to calculate the number of new students, we subtract the number of students in the store
+          // before loading from one after it
           int nbOfStudentsBefore, nbOfStudentsAfter;
-
           nbOfStudentsBefore = store.getNumberOfStudents();
           try {
             store.importData(reader);
           } catch (IOException ex) {
-              lcResponse.setStatus("failure");
+            lcResponse.setStatus("failure");
           }
-
           nbOfStudentsAfter = store.getNumberOfStudents();
           lcResponse.setNumberOfNewStudents(nbOfStudentsAfter-nbOfStudentsBefore);
           lcResponse.setStatus("success");
@@ -86,6 +81,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
         case RouletteV2Protocol.CMD_BYE:
           ByeCommandResponse bcResponse = new ByeCommandResponse("success", nbCommands);
           writer.println(JsonObjectMapper.toJson(bcResponse));
+          writer.flush();
           done = true;
           break;
         case RouletteV2Protocol.CMD_CLEAR:
@@ -94,15 +90,10 @@ public class RouletteV2ClientHandler implements IClientHandler {
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_LIST:
-          List<Student> students = store.listStudents();
-          writer.print("{\"students\":[");
-          Iterator<Student> it = students.iterator();
-          while (it.hasNext()) {
-            writer.print(it.next());
-            if (it.hasNext())
-              writer.print(",");
-          }
-          writer.print("]}\n");
+          StudentsList studentsList = new StudentsList();
+          studentsList.setStudents(store.listStudents());
+          String jsonStudentList = JsonObjectMapper.toJson(studentsList);
+          writer.println(jsonStudentList);
           writer.flush();
           break;
         default:
