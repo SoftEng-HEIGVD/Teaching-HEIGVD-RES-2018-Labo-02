@@ -1,10 +1,7 @@
 package ch.heigvd.res.labs.roulette.net.server;
 
 import ch.heigvd.res.labs.roulette.data.*;
-import ch.heigvd.res.labs.roulette.net.protocol.ByeCommandResponse;
-import ch.heigvd.res.labs.roulette.net.protocol.InfoCommandResponse;
-import ch.heigvd.res.labs.roulette.net.protocol.RandomCommandResponse;
-import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
+import ch.heigvd.res.labs.roulette.net.protocol.*;
 
 import java.io.*;
 import java.util.Arrays;
@@ -63,15 +60,18 @@ public class RouletteV2ClientHandler implements IClientHandler {
           break;
         case RouletteV2Protocol.CMD_LOAD:
           numberOfCommands++;
-          writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
-          writer.flush();
-          store.importData(reader);
-          writer.println(RouletteV2Protocol.RESPONSE_LOAD_DONE);
+          try {
+            store.importData(reader);
+          }catch (Exception e){
+            RouletteV2Protocol.etat = "fail";
+          }
+          LoadCommandResponse lRep = new LoadCommandResponse(RouletteV2Protocol.etat, store.getNumberOfNewStudents());
+          writer.println(JsonObjectMapper.toJson(lRep));
           writer.flush();
           break;
         case RouletteV2Protocol.CMD_BYE:
           numberOfCommands++;
-          ByeCommandResponse bRep = new ByeCommandResponse(RouletteV2Protocol.ETAT,numberOfCommands);
+          ByeCommandResponse bRep = new ByeCommandResponse(RouletteV2Protocol.etat = "success",numberOfCommands);
           writer.println(JsonObjectMapper.toJson(bRep));
           writer.flush();
           done = true;

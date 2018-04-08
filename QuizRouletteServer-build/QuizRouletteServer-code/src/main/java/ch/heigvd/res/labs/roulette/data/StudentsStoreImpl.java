@@ -21,6 +21,8 @@ public class StudentsStoreImpl implements IStudentsStore {
 
   private final List<Student> students = new LinkedList<>();
 
+  private int numberOfNewStudents;
+
   @Override
   public synchronized void clear() {
     students.clear();
@@ -51,6 +53,10 @@ public class StudentsStoreImpl implements IStudentsStore {
     return students.size();
   }
 
+  public int getNumberOfNewStudents() {
+        return numberOfNewStudents;
+    }
+
   @Override
   public void importData(BufferedReader reader) throws IOException {
     LOG.log(Level.INFO, "Importing data from input reader of type {0}", reader.getClass());
@@ -64,6 +70,7 @@ public class StudentsStoreImpl implements IStudentsStore {
       } else {
         LOG.log(Level.INFO, "Adding student {0} to the store.", record);
         studentsToAdd.add(new Student(record));
+        ++numberOfNewStudents;
       }
     }
     synchronized (this) {

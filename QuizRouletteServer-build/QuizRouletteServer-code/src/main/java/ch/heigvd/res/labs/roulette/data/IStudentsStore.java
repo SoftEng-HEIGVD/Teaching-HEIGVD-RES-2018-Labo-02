@@ -47,6 +47,13 @@ public interface IStudentsStore {
   public int getNumberOfStudents();
 
   /**
+   * This method returns the number of students add in the data store by the client
+   *
+   * @return the number of students add in the data store
+   */
+  public int getNumberOfNewStudents();
+
+  /**
    * This method is used to import students, by consuming lines from the
    * BufferedReader passed in argument. Data is read line by line and the whole
    * line is used as the student full name.
