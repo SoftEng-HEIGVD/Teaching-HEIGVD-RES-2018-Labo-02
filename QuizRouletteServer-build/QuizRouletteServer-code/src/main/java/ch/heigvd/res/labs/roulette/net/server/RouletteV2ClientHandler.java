@@ -23,10 +23,12 @@ public class RouletteV2ClientHandler implements IClientHandler {
 
     private final IStudentsStore store;
     private int nbCommands;
+    private int nbNewStudents;
 
     public RouletteV2ClientHandler(IStudentsStore store) {
         this.store = store;
         this.nbCommands = 0;
+        this.nbNewStudents = 0;
     }
 
     @Override
@@ -39,6 +41,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
 
         String command;
         boolean done = false;
+        nbCommands = 0;
         while (!done && ((command = reader.readLine()) != null)) {
             nbCommands++;
             LOG.log(Level.INFO, "COMMAND: {0}", command);
@@ -64,12 +67,18 @@ public class RouletteV2ClientHandler implements IClientHandler {
                 case RouletteV2Protocol.CMD_LOAD:
                     writer.println(RouletteV2Protocol.RESPONSE_LOAD_START);
                     writer.flush();
-                    store.importData(reader);
-                    LoadCommandResponse loadCmdResp = new LoadCommandResponse("success",store.getNumberOfStudents());
+                    String status = "success";
+                    try {
+                        store.importData(reader);
+                    } catch(IOException e){
+                        status = "failure";
+                    }
+                    LoadCommandResponse loadCmdResp = new LoadCommandResponse(status, store.getNumberOfStudentAdded());
                     writer.println(JsonObjectMapper.toJson(loadCmdResp));
                     writer.flush();
                     break;
                 case RouletteV2Protocol.CMD_BYE:
+                    done = true;
                     ByeCommandResponse byeCmdResp = new ByeCommandResponse("success",nbCommands);
                     writer.println(JsonObjectMapper.toJson(byeCmdResp));
                     writer.flush();

@@ -4,6 +4,10 @@ public class LoadCommandResponse {
     private String status;
     private int nbStudents;
 
+    public LoadCommandResponse(){
+
+    }
+
     public LoadCommandResponse(String status, int nbStudents){
         this.status = status;
         this.nbStudents = nbStudents;
