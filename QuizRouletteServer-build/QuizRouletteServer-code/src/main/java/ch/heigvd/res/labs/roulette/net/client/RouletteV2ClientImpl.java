@@ -15,6 +15,7 @@ import java.util.logging.Logger;
  * This class implements the client side of the protocol specification (version 2).
  *
  * @author Olivier Liechti
+ * Modified by: Julien Biefer and Léo Cortès
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
 
@@ -26,6 +27,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
   @Override
   public void clearDataStore() throws IOException {
+    LOG.log(Level.INFO, "Clearing database store");
     writeAndFlush(RouletteV2Protocol.CMD_CLEAR);
     ++nbrOfSentCommands;
     LOG.log(Level.INFO, reader.readLine());
@@ -33,21 +35,25 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
   @Override
   public void disconnect() throws IOException {
-    writeAndFlush(RouletteV2Protocol.CMD_BYE);
-    ++nbrOfSentCommands;
+    if (null != clientSocket) {
+      writeAndFlush(RouletteV2Protocol.CMD_BYE);
+      ++nbrOfSentCommands;
 
-    String byeResponse = reader.readLine();
-    ByeCommandResponse bye = JsonObjectMapper.parseJson(byeResponse, ByeCommandResponse.class);
-    status = bye.getStatus().equals(SUCCESS_STR);
-    nbrOfSentCommands = bye.getNumberOfCommands();
+      String byeResponse = reader.readLine();
+      ByeCommandResponse bye = JsonObjectMapper.parseJson(byeResponse, ByeCommandResponse.class);
+      status = bye.getStatus().equals(SUCCESS_STR);
+      nbrOfSentCommands = bye.getNumberOfCommands();
 
-    reader.close();
-    writer.close();
-    clientSocket.close();
+      reader.close();
+      writer.close();
+      clientSocket.close();
+      clientSocket = null;
+    }
   }
 
   @Override
   public List<Student> listStudents() throws IOException {
+    LOG.log(Level.INFO, "Fetching list of students");
     writeAndFlush(RouletteV2Protocol.CMD_LIST);
     ++nbrOfSentCommands;
     StudentsList list = new StudentsList();
@@ -61,6 +67,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
   @Override
   public void loadStudent(String fullname) throws IOException {
+    LOG.log(Level.INFO, "Loading student " + fullname);
     writeAndFlush(RouletteV2Protocol.CMD_LOAD);
     ++nbrOfSentCommands;
 
@@ -70,7 +77,6 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
     writeAndFlush(RouletteV2Protocol.CMD_LOAD_ENDOFDATA_MARKER);
 
     String loadResponse = reader.readLine();
-    LOG.log(Level.CONFIG, "response : " + loadResponse);
     LoadCommandResponse load = JsonObjectMapper.parseJson(loadResponse, LoadCommandResponse.class);
     status = load.getStatus().equals(SUCCESS_STR);
     nbrOfStudentNewlyImported = load.getNumberOfNewStudents();
@@ -78,6 +84,7 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
 
   @Override
   public void loadStudents(List<Student> students) throws IOException {
+    LOG.log(Level.INFO, "Loading list of students");
     writeAndFlush(RouletteV2Protocol.CMD_LOAD);
     ++nbrOfSentCommands;
     LOG.log(Level.INFO, reader.readLine());

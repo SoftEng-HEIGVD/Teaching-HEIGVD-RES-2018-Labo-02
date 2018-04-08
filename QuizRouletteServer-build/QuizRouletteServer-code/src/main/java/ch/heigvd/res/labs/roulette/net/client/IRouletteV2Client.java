@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti, Julien Biefer and Léo Cortès
  */
 public interface IRouletteV2Client extends IRouletteV1Client {
 

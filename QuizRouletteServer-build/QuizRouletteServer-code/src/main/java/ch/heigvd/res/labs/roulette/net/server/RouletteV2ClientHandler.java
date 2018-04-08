@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 /**
  * This class implements the Roulette protocol (version 2).
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti, Julien Biefer and Léo Cortès
  */
 public class RouletteV2ClientHandler implements IClientHandler {
 
@@ -27,6 +27,7 @@ public class RouletteV2ClientHandler implements IClientHandler {
 
   @Override
   public void handleClientConnection(InputStream is, OutputStream os) throws IOException {
+
     BufferedReader reader = new BufferedReader(new InputStreamReader(is));
     PrintWriter writer = new PrintWriter(new OutputStreamWriter(os));
     int nbrOfCommandsRecieved = 0;
@@ -57,7 +58,8 @@ public class RouletteV2ClientHandler implements IClientHandler {
           break;
 
         case RouletteV2Protocol.CMD_INFO:
-          InfoCommandResponse response = new InfoCommandResponse(RouletteV2Protocol.VERSION, store.getNumberOfStudents());
+          InfoCommandResponse response = new InfoCommandResponse(RouletteV2Protocol.VERSION,
+                                                                  store.getNumberOfStudents());
           writer.println(JsonObjectMapper.toJson(response));
           writer.flush();
           break;
@@ -94,7 +96,6 @@ public class RouletteV2ClientHandler implements IClientHandler {
 
         case RouletteV2Protocol.CMD_LIST:
           writer.println("{\"students\":" + JsonObjectMapper.toJson(store.listStudents()) + "}");
-
           writer.flush();
           break;
 

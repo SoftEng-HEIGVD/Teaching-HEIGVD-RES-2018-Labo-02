@@ -2,10 +2,11 @@ package ch.heigvd.res.labs.roulette.net.protocol;
 
 /**
  * This class is used to serialize/deserialize the response sent by the server
- * when processing the "INFO" command defined in the protocol specification. The
+ * when processing the "LOAD" command defined in the protocol specification. The
  * JsonObjectMapper utility class can use this class.
- * 
- * @author Olivier Liechti
+ * Inspired by InfoCommand by Olivier Liechti
+ *
+ * @author Julien Biefer and Léo Cortès
  */
 public class LoadCommandResponse {
 
