@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class RouletteV1ClientImpl implements IRouletteV1Client {
 
-  private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
+  protected static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
   protected Socket clientSocket;
   protected BufferedReader in;
   protected PrintWriter out;

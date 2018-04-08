@@ -6,6 +6,7 @@ import ch.heigvd.res.labs.roulette.data.StudentsList;
 import ch.heigvd.res.labs.roulette.net.protocol.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * This class implements the client side of the protocol specification (version 2).
@@ -14,70 +15,67 @@ import java.util.List;
  */
 public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRouletteV2Client {
   
-  protected int numberOfCommand;
-  protected int NumberOfStudentAdded;
-  private String commandStatus;
+  protected int numberOfCommand = 0;
+  protected int NumberOfStudentAdded = 0;
+  private boolean commandStatus = false;
   
   @Override
   public void disconnect() throws IOException {
-    out.println(RouletteV1Protocol.CMD_BYE);
-    out.flush();
-
-    //Get the json response
-    String response = in.readLine();
-
-    //numberOfCommand = JsonObjectMapper.parseJson(response, ByeCommandResponse.class).getNumberOfCommands();
-    //commandStatus = JsonObjectMapper.parseJson(response, ByeCommandResponse.class).getStatus();
-    
-    in.close();
-    out.close();
-    clientSocket.close();
+      numberOfCommand++;
+      commandStatus = false;
+      super.disconnect();
+      commandStatus = true;
+      
   }   
+
+  public String getProtocolVersion() throws IOException {
+      commandStatus = false;
+      String protoVersion = super.getProtocolVersion();
+      numberOfCommand++;
+      commandStatus = true; 
+      
+      return protoVersion;
+  }
   
   @Override
   public void clearDataStore() throws IOException {
+    commandStatus = false;  
     out.println(RouletteV2Protocol.CMD_CLEAR);
     out.flush();
     
-    in.readLine();
+    LOG.log(Level.INFO, "Data erased. Server notifies: {0}", in.readLine());
+    numberOfCommand++;
+    commandStatus = true;
   }
 
   @Override
   public void loadStudent(String fullname) throws IOException {
-      //Send the data accroding the protocol
-      out.println(RouletteV1Protocol.CMD_LOAD);
-      out.println(fullname);
-      out.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
-      out.flush();     
-      
-      in.readLine(); //read the "send data" line
-      String response = in.readLine();// //consume response send by server about the loading status
-      //commandStatus = JsonObjectMapper.parseJson(response, LoadCommandResponse.class).getStatus();
-      //NumberOfStudentAdded = JsonObjectMapper.parseJson(response, LoadCommandResponse.class).getNumberOfNewStudents(); 
+      commandStatus = false;
+      super.loadStudent(fullname);
+      NumberOfStudentAdded = 1;
+      numberOfCommand++;
+      commandStatus = true;
   }
 
   @Override
   public void loadStudents(List<Student> students) throws IOException {
-      out.println(RouletteV1Protocol.CMD_LOAD);
-      for (Student student : students) {
-          out.println(student.getFullname());
-      }
-      out.println(RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER);
-      out.flush();
-      
-      in.readLine();
-      String response = in.readLine(); //consume response send by server
-      //commandStatus = JsonObjectMapper.parseJson(response, LoadCommandResponse.class).getStatus();
-      //NumberOfStudentAdded = JsonObjectMapper.parseJson(response, LoadCommandResponse.class).getNumberOfNewStudents();       
+      commandStatus = false;
+      super.loadStudents(students);
+      NumberOfStudentAdded = students.size();
+      numberOfCommand++;
+      commandStatus = true;    
   }
   
   @Override
   public List<Student> listStudents() throws IOException {
+    commandStatus = false;
     out.println(RouletteV2Protocol.CMD_LIST);
     out.flush();  
     String response = in.readLine();
-    
-    return JsonObjectMapper.parseJson(response, StudentsList.class).getStudents();
+    List<Student> listS = JsonObjectMapper.parseJson(response, StudentsList.class).getStudents();
+    numberOfCommand++;
+    commandStatus = true;
+    return listS;
   }
  
   @Override
@@ -92,6 +90,6 @@ public class RouletteV2ClientImpl extends RouletteV1ClientImpl implements IRoule
   
   @Override
   public boolean checkSuccessOfCommand()throws IOException{
-      return commandStatus.equals(Status.Success.toString());
+      return commandStatus;
   }
 }
