@@ -6,8 +6,8 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>QuizRouletteServer-code</module>
-        <module>QuizRouletteServer-test</module>
+        <module>ch.heigvd.res.labs.roulette_QuizRouletteServer-code_jar_1.0-SNAPSHOT</module>
+        <module>ch.heigvd.res.labs.roulette_QuizRouletteServer-test_jar_1.0-SNAPSHOT</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -6,8 +6,10 @@ package ch.heigvd.res.labs.roulette.net.protocol;
  * @author Olivier Liechti
  */
 public class RouletteV2Protocol extends RouletteV1Protocol {
-
+    
   public final static String VERSION = "2.0";
+
+  public final static int DEFAULT_PORT = 2613;
 
   public final static String CMD_CLEAR = "CLEAR";
   public final static String CMD_LIST = "LIST";

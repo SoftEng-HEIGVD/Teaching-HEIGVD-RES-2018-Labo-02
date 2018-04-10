@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface IRouletteV2Client extends IRouletteV1Client {
 
-  /**
+    /**
    * Clears the students data store, by invoking the CLEAR command defined in
    * the protocol (version 2).
    * 
@@ -26,6 +26,12 @@ public interface IRouletteV2Client extends IRouletteV1Client {
    * @return the list of students currently in the store
    * @throws IOException 
    */
-  public List<Student> listStudents() throws IOException;
+   public List<Student> listStudents() throws IOException;
+
+  public int getNumberOfCommands();
+
+  public int getNumberOfStudentAdded();
+
+  public boolean checkSuccessOfCommand();
 
 }

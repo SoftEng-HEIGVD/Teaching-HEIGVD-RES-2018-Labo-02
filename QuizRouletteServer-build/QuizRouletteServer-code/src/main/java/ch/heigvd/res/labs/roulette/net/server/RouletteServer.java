@@ -54,7 +54,12 @@ public class RouletteServer {
   /*
    * The server uses a data store to keep track of students
    */
-  IStudentsStore store = new StudentsStoreImpl();
+    private int numberOfStudents = 0;
+    IStudentsStore store = new StudentsStoreImpl() {
+        public int getNumberOfNewStudentsAddedStudents() {
+            return numberOfStudents;
+        }
+    };
 
   /*
    * A flag that indicates whether the server should continue to run (or whether
