@@ -22,6 +22,8 @@ import ch.heigvd.res.labs.roulette.net.protocol.RouletteV2Protocol;
  * This class implements the Roulette protocol (version 2).
  *
  * @author Olivier Liechti
+ * 
+ * @author kaffo Doriane
  */
 public class RouletteV2ClientHandler implements IClientHandler {
 

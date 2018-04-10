@@ -13,6 +13,7 @@ import java.util.logging.Logger;
  * memory (no persistent storage).
  *
  * @author Olivier Liechti
+ * 
  */
 public class StudentsStoreImpl implements IStudentsStore {
 

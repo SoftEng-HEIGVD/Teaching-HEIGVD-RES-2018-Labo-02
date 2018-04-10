@@ -1,7 +1,6 @@
 package ch.heigvd.res.labs.roulette.net.server;
 
 /**
- *
  * @author Doriane Kaffo
  */
 public class ByeCommandResponse {

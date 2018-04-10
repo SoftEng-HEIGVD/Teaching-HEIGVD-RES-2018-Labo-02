@@ -2,7 +2,6 @@ package ch.heigvd.res.labs.roulette.net.server;
 /**
  * This class is used to serialize/deserialize the response sent by the server
  * 
- * 
  * @author Kaffo Doriane
  */
 

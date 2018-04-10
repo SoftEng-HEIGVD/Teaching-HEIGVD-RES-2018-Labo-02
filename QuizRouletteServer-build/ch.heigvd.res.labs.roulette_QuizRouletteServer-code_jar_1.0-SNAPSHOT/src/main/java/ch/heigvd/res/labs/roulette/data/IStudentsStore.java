@@ -9,6 +9,7 @@ import java.util.List;
  * manage student data, whether in memory or persistent storage.
  *
  * @author Olivier Liechti
+ * 
  */
 public interface IStudentsStore {
 

@@ -29,6 +29,7 @@ import java.util.logging.Logger;
  * need "isolated" servers).
  *
  * @author Olivier Liechti
+ * 
  */
 public class RouletteServer {
 

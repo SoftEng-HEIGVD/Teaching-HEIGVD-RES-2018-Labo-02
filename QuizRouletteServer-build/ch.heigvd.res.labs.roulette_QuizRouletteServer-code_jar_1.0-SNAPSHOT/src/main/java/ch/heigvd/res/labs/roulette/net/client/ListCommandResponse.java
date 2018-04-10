@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- *
  * @author dorianekaffo
+ * 
  */
 class ListCommandResponse {
 

@@ -32,9 +32,5 @@ public class InfoCommandResponse {
         return numberOfStudents;
     }
 
-   /* public void setNumberOfStudents(int numberOfStudents) {
-        this.numberOfStudents = numberOfStudents;
-    }*/
-
 
 }

@@ -5,7 +5,6 @@ import ch.heigvd.res.labs.roulette.data.Student;
 import java.util.ArrayList;
 import java.util.List;
 /**
- *
  * @author dorianekaffo
  */
 class ListCommandResponse {
