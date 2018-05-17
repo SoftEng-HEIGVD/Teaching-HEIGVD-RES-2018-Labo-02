@@ -120,7 +120,7 @@ public class RouletteV2AngoranceTest {
     
         client.loadStudents(serverStudents);                            // 2
         
-        client.getNumberOfStudents();                                   // 3
+        System.out.println("plop " + client.getNumberOfStudents());                                   // 3
         
         client.pickRandomStudent();                                     // 4
         
