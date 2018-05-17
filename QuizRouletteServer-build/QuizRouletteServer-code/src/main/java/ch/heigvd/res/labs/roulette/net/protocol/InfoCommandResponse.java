@@ -13,6 +13,7 @@ public class InfoCommandResponse {
   private int numberOfStudents;
 
   public InfoCommandResponse() {
+     
   }
 
   public InfoCommandResponse(String protocolVersion, int numberOfStudents) {

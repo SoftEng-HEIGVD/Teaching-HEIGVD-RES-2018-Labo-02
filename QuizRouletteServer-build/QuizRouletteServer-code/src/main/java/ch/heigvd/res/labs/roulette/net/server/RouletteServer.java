@@ -117,6 +117,11 @@ public class RouletteServer {
     serverThread.start();
   }
 
+  /**
+   * return the current client handler
+   * 
+   * @return the current client handler
+   */
   private IClientHandler getClientHandler() {
     switch (protocolVersion) {
       case RouletteV1Protocol.VERSION:
